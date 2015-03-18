@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PhysicsObject.h"
+#include "RigidBody.h"
 
 #include<vector>
 
@@ -8,16 +8,26 @@ class World{
 	
 private:
 
-	float airDensity;			//attrito dell'aria (rho =~ 1). Rappresenta la densità del fluido
-	float gravityForce[3];		//forza di gravità
+	float airDensity;				
+	float gravityForce[3];
 
-	std::vector<PhysicsObject> objects;
+	std::vector<RigidBody> bodies;
 
 public:
 
-	void updatePhysic(float dt){
-		for each objects
-			objects.updatePhysic(dt);
-	}
+	World(float airDensity, const float gravityForce[3]);
+
+	void updatePhysic(float dt);
+
+	void addBody(const RigidBody& body);
+	void removeBody(size_t index);
+	RigidBody getBody(size_t index) const;
+	size_t getNumberOfBody() const;
+
+	void setGravityForce(const float gravityForce[3]);
+	void getGravityForce(float o_gravityForce[3]) const;
+
+	void setAirDensity(float airDensity);
+	float getAirDensity() const;
 
 };
