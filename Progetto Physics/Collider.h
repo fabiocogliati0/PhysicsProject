@@ -1,18 +1,60 @@
 #pragma once
 
-class SphereCollider;
-class BoxCollider;
+#include "Vector3.h"
 
-class Collider{
+namespace PhysicEngine
+{
+	
+	//Forward declarations
+	class SphereCollider;
+	class BoxCollider;
+	struct Collision;
+	class RigidBody;
 
-public:
+	class Collider
+	{
 
-	virtual bool intersect(const Collider& i_other, float o_intersection[3]) const = 0;
-	virtual bool intersectWho(const SphereCollider& i_other,	float o_intersection[3]) const = 0;
-	virtual bool intersectWho(const BoxCollider& i_other,	float o_intersection[3]) const = 0;
+	public:
 
-private:
 
-	float offset[3];
+		virtual Collider* clone() const = 0;
 
-};
+		virtual bool intersect	(	const RigidBody& i_rigidBody, 
+									const Collider& i_colliderOther,
+									const RigidBody& i_rigidBodyOther,
+									Collision& o_collision
+								)	const = 0;
+
+		virtual bool intersectWho	(	const RigidBody& i_rigidBody,
+										const BoxCollider& i_colliderOther,
+										const RigidBody& i_rigidBodyOther,
+										Collision& o_collision
+									)	const = 0;
+
+		virtual bool intersectWho	(	const RigidBody& i_rigidBody,
+										const SphereCollider& i_colliderOther,
+										const RigidBody& i_rigidBodyOther,
+										Collision& o_collision
+									)	const = 0;
+
+		virtual ~Collider();
+
+		const Utils::Vector3& getRawInertia() const;
+
+		float getVolume() const;
+
+	protected:
+
+		void setRawInertia(Utils::Vector3 rawInertia);
+
+		void setVolume(float volume);
+
+	private:
+
+		Utils::Vector3 rawInertia;
+		
+		float volume;
+
+	};
+
+}

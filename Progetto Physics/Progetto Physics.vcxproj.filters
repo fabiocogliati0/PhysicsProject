@@ -13,28 +13,55 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\PhysicEngine">
+      <UniqueIdentifier>{4aef6c2b-f2ce-423a-9f97-f11b5bffe7ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{613af5c6-faaf-4914-9700-f039e4bdff4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PhysicEngine">
+      <UniqueIdentifier>{c2fcbb8f-08c1-4a0a-80d1-28f5989b38a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils">
+      <UniqueIdentifier>{6d15c828-7900-42e0-9484-468793f14403}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\PhysicEngine\Colliders">
+      <UniqueIdentifier>{59719a23-0d88-4c09-9bd7-05b7bf44e1e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PhysicEngine\Colliders">
+      <UniqueIdentifier>{130c47ab-f9bb-42df-8f5f-207662370429}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="World.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\PhysicEngine</Filter>
     </ClInclude>
     <ClInclude Include="PhyisicMaterial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Collider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BoxCollider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SphereCollider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IntersectOperations.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\PhysicEngine</Filter>
     </ClInclude>
     <ClInclude Include="RigidBody.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\PhysicEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxCollider.h">
+      <Filter>Header Files\PhysicEngine\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>Header Files\PhysicEngine\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="IntersectOperations.h">
+      <Filter>Header Files\PhysicEngine\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider.h">
+      <Filter>Header Files\PhysicEngine\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Header Files\PhysicEngine\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Header Files\PhysicEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Header Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -42,13 +69,22 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="World.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\PhysicEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector3.cpp">
+      <Filter>Source Files\Utils</Filter>
     </ClCompile>
     <ClCompile Include="BoxCollider.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\PhysicEngine\Colliders</Filter>
     </ClCompile>
     <ClCompile Include="SphereCollider.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\PhysicEngine\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>Source Files\PhysicEngine\Colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>Source Files\PhysicEngine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

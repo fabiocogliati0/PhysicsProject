@@ -1,19 +1,52 @@
 #pragma once
 
 #include "Collider.h"
-class BoxCollider;
 
-class SphereCollider : public Collider{
+namespace PhysicEngine{
 
-public:
+	class BoxCollider;
+	class RigidBody;
+	struct Collision;
 
-	bool intersect(const Collider& i_other, float o_intersection[3]) const;	//do double dispatch
-	
-private:
+	class SphereCollider : public Collider
+	{
 
-	bool intersectWho(const SphereCollider& i_other, float o_intersection[3]) const;
-	bool intersectWho(const BoxCollider& i_other, float o_intersection[3]) const;
+	public:
 
-	float radius;
+		SphereCollider();
 
-};
+		SphereCollider(float radius);
+
+		SphereCollider* clone() const;
+
+		bool intersect	(	const RigidBody& i_rigidBody, 
+							const Collider& i_colliderOther,
+							const RigidBody& i_rigidBodyOther,
+							Collision& o_collision
+						)	const;
+
+		float getRadius() const;
+
+		const Utils::Vector3& getInertia() const;
+
+		float getVolume() const;
+
+	private:
+
+		bool intersectWho	(	const RigidBody& i_rigidBody,
+								const BoxCollider& i_colliderOther,
+								const RigidBody& i_rigidBodyOther,
+								Collision& o_collision
+							)	const;
+
+		bool intersectWho	(	const RigidBody& i_rigidBody,
+								const SphereCollider& i_colliderOther,
+								const RigidBody& i_rigidBodyOther,
+								Collision& o_collision
+							)	const;
+
+		float radius;
+
+	};
+
+}

@@ -1,21 +1,57 @@
 #pragma once
 
 #include "Collider.h"
-class SphereCollider;
+#include "Vector3.h"
 
-class BoxCollider : public Collider{
+namespace PhysicEngine
+{
 
-public:
+	class SphereCollider;
+	struct Collision;
+	class RigidBody;
 
-	bool intersect(const Collider& i_other, float o_intersection[3]) const;	//do double dispatch
+	class BoxCollider : public Collider
+	{
 
-private:
+	public:
 
-	bool intersectWho(const SphereCollider& i_other, float o_intersection[3]) const;
-	bool intersectWho(const BoxCollider& i_other, float o_intersection[3])const;
+		BoxCollider();
 
-	float sizeX;
-	float sizeY;
-	float sizeZ;
+		BoxCollider(float SemiX, float SemiY, float SemiZ);
+		
+		BoxCollider(const Utils::Vector3& size);
 
-};
+		BoxCollider* clone() const;
+
+		bool intersect	(	const RigidBody& i_rigidBody, 
+							const Collider& i_colliderOther,
+							const RigidBody& i_rigidBodyOther,
+							Collision& o_collision
+						)	const;
+
+		const Utils::Vector3& getVertex(int vertex) const;
+
+		const Utils::Vector3& getInertia() const;
+
+		float getVolume() const;
+
+	private:
+
+		bool intersectWho	(	const RigidBody& i_rigidBody,
+								const BoxCollider& i_colliderOther,
+								const RigidBody& i_rigidBodyOther,
+								Collision& o_collision
+							)	const;
+
+		bool intersectWho	(	const RigidBody& i_rigidBody,
+								const SphereCollider& i_colliderOther,
+								const RigidBody& i_rigidBodyOther,
+								Collision& o_collision
+							)	const;
+
+
+		Utils::Vector3 vertices[8];
+
+	};
+
+}

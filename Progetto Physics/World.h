@@ -1,33 +1,49 @@
 #pragma once
 
 #include "RigidBody.h"
+#include "Vector3.h"
 
 #include<vector>
 
-class World{
-	
-private:
+namespace PhysicEngine{
 
-	float airDensity;				
-	float gravityForce[3];
+	class World{
 
-	std::vector<RigidBody> bodies;
+	public:
 
-public:
+		World();
 
-	World(float airDensity, const float gravityForce[3]);
+		World(float airDensity, const Utils::Vector3& gravityForce);
 
-	void updatePhysic(float dt);
+		
+		void updatePhysic(float dt);
 
-	void addBody(const RigidBody& body);
-	void removeBody(size_t index);
-	RigidBody getBody(size_t index) const;
-	size_t getNumberOfBody() const;
 
-	void setGravityForce(const float gravityForce[3]);
-	void getGravityForce(float o_gravityForce[3]) const;
+		void addBody(const RigidBody& body);
 
-	void setAirDensity(float airDensity);
-	float getAirDensity() const;
+		void removeBody(size_t index);
 
-};
+		const RigidBody& getBody(size_t index) const;
+
+		size_t getNumberOfBodies() const;
+
+
+		void setGravityForce(const Utils::Vector3& gravityForce);
+
+		const Utils::Vector3& getGravityForce() const;
+
+		void setAirDensity(float airDensity);
+
+		float getAirDensity() const;
+
+	private:
+
+		std::vector<RigidBody> bodies;
+
+		float airDensity;
+
+		Utils::Vector3 gravityForce;
+
+	};
+
+}

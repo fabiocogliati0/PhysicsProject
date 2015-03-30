@@ -1,8 +1,12 @@
 # pragma once
 
-struct PhysicMaterial{
-	float elasticity;				
-	float viscosity;
-	float dynamicFriction;					
-	float staticFriction;
-};
+namespace PhysicEngine
+{
+	struct PhysicMaterial
+	{
+		float elasticity;
+		float viscosity;
+		float dynamicFriction;
+		float staticFriction;
+	};
+}

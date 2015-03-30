@@ -1,20 +1,69 @@
 #include "World.h"
 
-World::World(float airDensity, const float gravityForce[3]){
-	this->airDensity = airDensity;
-	this->gravityForce[0] = gravityForce[0];
-	this->gravityForce[1] = gravityForce[1];
-	this->gravityForce[2] = gravityForce[2];
-}
+#include "RigidBody.h"
 
-void World::setGravityForce(const float gravityForce[3]){
-	this->gravityForce[0] = gravityForce[0];
-	this->gravityForce[1] = gravityForce[1];
-	this->gravityForce[2] = gravityForce[2];
-}
+#include <vector>
+#include <cassert>
 
-void World::getGravityForce(float o_gravityForce[3]) const{
-	o_gravityForce[0] = this->gravityForce[0];
-	o_gravityForce[1] = this->gravityForce[1];
-	o_gravityForce[2] = this->gravityForce[2];
+namespace PhysicEngine{
+
+	World::World() 
+		: World(1.0f, Utils::Vector3(0.0f, -9.8f, 0.0f))
+	{
+	}
+
+	World::World(float airDensity, const Utils::Vector3& gravityForce)
+		: airDensity(airDensity), gravityForce(gravityForce)
+	{
+	}
+
+	void World::updatePhysic(float dt)
+	{
+		for (size_t i = 0; i < bodies.size(); ++i)
+		{
+			bodies[i].updatePhyisic(dt, *this);
+		}
+	}
+
+	void World::addBody(const RigidBody& body)
+	{
+		bodies.push_back(body);
+	}
+
+	void World::removeBody(size_t index)
+	{
+		assert(index < bodies.size());
+
+		bodies.erase(bodies.begin() + index);
+	}
+
+	const RigidBody& World::getBody(size_t index) const
+	{
+		assert(index < bodies.size());
+
+		return bodies[index];
+	}
+
+	size_t World::getNumberOfBodies() const
+	{
+		return bodies.size();
+	}
+
+	void World::setGravityForce(const Utils::Vector3 &gravityForce){
+		this->gravityForce = gravityForce;
+	}
+
+	const Utils::Vector3& World::getGravityForce() const{
+		return this->gravityForce;
+	}
+
+	void World::setAirDensity(float airDensity)
+	{
+		this->airDensity = airDensity;
+	}
+
+	float World::getAirDensity() const
+	{
+		return airDensity;
+	}
 }

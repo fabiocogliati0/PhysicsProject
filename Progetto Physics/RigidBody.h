@@ -1,53 +1,103 @@
 #pragma once
 
 #include "PhyisicMaterial.h"
-#include "Collider.h"
+#include "Transform.h"
+#include "Vector3.h"
 
-class RigidBody{
+namespace PhysicEngine{
 
-	//pensare se usare il pattern composite composite
+	//forward declarations
+	class World;
+	class Collider;
+	struct Collision;
 
-private:
+	class RigidBody{
 
-	PhysicMaterial* material;
-	Collider* collider;
+	public:
 
-	//proprietà relative all'oggetto
-	float mass;
-	float inerzia[3];
+		RigidBody	();
 
-	//stato
-	float position[3];
-	float rotation[3];
-	float velocity[3];
-	float angularVelocity[3];
+		RigidBody	(	float mass,
+						const PhysicMaterial& material,
+						const Collider& collider
+					);
+
+		RigidBody	(	float mass,
+						const PhysicMaterial& material,
+						const Collider& collider,
+						const Transform& transform
+					);
+
+		RigidBody	(	float mass,
+						const PhysicMaterial& material,
+						const Collider& collider,
+						const Transform& transform,
+						const Utils::Vector3& velocity
+					);
+
+		RigidBody	(	float mass,
+						const PhysicMaterial& material,
+						const Collider& collider,
+						const Transform& transform,
+						const Utils::Vector3& velocity,
+						const Utils::Vector3& angularVelocity
+					);
+
+		
+		RigidBody(const RigidBody& other);
+	
+		~RigidBody();
+
+		RigidBody& operator=(const RigidBody& other);
+
+		bool intersect(const RigidBody& other, Collision& o_collision) const;
 
 
-	//temporanei
-	float quantitaDiMoto[3];	//forza iniziale
-	float momentoAngolare[3];	//momento angolare, ragionare su questo
-	float forzaRisultante[3];
-	float momentoRisultante[3];
-	float matriceRotazione[9];
+		const Utils::Vector3& getPosition() const;
 
-public:
+		const Utils::Vector3& getRotation() const;	//todo: manuele : cosa deve tornare? la matrice o il vettore? o entrambe le versioni
 
-	RigidBody(float mass,
-		float inerzia[3],
-		PhysicMaterial material,
-		float position[3],
-		float rotation[3],
-		float velocity[3],
-		float angularVelocity[3]);
+		const Utils::Vector3& RigidBody::getVelocity() const;
 
-	RigidBody(float mass, float inerzia[3], PhysicMaterial material);
+		const Utils::Vector3& getAngularVelocity() const;
 
-	void addForce(float point[3], float force[3]);
+		const Utils::Vector3& getInertia() const;
 
-	void updatePhyisic(float dt);
+		float getVolume() const;
 
-	void getPosition(float o_position[3]) const;
-	void getRotation(float o_rotation[3]) const;
-	void getVelocity(float o_velocity[3]) const;
-	void getAngularVelocity(float o_angularVelocity[3]) const;
-};
+
+
+		void addForce(const Utils::Vector3& point);
+
+		void addForce(const Utils::Vector3& point, const Utils::Vector3& force);
+
+		void updatePhyisic(float dt, const World& myWorld);
+
+	private:
+
+		PhysicMaterial material;
+		
+		Transform transform;
+		
+		Collider* collider;
+
+		float mass;
+
+		Utils::Vector3 velocity;
+		
+		Utils::Vector3 angularVelocity;
+
+		//temps-----------------------------------------------------------------------
+		//todo: manuele - mettere i nomi in inglese e pensare quali servono e quali no
+		Utils::Vector3 quantitaDiMoto;		//forza iniziale
+		Utils::Vector3 momentoAngolare;		//momento angolare, ragionare su questo
+		Utils::Vector3 forzaRisultante;
+		Utils::Vector3 momentoRisultante;
+		float matriceRotazione[9];			//todo: manuele - mettere la classe matrix?
+		Utils::Vector3 gravity;				// Gravità
+		Utils::Vector3 velocityOfGravity;	// velocità di gravità
+		bool updateForce;
+
+	};
+
+}
