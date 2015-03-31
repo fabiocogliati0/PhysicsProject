@@ -68,8 +68,7 @@ namespace Utils
 
 	Vector3 Vector3::operator*(const float &right) const
 	{
-		Vector3 tmp;
-		tmp = *this;
+		Vector3 tmp = *this;
 		tmp *= right;
 		return tmp;
 	}
@@ -84,8 +83,7 @@ namespace Utils
 
 	Vector3 Vector3::operator/(const float &right) const
 	{
-		Vector3 tmp;
-		tmp = *this;
+		Vector3 tmp = *this;
 		tmp /= right;
 		return tmp;
 	}
@@ -100,10 +98,7 @@ namespace Utils
 
 	bool Vector3::operator==(const Vector3 &right) const
 	{
-		if (x == right.x && y == right.y && z == right.z)
-			return true;
-		else
-			return false;
+		return x == right.x && y == right.y && z == right.z;
 	}
 
 	bool Vector3::operator!=(const Vector3 &right) const
@@ -116,9 +111,7 @@ namespace Utils
 
 	float Vector3::dot(const Vector3 &right) const
 	{
-		float tmp;
-		tmp = (x * right.x) + (y * right.y) + (z * right.z);
-		return tmp;
+		return (x * right.x) + (y * right.y) + (z * right.z);
 	}
 
 	Vector3 Vector3::cross(const Vector3 &right) const
@@ -139,9 +132,7 @@ namespace Utils
 
 	float Vector3::module() const
 	{
-		float tmp;
-		tmp = sqrt((x * x) + (y * y) + (z * z));
-		return tmp;
+		return sqrt((x * x) + (y * y) + (z * z)); 
 	}
 
 	void Vector3::normalize()

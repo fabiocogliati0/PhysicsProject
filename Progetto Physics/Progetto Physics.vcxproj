@@ -68,7 +68,9 @@
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="IntersectOperations.h" />
+    <ClInclude Include="Matrix.h" />
     <ClInclude Include="PhyisicMaterial.h" />
+    <ClInclude Include="Quaternion.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="Transform.h" />
@@ -79,6 +81,8 @@
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="Vector3.cpp" />
