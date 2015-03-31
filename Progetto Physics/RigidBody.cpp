@@ -121,7 +121,7 @@ namespace PhysicEngine
 		return angularVelocity;
 	}
 
-	const Utils::Vector3& RigidBody::getInertia() const
+	const Utils::Vector3 RigidBody::getInertia() const
 	{
 		assert(collider != nullptr);
 		return collider->getRawInertia() * mass;

@@ -49,11 +49,13 @@ namespace PhysicEngine{
 		return bodies.size();
 	}
 
-	void World::setGravityForce(const Utils::Vector3 &gravityForce){
+	void World::setGravityForce(const Utils::Vector3 &gravityForce)
+	{
 		this->gravityForce = gravityForce;
 	}
 
-	const Utils::Vector3& World::getGravityForce() const{
+	const Utils::Vector3& World::getGravityForce() const
+	{
 		return this->gravityForce;
 	}
 
