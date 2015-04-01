@@ -3,6 +3,10 @@
 #include "Collider.h"
 #include "Collision.h"
 
+#include "Vector3.h"
+
+#include <vector>
+
 namespace PhysicEngine
 {
 	class SphereCollider;
@@ -69,20 +73,10 @@ namespace PhysicEngine
 	bool BoxCollider::intersect	(	const RigidBody& i_rigidBody, 
 									const Collider& i_colliderOther,
 									const RigidBody& i_rigidBodyOther,
-									Collision& o_collision
+									std::vector<Collision>& o_collisions
 								)	const
 	{
-		return i_colliderOther.intersectWho(i_rigidBody, *this, i_rigidBodyOther, o_collision);
-	}
-
-	const Utils::Vector3& BoxCollider::getInertia() const
-	{
-		return Utils::Vector3::zero;	//todo : fabio
-	}
-
-	float BoxCollider::getVolume() const
-	{
-		return 1.0f;		//todo : fabio
+		return i_colliderOther.intersectWho(i_rigidBody, *this, i_rigidBodyOther, o_collisions);
 	}
 
 	const Utils::Vector3& BoxCollider::getVertex(int vertex) const
@@ -93,19 +87,19 @@ namespace PhysicEngine
 	bool BoxCollider::intersectWho	(	const RigidBody& i_rigidBody,
 										const BoxCollider& i_colliderOther,
 										const RigidBody& i_rigidBodyOther,
-										Collision& o_collision
+										std::vector<Collision>& o_collisions
 									)	const
 	{
-		return IntersectOperations::intersect(*this, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collision);
+		return IntersectOperations::intersect(*this, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collisions);
 	}
 
 	bool BoxCollider::intersectWho	(	const RigidBody& i_rigidBody,
 										const SphereCollider& i_colliderOther,
 										const RigidBody& i_rigidBodyOther,
-										Collision& o_collision
+										std::vector<Collision>& o_collisions
 									)	const
 	{
-		return IntersectOperations::intersect(*this, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collision);
+		return IntersectOperations::intersect(*this, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collisions);
 	}
 
 }

@@ -2,6 +2,8 @@
 
 #include "Vector3.h"
 
+#include <vector>
+
 namespace PhysicEngine
 {
 	
@@ -22,19 +24,19 @@ namespace PhysicEngine
 		virtual bool intersect	(	const RigidBody& i_rigidBody, 
 									const Collider& i_colliderOther,
 									const RigidBody& i_rigidBodyOther,
-									Collision& o_collision
+									std::vector<Collision>& o_collisions
 								)	const = 0;
 
 		virtual bool intersectWho	(	const RigidBody& i_rigidBody,
 										const BoxCollider& i_colliderOther,
 										const RigidBody& i_rigidBodyOther,
-										Collision& o_collision
+										std::vector<Collision>& o_collisions
 									)	const = 0;
 
 		virtual bool intersectWho	(	const RigidBody& i_rigidBody,
 										const SphereCollider& i_colliderOther,
 										const RigidBody& i_rigidBodyOther,
-										Collision& o_collision
+										std::vector<Collision>& o_collisions
 									)	const = 0;
 
 		virtual ~Collider();

@@ -7,6 +7,8 @@
 #include "Quaternion.h"
 #include "Matrix.h"
 
+#include <vector>
+
 namespace PhysicEngine{
 
 	//forward declarations
@@ -55,7 +57,7 @@ namespace PhysicEngine{
 
 		RigidBody& operator=(const RigidBody& other);
 
-		bool intersect(const RigidBody& other, Collision& o_collision) const;
+		bool intersect(const RigidBody& other, std::vector<Collision>& o_collisions) const;
 
 		const Utils::Vector3& getPosition() const;
 

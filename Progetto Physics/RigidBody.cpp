@@ -4,7 +4,8 @@
 #include "Collider.h"
 #include "BoxCollider.h"
 
-#include <assert.h>
+#include <cassert>
+#include <vector>
 
 namespace PhysicEngine
 {
@@ -104,10 +105,10 @@ namespace PhysicEngine
 		return *this;
 	}
 
-	bool RigidBody::intersect(const RigidBody& other, Collision& o_collision) const
+	bool RigidBody::intersect(const RigidBody& other, std::vector<Collision>& o_collisions) const
 	{
 		assert(collider != nullptr);
-		return collider->intersect(*this, *(other.collider), other, o_collision);
+		return collider->intersect(*this, *(other.collider), other, o_collisions);
 	}
 
 	const Utils::Vector3& RigidBody::getPosition() const
