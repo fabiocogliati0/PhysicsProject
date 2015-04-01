@@ -10,7 +10,8 @@
 using namespace PhysicEngine;
 using namespace Utils;
 
-int main(){
+int main()
+{
 
 	World world(10.0f, Vector3::zero);
 
@@ -24,13 +25,11 @@ int main(){
 
 	Vector3 inertia;
 
-
 	PhysicEngine::BoxCollider a;
 	PhysicEngine::SphereCollider b;
 
 	RigidBody rigidbody1(1.0f, material, a);
 	RigidBody rigidbody2(1.0f, material, b);
-
 
 	Collision outputCollision;
 	rigidbody1.intersect(rigidbody2, outputCollision);

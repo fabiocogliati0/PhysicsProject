@@ -146,6 +146,12 @@ namespace Utils
 		}
 	}
 
+	float Vector3::distance(Vector3 &right) const
+	{
+		Vector3 tmp = *this - right;
+		return tmp.module();
+	}
+
 	Vector3::~Vector3()
 	{
 	}

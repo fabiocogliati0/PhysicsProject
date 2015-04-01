@@ -33,6 +33,7 @@ namespace Utils{
 		void invert();  // invert of vector
 		float module() const; // module of vector
 		void normalize(); // normalize vector
+		float distance(Vector3 &right) const; // distance from two vector
 		~Vector3();
 	};
 
