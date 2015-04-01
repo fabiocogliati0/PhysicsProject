@@ -2,6 +2,11 @@
 
 namespace Utils
 {
+	Quaternion::Quaternion()
+	{
+		Quaternion(0, 0, 0, 0);
+	}
+
 	Quaternion::Quaternion(float s, float x, float y, float z)
 	{
 		this->s = s;
@@ -23,6 +28,14 @@ namespace Utils
 	{
 		Quaternion tmp = *this;
 		return tmp *= right;
+	}
+
+	void Quaternion::set(float s, float x, float y, float z)
+	{
+		this->s = s;
+		this->x = x;
+		this->y = y;
+		this->z = z;
 	}
 
 	float Quaternion::module() const

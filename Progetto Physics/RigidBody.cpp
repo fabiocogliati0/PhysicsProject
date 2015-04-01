@@ -55,6 +55,8 @@ namespace PhysicEngine
 			angularVelocity(angularVelocity)
 	{
 		this->collider = collider.clone();
+
+		this->Init(); // Initialize the parameter of a RigidBody
 	}
 
 
@@ -69,6 +71,14 @@ namespace PhysicEngine
 		assert(other.collider != nullptr);
 		
 		this->collider = other.collider->clone();
+
+		this->Init();
+	}
+
+	void RigidBody::Init()
+	{
+		quaternionRotation.s = 1;
+		matrixRotation[0] = matrixRotation[4] = matrixRotation[8] = 1;
 	}
 
 	RigidBody::~RigidBody()
@@ -77,7 +87,7 @@ namespace PhysicEngine
 		collider = nullptr;
 	}
 
-	RigidBody& RigidBody::operator = (const RigidBody& other)
+	RigidBody& RigidBody::operator=(const RigidBody& other)
 	{
 		if (this != &other)
 		{
@@ -105,11 +115,12 @@ namespace PhysicEngine
 		return transform.position;
 	}
 
-	//todo : manuele (vedi commenti nel .h)
-	/*const Utils::Vector3& RigidBody::getRotation() const
+	// Fabio:	getRotation ritorna la matrice
+	//			getQuaternion ritorna il quaternione
+	const Utils::Matrix& RigidBody::getRotation() const
 	{
-		return ???
-	}*/
+		return matrixRotation;
+	}
 
 	const Utils::Vector3& RigidBody::getVelocity() const
 	{
@@ -141,18 +152,20 @@ namespace PhysicEngine
 	void RigidBody::addForce(const Utils::Vector3& point, const Utils::Vector3& force)
 	{
 		// Sommo la forza ricevuta a quella che ho già
-		this->forzaRisultante += force;
+		this->resultantForce += force;
 		if (point != Utils::Vector3::zero)
 		{
 			// *** Calcolo il momento risultante che mi servirà per ruotare l'oggetto
-			Utils::Vector3 mRisNew = point.cross(force);
-			momentoRisultante += mRisNew;
+			Utils::Vector3 newResultantMomentum = point.cross(force);
+			resultantMomentum += newResultantMomentum;
 			updateForce = true;
 		}
 	}
 
 	void RigidBody::updatePhyisic(float dt, const World& myWorld)
 	{
+		Utils::Quaternion newQuaternionRotation;
+
 		// Se la gravità è uguale l'ho già calcolata e mi evito una moltiplicazione
 		if (myWorld.getGravityForce() != gravity)
 		{
@@ -165,8 +178,8 @@ namespace PhysicEngine
 		// Moto rettilineo uniforme
 		if (updateForce)
 		{
-			quantitaDiMoto = forzaRisultante * dt; // Debug: forse +=
-			velocity = quantitaDiMoto / mass;
+			momentum = resultantForce * dt; 
+			velocity = momentum / mass;
 			updateForce = false;
 		}
 
@@ -174,27 +187,34 @@ namespace PhysicEngine
 		transform.position += velocity * dt;
 
 		// Moto angolare
-		if (momentoRisultante != Utils::Vector3::zero)
-			momentoAngolare = momentoRisultante * dt; // Debug: forse +=
+		if ( resultantMomentum != Utils::Vector3::zero )
+			angularMomentum = resultantMomentum * dt;
 
-		/* RuotaRelative(MRot, Mang, Vang); // Per risolvere problemi di inerzia, raddrizzo il mio
-		// oggetto, altrimenti l'inerzia cambierebbe in base a come  disposto l'oggetto
+		// Per risolvere problemi di inerzia, "raddrizzo" il mio
+		// oggetto, altrimenti l'inerzia cambierebbe in base a come è disposto l'oggetto
+		angularVelocity = matrixRotation.RotateRelative(angularMomentum);
 
-		Vang[0] /= Inertia[0];
-		Vang[1] /= Inertia[1];
-		Vang[2] /= Inertia[2];
+		// Ho effettivamente l'angularVelocity ora
+		angularVelocity.x /= this->getInertia().x;
+		angularVelocity.y /= this->getInertia().y;
+		angularVelocity.z /= this->getInertia().z;
+		
+		newQuaternionRotation.set(1, angularVelocity.x * dt / 2, angularVelocity.y * dt / 2, 
+								  angularVelocity.z * dt / 2);
+		
+		// Normalizzo il quaternione per putilizzarlo per la rotazione
+		newQuaternionRotation.normalize();
+		
+		quaternionRotation *= newQuaternionRotation;
+		quaternionRotation.normalize();
+		
+		// La velocità la ritorno in assoluto
+		angularVelocity = matrixRotation.RotateAbsolute(angularVelocity);
 
-		q[0] = 1;
-		q[1] = Vang[0] * dt / 2;
-		q[2] = Vang[1] * dt / 2;
-		q[3] = Vang[2] * dt / 2;
+		// Creo la matrice attuale di rotazione da quaternione ricavato tramite velocità angolare
+		quaternionRotation.toMatrix(matrixRotation);
 
-		NormalizzaQuaternione(q, q);
-		MoltiplicaQuaternioni(Rot, q, Rot);
-		NormalizzaQuaternione(Rot, Rot);
-
-		RuotaAssolute(MRot, Vang, Vang); // Torno in assoluto per poi tornare in relativo
-		MatriceDaQuaternione(Rot, MRot); */
-
+		// Azzeramento forza risulntate e momento risultante 
+		resultantForce = resultantMomentum = Utils::Vector3::zero;
 	}
 }

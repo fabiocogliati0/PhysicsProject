@@ -8,7 +8,7 @@ namespace Utils
 			_Matrix[i] = 0;
 	}
 
-	float& Matrix::operator[](int index)
+	float& Matrix::operator[](unsigned int index)
 	{
 		if (index >= _size)
 			return _Matrix[0];
@@ -16,18 +16,22 @@ namespace Utils
 			return _Matrix[index];
 	}
 
-	void Matrix::RotateRelative(Vector3 &right) const
+	Vector3 Matrix::RotateRelative(Vector3 &input) const
 	{
-		right.x = _Matrix[0] * right.x + _Matrix[1] * right.y + _Matrix[2] * right.z;
-		right.y = _Matrix[3] * right.x + _Matrix[4] * right.y + _Matrix[5] * right.z;
-		right.z = _Matrix[6] * right.x + _Matrix[7] * right.y + _Matrix[8] * right.z;
+		Vector3 tmp;
+		tmp.x = _Matrix[0] * input.x + _Matrix[1] * input.y + _Matrix[2] * input.z;
+		tmp.y = _Matrix[3] * input.x + _Matrix[4] * input.y + _Matrix[5] * input.z;
+		tmp.z = _Matrix[6] * input.x + _Matrix[7] * input.y + _Matrix[8] * input.z;
+		return tmp;
 	}
 	
-	void Matrix::RotateAbsolute(Vector3 &right) const
+	Vector3 Matrix::RotateAbsolute(Vector3 &input) const
 	{
-		right.x = _Matrix[0] * right.x + _Matrix[3] * right.y + _Matrix[6] * right.z;
-		right.y = _Matrix[1] * right.x + _Matrix[4] * right.y + _Matrix[7] * right.z;
-		right.z = _Matrix[2] * right.x + _Matrix[5] * right.y + _Matrix[8] * right.z;
+		Vector3 tmp;
+		tmp.x = _Matrix[0] * input.x + _Matrix[3] * input.y + _Matrix[6] * input.z;
+		tmp.y = _Matrix[1] * input.x + _Matrix[4] * input.y + _Matrix[7] * input.z;
+		tmp.z = _Matrix[2] * input.x + _Matrix[5] * input.y + _Matrix[8] * input.z;
+		return tmp;
 	}
 
 	Matrix::~Matrix() {}

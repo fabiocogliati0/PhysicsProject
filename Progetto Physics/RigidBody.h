@@ -48,7 +48,9 @@ namespace PhysicEngine{
 
 		
 		RigidBody(const RigidBody& other);
-	
+		
+		void RigidBody::Init();
+
 		~RigidBody();
 
 		RigidBody& operator=(const RigidBody& other);
@@ -57,7 +59,7 @@ namespace PhysicEngine{
 
 		const Utils::Vector3& getPosition() const;
 
-		const Utils::Vector3& getRotation() const;	//todo: manuele : cosa deve tornare? la matrice o il vettore? o entrambe le versioni
+		const Utils::Matrix& getRotation() const;
 
 		const Utils::Vector3& RigidBody::getVelocity() const;
 
@@ -89,15 +91,17 @@ namespace PhysicEngine{
 		
 		Utils::Vector3 angularVelocity;
 
+		Utils::Matrix matrixRotation;			// Matrice di rotazione
+		Utils::Quaternion quaternionRotation;	// Quaternione di rotazione
+
 		// Temps
-		Utils::Vector3 momentum;			// quantità di moto
-		Utils::Vector3 angularMomentum;		// momento angolare
-		Utils::Vector3 resultantForce;		// forza risultante
-		Utils::Vector3 resultantMomentum;	// momento risultante
-		Utils::Matrix matrixRotation;		// Matrice di rotazione
-		Utils::Vector3 gravity;				// Gravità
-		Utils::Vector3 velocityOfGravity;	// velocità di gravità
-		bool updateForce;					// flag nel caso la forza venisse aggiornata
+		Utils::Vector3 momentum;				// quantità di moto
+		Utils::Vector3 angularMomentum;			// momento angolare
+		Utils::Vector3 resultantForce;			// forza risultante
+		Utils::Vector3 resultantMomentum;		// momento risultante
+		Utils::Vector3 gravity;					// Gravità
+		Utils::Vector3 velocityOfGravity;		// velocità di gravità
+		bool updateForce;						// flag nel caso la forza venisse aggiornata
 
 	};
 

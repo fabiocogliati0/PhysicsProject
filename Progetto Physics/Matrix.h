@@ -10,13 +10,13 @@ namespace Utils
 	{
 		private:
 			float _Matrix[size];
-			int _size = size;
+			unsigned int _size = size;
 		
 		public:
 			Matrix();
-			float& operator[](int index);
-			void RotateRelative(Vector3 &right) const;
-			void RotateAbsolute(Vector3 &right) const;
+			float& operator[](unsigned int index);
+			Vector3 RotateRelative(Vector3 &input) const;
+			Vector3 RotateAbsolute(Vector3 &input) const;
 			~Matrix();
 	};
 }
