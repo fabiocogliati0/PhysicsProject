@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <vector>
 
 #include "World.h"
 #include "PhyisicMaterial.h"
@@ -31,7 +32,7 @@ int main()
 	RigidBody rigidbody1(1.0f, material, a);
 	RigidBody rigidbody2(1.0f, material, b);
 
-	Collision outputCollision;
+	std::vector<Collision> outputCollision;
 	rigidbody1.intersect(rigidbody2, outputCollision);
 
 	//world.addBody(rigidbody1);

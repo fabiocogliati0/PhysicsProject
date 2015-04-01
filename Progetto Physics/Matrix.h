@@ -1,6 +1,6 @@
-#include "Vector3.h"
-
 #pragma once
+
+#include "Vector3.h"
 
 namespace Utils
 {

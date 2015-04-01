@@ -5,7 +5,7 @@
 #include "RigidBody.h"
 #include "Collision.h"
 
-#include <iostream>	//todo: rimuovere
+#include <vector>
 
 namespace PhysicEngine
 {
@@ -19,19 +19,24 @@ namespace PhysicEngine
 																const RigidBody& i_rigidBody1,
 																const U& i_collider2,
 																const RigidBody& i_rigidBody2,
-																Collision& o_collision
+																std::vector<Collision>& o_collisions
 															)
 		{
-			return intersect(i_collider2, i_rigidBody2, i_collider1, i_rigidBody1, o_collision);
+			return intersect(i_collider2, i_rigidBody2, i_collider1, i_rigidBody1, o_collisions);
 		}
 
 		template<> static bool intersect<SphereCollider, SphereCollider>	(	const SphereCollider& i_collider1,
 																				const RigidBody& i_rigidBody1,
 																				const SphereCollider& i_collider2,
 																				const RigidBody& i_rigidBody2,
-																				Collision& o_collision
+																				std::vector<Collision>& o_collisions
 																			)
 		{
+
+			o_collisions.clear();
+
+			Collision o_collision;
+
 			Utils::Vector3 spherePosition1 = i_rigidBody1.getPosition();
 			float sphereRadius1 = i_collider1.getRadius();
 
@@ -52,7 +57,7 @@ namespace PhysicEngine
 
 				o_collision.normal = o_collision.impactPoint - spherePosition2;
 				o_collision.normal.normalize();
-				o_collision.normal = o_collision.normal / distanceFromCenters;	//todo: perchè? è giusta sta roba?
+				o_collision.normal = o_collision.normal / distanceFromCenters;
 
 				o_collision.impactSpeed = o_collision.impactPoint - spherePosition2;
 				o_collision.impactSpeed = i_rigidBody2.getAngularVelocity().cross(o_collision.impactSpeed);
@@ -64,6 +69,8 @@ namespace PhysicEngine
 
 				o_collision.impactSpeed = temp - o_collision.impactSpeed;
 
+				o_collisions.push_back(o_collision);
+
 				return true;
 			}
 		}
@@ -72,10 +79,10 @@ namespace PhysicEngine
 																				const RigidBody& i_rigidBody1,
 																				const BoxCollider& i_collider2,
 																				const RigidBody& i_rigidBody2,
-																				Collision& o_collision
+																				std::vector<Collision>& o_collisions
 																			)
 		{
-			//todo
+			o_collisions.clear();
 			return false;
 		}
 
@@ -83,16 +90,22 @@ namespace PhysicEngine
 																				const RigidBody& i_rigidBody1,
 																				const SphereCollider& i_collider2,
 																				const RigidBody& i_rigidBody2,
-																				Collision& o_collision
+																				std::vector<Collision>& o_collisions
 																			)
 		{
+			
+			o_collisions.clear();
+
+			Collision o_collision;
 
 			Utils::Vector3 boxPosition = i_rigidBody1.getPosition();
 			Utils::Vector3 spherePosition = i_rigidBody2.getPosition();
 			float sphereRadius = i_collider2.getRadius();
 
 			o_collision.impactPoint = spherePosition - boxPosition;
-			//RuotaRelative(r->MRot, c[0].PuntoImpatto, c[0].PuntoImpatto);	//todo
+			//RuotaRelative(r->MRot, c[0].PuntoImpatto, c[0].PuntoImpatto);	//
+			o_collision.impactPoint = i_rigidBody1.getRotation().RotateRelative(o_collision.impactPoint);
+
 
 			if (o_collision.impactPoint.x > i_collider1.getVertex(2).x) o_collision.impactPoint.x = i_collider1.getVertex(2).x;
 			if (o_collision.impactPoint.x < i_collider1.getVertex(0).x) o_collision.impactPoint.x = i_collider1.getVertex(0).x;
@@ -101,7 +114,8 @@ namespace PhysicEngine
 			if (o_collision.impactPoint.z > i_collider1.getVertex(0).z) o_collision.impactPoint.y = i_collider1.getVertex(0).z;
 			if (o_collision.impactPoint.z < i_collider1.getVertex(4).z) o_collision.impactPoint.z = i_collider1.getVertex(4).z;
 
-			//RuotaAssolute(r->MRot, c[0].PuntoImpatto, c[0].PuntoImpatto); //todo
+			//RuotaAssolute(r->MRot, c[0].PuntoImpatto, c[0].PuntoImpatto); //
+			o_collision.impactPoint = i_rigidBody1.getRotation().RotateAbsolute(o_collision.impactPoint);
 			o_collision.impactPoint = o_collision.impactPoint + boxPosition;
 			
 			o_collision.normal = o_collision.impactPoint - spherePosition;
@@ -125,6 +139,8 @@ namespace PhysicEngine
 				temp = i_rigidBody1.getVelocity() + temp;
 
 				o_collision.impactSpeed = temp - o_collision.impactSpeed;
+
+				o_collisions.push_back(o_collision);
 
 				return true;
 			}

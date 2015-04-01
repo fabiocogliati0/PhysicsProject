@@ -3,6 +3,8 @@
 #include "Collider.h"
 #include "Vector3.h"
 
+#include <vector>
+
 namespace PhysicEngine
 {
 
@@ -26,27 +28,24 @@ namespace PhysicEngine
 		bool intersect	(	const RigidBody& i_rigidBody, 
 							const Collider& i_colliderOther,
 							const RigidBody& i_rigidBodyOther,
-							Collision& o_collision
+							std::vector<Collision>& o_collisions
 						)	const;
 
 		const Utils::Vector3& getVertex(int vertex) const;
 
-		const Utils::Vector3& getInertia() const;
-
-		float getVolume() const;
 
 	private:
 
 		bool intersectWho	(	const RigidBody& i_rigidBody,
 								const BoxCollider& i_colliderOther,
 								const RigidBody& i_rigidBodyOther,
-								Collision& o_collision
+								std::vector<Collision>& o_collisions
 							)	const;
 
 		bool intersectWho	(	const RigidBody& i_rigidBody,
 								const SphereCollider& i_colliderOther,
 								const RigidBody& i_rigidBodyOther,
-								Collision& o_collision
+								std::vector<Collision>& o_collisions
 							)	const;
 
 

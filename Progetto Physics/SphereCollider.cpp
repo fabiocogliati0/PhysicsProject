@@ -20,7 +20,7 @@ namespace PhysicEngine{
 		assert(radius > 0.0f);
 
 		//calculates volume
-		setVolume((4.0f * M_PI *radius * radius * radius) / 3.0f);
+		setVolume((4.0f * static_cast<float>(M_PI) *radius * radius * radius) / 3.0f);
 
 		//calculates raw inertia
 		Utils::Vector3 rawInertia;
@@ -38,10 +38,10 @@ namespace PhysicEngine{
 	bool SphereCollider::intersect	(	const RigidBody& i_rigidBody, 
 										const Collider& i_colliderOther,
 										const RigidBody& i_rigidBodyOther,
-										Collision& o_collision
+										std::vector<Collision>& o_collisions
 									)	const
 	{
-		return i_colliderOther.intersectWho(i_rigidBody, *this, i_rigidBodyOther, o_collision);
+		return i_colliderOther.intersectWho(i_rigidBody, *this, i_rigidBodyOther, o_collisions);
 	}
 
 	float SphereCollider::getRadius() const
@@ -49,32 +49,22 @@ namespace PhysicEngine{
 		return radius;
 	}
 
-	const Utils::Vector3& SphereCollider::getInertia() const
-	{
-		return Utils::Vector3::zero;	//todo : fabio
-	}
-
-	float SphereCollider::getVolume() const
-	{
-		return 1.0f;		//todo : fabio
-	}
-
 	bool SphereCollider::intersectWho	(	const RigidBody& i_rigidBody,
 											const BoxCollider& i_colliderOther,
 											const RigidBody& i_rigidBodyOther,
-											Collision& o_collision
+											std::vector<Collision>& o_collisions
 										)	const
 	{
-		return IntersectOperations::intersect(*this, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collision);
+		return IntersectOperations::intersect(*this, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collisions);
 	}
 
 	bool SphereCollider::intersectWho	(	const RigidBody& i_rigidBody,
 											const SphereCollider& i_colliderOther,
 											const RigidBody& i_rigidBodyOther,
-											Collision& o_collision
+											std::vector<Collision>& o_collisions
 										)	const
 	{
-		return IntersectOperations::intersect(*this, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collision);
+		return IntersectOperations::intersect(*this, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collisions);
 	}
 
 }
