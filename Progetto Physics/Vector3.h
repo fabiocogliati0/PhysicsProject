@@ -1,3 +1,5 @@
+#include "Quaternion.h"
+
 #pragma once
 
 namespace Utils{
@@ -34,6 +36,7 @@ namespace Utils{
 		float module() const; // module of vector
 		void normalize(); // normalize vector
 		float distance(Vector3 &right) const; // distance from two vector
+		Quaternion toQuaternion() const; // from euler to quaternion
 		~Vector3();
 	};
 

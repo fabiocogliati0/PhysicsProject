@@ -4,13 +4,13 @@
 
 namespace Utils
 {
-	const int size = 9;
+	const size_t size = 9;
 	
 	class Matrix
 	{
 		private:
 			float _Matrix[size];
-			unsigned int _size = size;
+			size_t _size = size;
 		
 		public:
 			Matrix();

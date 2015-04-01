@@ -1,4 +1,5 @@
 #include "Quaternion.h"
+#include "Matrix.h"
 
 namespace Utils
 {

@@ -1,10 +1,11 @@
-#include "Matrix.h"
 #include <math.h>
 
 #pragma once
 
 namespace Utils
 {
+	class Matrix;
+
 	class Quaternion
 	{
 		private:
