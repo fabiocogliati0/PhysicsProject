@@ -2,7 +2,10 @@
 
 #include "PhyisicMaterial.h"
 #include "Transform.h"
+
 #include "Vector3.h"
+#include "Quaternion.h"
+#include "Matrix.h"
 
 namespace PhysicEngine{
 
@@ -52,7 +55,6 @@ namespace PhysicEngine{
 
 		bool intersect(const RigidBody& other, Collision& o_collision) const;
 
-
 		const Utils::Vector3& getPosition() const;
 
 		const Utils::Vector3& getRotation() const;	//todo: manuele : cosa deve tornare? la matrice o il vettore? o entrambe le versioni
@@ -87,16 +89,15 @@ namespace PhysicEngine{
 		
 		Utils::Vector3 angularVelocity;
 
-		//temps-----------------------------------------------------------------------
-		//todo: manuele - mettere i nomi in inglese e pensare quali servono e quali no
-		Utils::Vector3 quantitaDiMoto;		//forza iniziale
-		Utils::Vector3 momentoAngolare;		//momento angolare, ragionare su questo
-		Utils::Vector3 forzaRisultante;
-		Utils::Vector3 momentoRisultante;
-		float matriceRotazione[9];			//todo: manuele - mettere la classe matrix?
+		// Temps
+		Utils::Vector3 momentum;			// quantità di moto
+		Utils::Vector3 angularMomentum;		// momento angolare
+		Utils::Vector3 resultantForce;		// forza risultante
+		Utils::Vector3 resultantMomentum;	// momento risultante
+		Utils::Matrix matrixRotation;		// Matrice di rotazione
 		Utils::Vector3 gravity;				// Gravità
 		Utils::Vector3 velocityOfGravity;	// velocità di gravità
-		bool updateForce;
+		bool updateForce;					// flag nel caso la forza venisse aggiornata
 
 	};
 

@@ -16,6 +16,7 @@ namespace Utils
 		x = s * right.x + x * right.s + y * right.z - z * right.y;
 		y = s * right.y - x * right.z + y * right.s + z * right.x;
 		z = s * right.z + x * right.y - y * right.x + z * right.s;
+		return *this;
 	}
 
 	Quaternion Quaternion::operator*(const Quaternion &right) const
