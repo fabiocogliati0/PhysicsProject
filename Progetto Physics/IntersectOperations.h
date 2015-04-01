@@ -32,8 +32,40 @@ namespace PhysicEngine
 																				Collision& o_collision
 																			)
 		{
-			//todo
-			return false;
+			Utils::Vector3 spherePosition1 = i_rigidBody1.getPosition();
+			float sphereRadius1 = i_collider1.getRadius();
+
+			Utils::Vector3 spherePosition2 = i_rigidBody2.getPosition();
+			float sphereRadius2 = i_collider2.getRadius();
+
+			float distanceFromCenters = (spherePosition1 - spherePosition2).module();;
+			float radiusSum = sphereRadius1 + sphereRadius2;
+
+			if (distanceFromCenters > radiusSum)
+			{
+				return false;
+			}
+			else
+			{
+				o_collision.deformation = radiusSum - distanceFromCenters;
+				o_collision.impactPoint = (spherePosition1 + spherePosition2) / 2.0f;
+
+				o_collision.normal = o_collision.impactPoint - spherePosition2;
+				o_collision.normal.normalize();
+				o_collision.normal = o_collision.normal / distanceFromCenters;	//todo: perchè? è giusta sta roba?
+
+				o_collision.impactSpeed = o_collision.impactPoint - spherePosition2;
+				o_collision.impactSpeed = i_rigidBody2.getAngularVelocity().cross(o_collision.impactSpeed);
+				o_collision.impactSpeed = i_rigidBody2.getVelocity() + o_collision.impactSpeed;
+
+				Utils::Vector3 temp = o_collision.impactPoint + spherePosition1;
+				temp = i_rigidBody1.getAngularVelocity().cross(temp);
+				temp = i_rigidBody1.getVelocity() + temp;
+
+				o_collision.impactSpeed = temp - o_collision.impactSpeed;
+
+				return true;
+			}
 		}
 
 		template<> static bool intersect<BoxCollider, BoxCollider>			(	const BoxCollider& i_collider1,

@@ -2,6 +2,10 @@
 #include "IntersectOperations.h"
 #include "Collider.h"
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+#include <cassert>
+
 namespace PhysicEngine{
 
 	class BoxCollider;
@@ -13,19 +17,16 @@ namespace PhysicEngine{
 	SphereCollider::SphereCollider(float radius) : radius(radius)
 	{
 
+		assert(radius > 0.0f);
+
 		//calculates volume
-		setVolume((4.0f * 3.14f * radius * radius * radius) / 3.0f);	//todo: trovare il pi greco in qualche libreria
+		setVolume((4.0f * M_PI *radius * radius * radius) / 3.0f);
 
 		//calculates raw inertia
 		Utils::Vector3 rawInertia;
 		rawInertia.x = rawInertia.y = rawInertia.z = 0.4f * radius * radius;
 		setRawInertia(rawInertia);
 	}
-
-	/*SphereCollider::~SphereCollider()
-	{
-
-	}*/
 
 	SphereCollider* SphereCollider::clone () const
 	{

@@ -17,7 +17,7 @@ namespace PhysicEngine
 		return volume;
 	}
 
-	void Collider::setRawInertia(Utils::Vector3 rawInertia){
+	void Collider::setRawInertia(const Utils::Vector3& rawInertia){
 		this->rawInertia = rawInertia;
 	}
 
