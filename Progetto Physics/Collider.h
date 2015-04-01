@@ -45,7 +45,7 @@ namespace PhysicEngine
 
 	protected:
 
-		void setRawInertia(Utils::Vector3 rawInertia);
+		void setRawInertia(const Utils::Vector3& rawInertia);
 
 		void setVolume(float volume);
 

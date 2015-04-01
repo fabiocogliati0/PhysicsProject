@@ -61,7 +61,7 @@ namespace PhysicEngine{
 
 		const Utils::Vector3& getAngularVelocity() const;
 
-		const Utils::Vector3 getInertia() const;
+		Utils::Vector3 getInertia() const;
 
 		float getVolume() const;
 
