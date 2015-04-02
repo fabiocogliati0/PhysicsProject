@@ -1,4 +1,7 @@
 #include "BoxCollider.h"
+
+#include "PlaneCollider.h"
+#include "SphereCollider.h"
 #include "IntersectOperations.h"
 #include "Collider.h"
 #include "Collision.h"
@@ -95,6 +98,15 @@ namespace PhysicEngine
 
 	bool BoxCollider::intersectWho	(	const RigidBody& i_rigidBody,
 										const SphereCollider& i_colliderOther,
+										const RigidBody& i_rigidBodyOther,
+										std::vector<Collision>& o_collisions
+									)	const
+	{
+		return IntersectOperations::intersect(*this, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collisions);
+	}
+
+	bool BoxCollider::intersectWho	(	const RigidBody& i_rigidBody,
+										const PlaneCollider& i_colliderOther,
 										const RigidBody& i_rigidBodyOther,
 										std::vector<Collision>& o_collisions
 									)	const

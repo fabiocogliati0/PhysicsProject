@@ -9,7 +9,9 @@ namespace PhysicEngine
 	
 	//Forward declarations
 	class SphereCollider;
+	class PlaneCollider;
 	class BoxCollider;
+
 	struct Collision;
 	class RigidBody;
 
@@ -35,6 +37,12 @@ namespace PhysicEngine
 
 		virtual bool intersectWho	(	const RigidBody& i_rigidBody,
 										const SphereCollider& i_colliderOther,
+										const RigidBody& i_rigidBodyOther,
+										std::vector<Collision>& o_collisions
+									)	const = 0;
+
+		virtual bool intersectWho	(	const RigidBody& i_rigidBody,
+										const PlaneCollider& i_colliderOther,
 										const RigidBody& i_rigidBodyOther,
 										std::vector<Collision>& o_collisions
 									)	const = 0;

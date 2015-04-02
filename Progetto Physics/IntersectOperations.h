@@ -2,6 +2,7 @@
 
 #include "SphereCollider.h"
 #include "BoxCollider.h"
+#include "PlaneCollider.h"
 #include "RigidBody.h"
 #include "Collision.h"
 
@@ -107,6 +108,17 @@ namespace PhysicEngine
 			return false;
 		}
 
+		template<> static bool intersect<PlaneCollider, PlaneCollider>		(	const PlaneCollider& i_collider1,
+																				const RigidBody& i_rigidBody1,
+																				const PlaneCollider& i_collider2,
+																				const RigidBody& i_rigidBody2,
+																				std::vector<Collision>& o_collisions
+																			)
+		{
+			o_collisions.clear();
+			return false;
+		}
+
 		template<> static bool intersect<BoxCollider, SphereCollider>		(	const BoxCollider& i_collider1,
 																				const RigidBody& i_rigidBody1,
 																				const SphereCollider& i_collider2,
@@ -166,6 +178,30 @@ namespace PhysicEngine
 				return true;
 			}
 			
+		}
+
+		template<> static bool intersect<BoxCollider, PlaneCollider>		(	const BoxCollider& i_collider1,
+																				const RigidBody& i_rigidBody1,
+																				const PlaneCollider& i_collider2,
+																				const RigidBody& i_rigidBody2,
+																				std::vector<Collision>& o_collisions
+																			)
+		{
+			o_collisions.clear();
+			//todo
+			return false;
+		}
+
+		template<> static bool intersect<SphereCollider, PlaneCollider>		(	const SphereCollider& i_collider1,
+																				const RigidBody& i_rigidBody1,
+																				const PlaneCollider& i_collider2,
+																				const RigidBody& i_rigidBody2,
+																				std::vector<Collision>& o_collisions
+																			)
+		{
+			o_collisions.clear();
+			//todo
+			return false;
 		}
 
 	private:

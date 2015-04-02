@@ -9,6 +9,8 @@ namespace PhysicEngine
 {
 
 	class SphereCollider;
+	class PlaneCollider;
+
 	struct Collision;
 	class RigidBody;
 
@@ -48,6 +50,11 @@ namespace PhysicEngine
 								std::vector<Collision>& o_collisions
 							)	const;
 
+		bool intersectWho	(	const RigidBody& i_rigidBody,
+								const PlaneCollider& i_colliderOther,
+								const RigidBody& i_rigidBodyOther,
+								std::vector<Collision>& o_collisions
+							)	const;
 
 		Utils::Vector3 vertices[8];
 

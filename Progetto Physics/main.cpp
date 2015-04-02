@@ -6,6 +6,7 @@
 #include "PhyisicMaterial.h"
 #include "BoxCollider.h"
 #include "SphereCollider.h"
+#include "PlaneCollider.h"
 #include "Collision.h"
 
 using namespace PhysicEngine;
@@ -26,11 +27,13 @@ int main()
 
 	Vector3 inertia;
 
-	PhysicEngine::BoxCollider a;
-	PhysicEngine::SphereCollider b;
+	PhysicEngine::BoxCollider a(1.0f,1.0f,1.0f);
+	PhysicEngine::SphereCollider b(3.0f);
+	PhysicEngine::PlaneCollider c(PlaneCollider::Y_coordinate, 0.0f, PlaneCollider::PositiveLookDirection);
 
 	RigidBody rigidbody1(1.0f, material, a);
 	RigidBody rigidbody2(1.0f, material, b);
+	RigidBody rigidBody3(1.0f, material, c);
 
 	std::vector<Collision> outputCollision;
 	rigidbody1.intersect(rigidbody2, outputCollision);
