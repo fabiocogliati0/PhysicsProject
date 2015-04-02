@@ -38,17 +38,72 @@ namespace PhysicEngine{
 					float viscosity = bodies[i].getViscosity() >= bodies[j].getViscosity() ? 
 											bodies[i].getViscosity() : bodies[j].getViscosity();
 					
-					// Faccio il prodotto fra i due attriti per trovare il totale
-					float dynamicFricion = bodies[i].getDynamicFriction() * bodies[j].getDynamicFriction();
+					// Eseguo il prodotto fra i due attriti per trovare il totale se non sono uguali
+					float dynamicFricion = bodies[i].getDynamicFriction() == bodies[j].getDynamicFriction() ?
+												bodies[i].getDynamicFriction()
+												:
+												bodies[i].getDynamicFriction() * bodies[j].getDynamicFriction();
 
-					float staticFricion = bodies[i].getStaticFriction() * bodies[j].getStaticFriction();
+					float staticFricion = bodies[i].getStaticFriction() == bodies[j].getStaticFriction() ?
+												bodies[i].getStaticFriction()
+												:
+												bodies[i].getStaticFriction() * bodies[j].getStaticFriction();
 
+					// Note Manu: non dormo più la notte, non riesco a condurre una vita normale, quando finirà
+					// tutto questo? quando? quando?
 					this->applyCollisionForce(bodies[i], bodies[j],
-											 outputCollision, elasticity, viscosity, dynamicFricion, staticFricion);
+											  outputCollision, elasticity, viscosity, dynamicFricion, staticFricion, dt);
 				}
 			}
 		}
+		for (size_t i = 0; i < bodies.size(); ++i)
+		{
+			bodies[i].updatePhyisic(dt, *this);
+		}
 	}
+
+	void World::applyCollisionForce(RigidBody &rigidBodyA, RigidBody &RigidBodyB,
+									Collision collision, float elasticity, float vicosity,
+									float dynamicFricion, float staticFricion, float dt) const
+	{
+		float modNormalVelocity;
+		float modTangentVelocity;
+		float force;
+		Utils::Vector3 normalVelocity;
+		Utils::Vector3 tangentVelocity;
+		Utils::Vector3 normalForce;
+		Utils::Vector3 tangentForce;
+		Utils::Vector3 totalForce;
+
+		modNormalVelocity = collision.impactSpeed.dot(collision.normal);
+		normalVelocity = collision.normal * modNormalVelocity;
+		tangentVelocity = collision.impactSpeed - normalVelocity;
+		force = (elasticity * collision.deformation) + (vicosity * modNormalVelocity);
+		force = force < 0 ? 0 : force;
+		normalForce = collision.normal * force;
+		// Se entrami i corpi non si muovono uso l'attrito statico, altrimenti il dinamico
+		if (rigidBodyA.getVelocity() == Utils::Vector3::zero && RigidBodyB.getVelocity() == Utils::Vector3::zero)
+			force *= staticFricion;
+		else
+			force *= dynamicFricion;
+		tangentForce = tangentVelocity * force;
+
+		modTangentVelocity = tangentVelocity.module();
+
+		if (modTangentVelocity > gravityForce.y * dt)
+			tangentForce /= modTangentVelocity;
+		else
+			tangentForce /= gravityForce.y * dt;
+		
+		totalForce = normalForce + tangentForce;
+		
+		rigidBodyA.addForce(normalForce, collision.impactPoint);
+
+		normalForce.invert();
+
+		RigidBodyB.addForce(normalForce, collision.impactPoint);
+	}
+
 
 	void World::addBody(const RigidBody& body)
 	{
