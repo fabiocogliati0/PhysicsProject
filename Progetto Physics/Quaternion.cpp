@@ -77,26 +77,26 @@ namespace Utils
 		
 		if (test > 0.499)
 		{
-			tmp.y = 2 * atan2(this->x, this->s) * (180 / M_PI);
-			tmp.z = M_PI / 2 * (180 / M_PI);
-			tmp.x = 0 * (180 / M_PI);
+			tmp.y = roundf(2 * atan2(this->x, this->s) * (180 / M_PI));
+			tmp.z = roundf(M_PI / 2 * (180 / M_PI));
+			tmp.x = 0;
 			return tmp;
 		}
 		
 		if (test < -0.499)
 		{
-			tmp.y = -2 * atan2(this->x, this->s) * (180 / M_PI);
-			tmp.z = -M_PI / 2 * (180 / M_PI);
-			tmp.x = 0 * (180 / M_PI);
+			tmp.y = roundf(-2 * atan2(this->x, this->s) * (180 / M_PI));
+			tmp.z = roundf(-M_PI / 2 * (180 / M_PI));
+			tmp.x = 0;
 			return tmp;
 		}
 		
 		float sqx = this->x * this->x;
 		float sqy = this->y * this->y;
 		float sqz = this->z * this->z;
-		tmp.y = atan2(2 * this->y * this->s - 2 * this->x * this->z, 1 - 2 * sqy - 2 * sqz) * (180 / M_PI);
-		tmp.z = asin(2 * test) * (180 / M_PI);
-		tmp.x = atan2(2 * this->x * this->s - 2 * this->y * this->z, 1 - 2 * sqx - 2 * sqz) * (180 / M_PI);
+		tmp.y = roundf(atan2(2 * this->y * this->s - 2 * this->x * this->z, 1 - 2 * sqy - 2 * sqz) * (180 / M_PI));
+		tmp.z = roundf(asin(2 * test) * (180 / M_PI));
+		tmp.x = roundf(atan2(2 * this->x * this->s - 2 * this->y * this->z, 1 - 2 * sqx - 2 * sqz) * (180 / M_PI));
 		return tmp;
 	}
 }

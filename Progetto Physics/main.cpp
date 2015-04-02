@@ -38,11 +38,5 @@ int main()
 	//world.addBody(rigidbody1);
 	//world.addBody(rigidbody2);
 
-	Vector3 v1(90, 60, 50);
-	
-	Quaternion q1 = v1.toQuaternion();
-
-	Vector3 v2 = q1.toEuler();
-
 	std::getchar();
 }
