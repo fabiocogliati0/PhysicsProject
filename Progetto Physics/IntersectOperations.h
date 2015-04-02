@@ -22,7 +22,15 @@ namespace PhysicEngine
 																std::vector<Collision>& o_collisions
 															)
 		{
-			return intersect(i_collider2, i_rigidBody2, i_collider1, i_rigidBody1, o_collisions);
+			bool isIntersection = intersect(i_collider2, i_rigidBody2, i_collider1, i_rigidBody1, o_collisions);
+			if (isIntersection)
+			{
+				for (size_t i = 0; i < o_collisions.size(); ++i)
+				{
+					o_collisions[i].normal *= -1.0f;
+				}
+			}
+			return isIntersection;
 		}
 
 		template<> static bool intersect<SphereCollider, SphereCollider>	(	const SphereCollider& i_collider1,
@@ -83,6 +91,19 @@ namespace PhysicEngine
 																			)
 		{
 			o_collisions.clear();
+
+			int numberOfCollisions = 0;
+
+			for (int i = 0; i < 8; ++i)
+			{
+				Collision o_collision;
+
+				o_collision.impactPoint = i_rigidBody2.getRotation().RotateAbsolute(i_collider2.getVertex(i));
+
+				//COME CAVOLO SI FA???
+			}
+
+
 			return false;
 		}
 

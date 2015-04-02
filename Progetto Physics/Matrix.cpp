@@ -16,7 +16,7 @@ namespace Utils
 			return _Matrix[index];
 	}
 
-	Vector3 Matrix::RotateRelative(Vector3 &input) const
+	Vector3 Matrix::RotateRelative(const Vector3 &input) const
 	{
 		Vector3 tmp;
 		tmp.x = _Matrix[0] * input.x + _Matrix[1] * input.y + _Matrix[2] * input.z;
@@ -25,7 +25,7 @@ namespace Utils
 		return tmp;
 	}
 	
-	Vector3 Matrix::RotateAbsolute(Vector3 &input) const
+	Vector3 Matrix::RotateAbsolute(const Vector3 &input) const
 	{
 		Vector3 tmp;
 		tmp.x = _Matrix[0] * input.x + _Matrix[3] * input.y + _Matrix[6] * input.z;

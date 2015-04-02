@@ -17,19 +17,23 @@ namespace PhysicEngine
 
 	RigidBody::RigidBody(float mass,
 		const PhysicMaterial& material,
-		const Collider& collider
+		const Collider& collider,
+		bool isStatic
 		)
 		: RigidBody(mass, material, collider, Transform(), Utils::Vector3::zero, Utils::Vector3::zero)
 	{
+		staticBody = isStatic;
 	}
 
 	RigidBody::RigidBody(float mass,
 		const PhysicMaterial& material,
 		const Collider& collider,
-		const Transform& transform
+		const Transform& transform,
+		bool isStatic
 		)
 		: RigidBody(mass, material, collider, transform, Utils::Vector3::zero, Utils::Vector3::zero)
 	{
+		staticBody = isStatic;
 	}
 
 	RigidBody::RigidBody(float mass,
@@ -65,6 +69,7 @@ namespace PhysicEngine
 		:	mass(other.mass),
 			material(other.material),
 			transform(other.transform),
+			staticBody(other.staticBody),
 			velocity(other.velocity),
 			angularVelocity(other.angularVelocity)
 	{
@@ -95,6 +100,7 @@ namespace PhysicEngine
 			this->mass = mass;
 			this->material = material;
 			this->transform = transform;
+			this->staticBody = staticBody;
 			this->velocity = velocity;
 			this->angularVelocity = angularVelocity;
 
@@ -143,6 +149,11 @@ namespace PhysicEngine
 	{
 		assert(collider != nullptr);
 		return collider->getVolume();
+	}
+
+	bool RigidBody::isStatic() const
+	{
+		return staticBody;
 	}
 
 	void RigidBody::addForce(const Utils::Vector3& force)

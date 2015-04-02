@@ -24,13 +24,15 @@ namespace PhysicEngine{
 
 		RigidBody	(	float mass,
 						const PhysicMaterial& material,
-						const Collider& collider
+						const Collider& collider,
+						bool isStatic = false
 					);
 
 		RigidBody	(	float mass,
 						const PhysicMaterial& material,
 						const Collider& collider,
-						const Transform& transform
+						const Transform& transform,
+						bool isStatic = false
 					);
 
 		RigidBody	(	float mass,
@@ -71,6 +73,8 @@ namespace PhysicEngine{
 
 		float getVolume() const;
 
+		bool isStatic() const;
+
 
 
 		void addForce(const Utils::Vector3& point);
@@ -88,6 +92,8 @@ namespace PhysicEngine{
 		Collider* collider;
 
 		float mass;
+
+		bool staticBody;
 
 		Utils::Vector3 velocity;
 		
