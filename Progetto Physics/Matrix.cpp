@@ -4,11 +4,11 @@ namespace Utils
 {
 	Matrix::Matrix()
 	{
-		for (unsigned int i = 0; i < _size; i++)
+		for (size_t i = 0; i < _size; ++i)
 			_Matrix[i] = 0;
 	}
 
-	float& Matrix::operator[](unsigned int index)
+	float& Matrix::operator[](size_t index)
 	{
 		if (index >= _size)
 			return _Matrix[0];

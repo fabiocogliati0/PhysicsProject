@@ -1,6 +1,7 @@
 #include "World.h"
 
 #include "RigidBody.h"
+#include "Collision.h"
 
 #include <vector>
 #include <cassert>
@@ -19,9 +20,33 @@ namespace PhysicEngine{
 
 	void World::updatePhysic(float dt)
 	{
-		for (size_t i = 0; i < bodies.size(); ++i)
+		std::vector<PhysicEngine::Collision> outputCollisions;
+
+		for (size_t i = 0; i < (bodies.size() - 1); ++i)
 		{
-			bodies[i].updatePhyisic(dt, *this);
+			for (size_t j = i + 1; j < bodies.size(); ++j)
+			{
+				bodies[i].intersect(bodies[j], outputCollisions);
+				for (size_t k = 0; k < outputCollisions.size(); ++k)
+				{
+					PhysicEngine::Collision outputCollision = outputCollisions[k];
+					
+					// Seleziono la più grande fra le due
+					float elasticity = bodies[i].getElasticity() >= bodies[j].getElasticity() ?
+											bodies[i].getElasticity() : bodies[j].getElasticity();
+
+					float viscosity = bodies[i].getViscosity() >= bodies[j].getViscosity() ? 
+											bodies[i].getViscosity() : bodies[j].getViscosity();
+					
+					// Faccio il prodotto fra i due attriti per trovare il totale
+					float dynamicFricion = bodies[i].getDynamicFriction() * bodies[j].getDynamicFriction();
+
+					float staticFricion = bodies[i].getStaticFriction() * bodies[j].getStaticFriction();
+
+					this->applyCollisionForce(bodies[i], bodies[j],
+											 outputCollision, elasticity, viscosity, dynamicFricion, staticFricion);
+				}
+			}
 		}
 	}
 

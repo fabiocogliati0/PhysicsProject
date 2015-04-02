@@ -30,7 +30,6 @@ namespace PhysicEngine{
 
 		size_t getNumberOfBodies() const;
 
-
 		void setGravityForce(const Utils::Vector3& gravityForce);
 
 		const Utils::Vector3& getGravityForce() const;
@@ -40,6 +39,10 @@ namespace PhysicEngine{
 		float getAirDensity() const;
 
 	private:
+
+		void applyCollisionForce(RigidBody &rigidBodyA, RigidBody &RigidBodyB,
+								 Collision collision, float elasticity, float vicosity,
+								 float dynamicFricion, float staticFricion);
 
 		std::vector<RigidBody> bodies;
 
