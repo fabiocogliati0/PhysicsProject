@@ -196,21 +196,22 @@ namespace PhysicEngine
 	void RigidBody::updatePhyisic(float dt, const World& myWorld)
 	{
 		Utils::Quaternion newQuaternionRotation;
+		Utils::Vector3 tmpAngularVelocity;
 
 		// Se la gravità è uguale l'ho già calcolata e mi evito una moltiplicazione
 		if (myWorld.getGravityForce() != gravity)
 		{
 			// *** calcolo nuovamente la quantità di moto della gravità
 			// quantitadiMotoGravity = gravity * dt;
-			velocityOfGravity = gravity * dt;
 			gravity = myWorld.getGravityForce();
+			velocityOfGravity = gravity * dt;
 		}
 
 		// Moto rettilineo uniforme
 		if (updateForce)
 		{
 			momentum = resultantForce * dt; 
-			velocity = momentum / mass;
+			velocity += momentum / mass;
 			updateForce = false;
 		}
 
@@ -218,34 +219,42 @@ namespace PhysicEngine
 		transform.position += velocity * dt;
 
 		// Moto angolare
-		if ( resultantMomentum != Utils::Vector3::zero )
+		if (resultantMomentum != Utils::Vector3::zero)
+		{
 			angularMomentum = resultantMomentum * dt;
 
-		// Per risolvere problemi di inerzia, "raddrizzo" il mio
-		// oggetto, altrimenti l'inerzia cambierebbe in base a come è disposto l'oggetto
-		angularVelocity = matrixRotation.RotateRelative(angularMomentum);
+			// Per risolvere problemi di inerzia, "raddrizzo" il mio
+			// oggetto, altrimenti l'inerzia cambierebbe in base a come è disposto l'oggetto
+			tmpAngularVelocity = matrixRotation.RotateRelative(angularMomentum);
 
-		// Ho effettivamente l'angularVelocity ora
-		angularVelocity.x /= this->getInertia().x;
-		angularVelocity.y /= this->getInertia().y;
-		angularVelocity.z /= this->getInertia().z;
-		
-		newQuaternionRotation.set(1, angularVelocity.x * dt / 2, angularVelocity.y * dt / 2, 
-								  angularVelocity.z * dt / 2);
-		
-		// Normalizzo il quaternione per putilizzarlo per la rotazione
-		newQuaternionRotation.normalize();
-		
-		quaternionRotation *= newQuaternionRotation;
-		quaternionRotation.normalize();
-		
-		// La velocità la ritorno in assoluto
-		angularVelocity = matrixRotation.RotateAbsolute(angularVelocity);
+			// Ho effettivamente l'angularVelocity ora TODO: angular metterla in locale e considerare quella da fuori
+			tmpAngularVelocity.x /= this->getInertia().x;
+			tmpAngularVelocity.y /= this->getInertia().y;
+			tmpAngularVelocity.z /= this->getInertia().z;
+		}
 
-		// Creo la matrice attuale di rotazione da quaternione ricavato tramite velocità angolare
-		quaternionRotation.toMatrix(matrixRotation);
+		// Sommo l'angularVelocity settata con quella derivata dalle forze di collisione (tmpAngularVelocity)
+		angularVelocity += tmpAngularVelocity;
 
-		// Azzeramento forza risulntate e momento risultante 
+		if (angularVelocity != Utils::Vector3::zero)
+		{
+			newQuaternionRotation.set(1, angularVelocity.x * dt / 2, angularVelocity.y * dt / 2,
+									  angularVelocity.z * dt / 2);
+
+			// Normalizzo il quaternione per putilizzarlo per la rotazione
+			newQuaternionRotation.normalize();
+
+			quaternionRotation *= newQuaternionRotation;
+			quaternionRotation.normalize();
+
+			// La velocità la ritorno in assoluto
+			angularVelocity = matrixRotation.RotateAbsolute(angularVelocity);
+
+			// Creo la matrice attuale di rotazione da quaternione ricavato tramite velocità angolare
+			quaternionRotation.toMatrix(matrixRotation);
+		}
+
+		// Azzeramento forza risultante e momento risultante 
 		resultantForce = resultantMomentum = Utils::Vector3::zero;
 	}
 }

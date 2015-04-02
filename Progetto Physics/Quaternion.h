@@ -1,11 +1,13 @@
+#define _USE_MATH_DEFINES
 #include <math.h>
 
 #pragma once
 
 namespace Utils
 {
+	class Vector3;
 	class Matrix;
-
+	
 	class Quaternion
 	{
 		private:
@@ -26,5 +28,6 @@ namespace Utils
 			float module() const;
 			void normalize();
 			void toMatrix(Matrix &right) const;
+			Vector3 toEuler() const;
 	};
 }
