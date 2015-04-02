@@ -7,6 +7,14 @@ namespace PhysicEngine
 	struct Transform
 	{
 		Utils::Vector3 position;
-		//Utils::Matrix rotation;		//todo : manuele : metti quello che mi dicevi
+		Utils::Matrix rotationMatrix;
+
+		Vector3 getEulerRotation() const;
+
+		void setEulerRotation(const Vector3& eulerAngles);
+
+		Quaternion getQuaternionRotation() const;
+
+		void setQuaternionRotation(const Quaternion& quaternionRotation);
 	};
 }
