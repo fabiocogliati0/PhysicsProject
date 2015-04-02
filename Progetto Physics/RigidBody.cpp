@@ -57,7 +57,8 @@ namespace PhysicEngine
 			material(material),
 			transform(transform), 
 			velocity(velocity), 
-			angularVelocity(angularVelocity)
+			angularVelocity(angularVelocity),
+			staticBody(false)
 	{
 		this->collider = collider.clone();
 
