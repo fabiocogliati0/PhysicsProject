@@ -225,7 +225,7 @@ namespace PhysicEngine
 		// oggetto, altrimenti l'inerzia cambierebbe in base a come è disposto l'oggetto
 		angularVelocity = matrixRotation.RotateRelative(angularMomentum);
 
-		// Ho effettivamente l'angularVelocity ora
+		// Ho effettivamente l'angularVelocity ora TODO: angular metterla in locale e considerare quella da fuori
 		angularVelocity.x /= this->getInertia().x;
 		angularVelocity.y /= this->getInertia().y;
 		angularVelocity.z /= this->getInertia().z;

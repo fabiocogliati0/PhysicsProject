@@ -1,11 +1,11 @@
 #include "Quaternion.h"
 #include "Matrix.h"
+#include "Vector3.h"
 
 namespace Utils
 {
-	Quaternion::Quaternion()
+	Quaternion::Quaternion() : Quaternion(1, 0, 0, 0)
 	{
-		Quaternion(0, 0, 0, 0);
 	}
 
 	Quaternion::Quaternion(float s, float x, float y, float z)
@@ -67,5 +67,36 @@ namespace Utils
 		right[6] = 2.0f * ((x * z) + (s * y));
 		right[7] = 2.0f * ((y * z) - (s * x));
 		right[8] = 1.0f - 2.0f * ((x * x) + (y * y));
+	}
+
+	Vector3 Quaternion::toEuler() const
+	{
+		Vector3 tmp;
+
+		float test = this->x * this->y + this->z * this->s;
+		
+		if (test > 0.499)
+		{
+			tmp.y = 2 * atan2(this->x, this->s) * (180 / M_PI);
+			tmp.z = M_PI / 2 * (180 / M_PI);
+			tmp.x = 0 * (180 / M_PI);
+			return tmp;
+		}
+		
+		if (test < -0.499)
+		{
+			tmp.y = -2 * atan2(this->x, this->s) * (180 / M_PI);
+			tmp.z = -M_PI / 2 * (180 / M_PI);
+			tmp.x = 0 * (180 / M_PI);
+			return tmp;
+		}
+		
+		float sqx = this->x * this->x;
+		float sqy = this->y * this->y;
+		float sqz = this->z * this->z;
+		tmp.y = atan2(2 * this->y * this->s - 2 * this->x * this->z, 1 - 2 * sqy - 2 * sqz) * (180 / M_PI);
+		tmp.z = asin(2 * test) * (180 / M_PI);
+		tmp.x = atan2(2 * this->x * this->s - 2 * this->y * this->z, 1 - 2 * sqx - 2 * sqz) * (180 / M_PI);
+		return tmp;
 	}
 }
