@@ -116,8 +116,6 @@ namespace PhysicEngine
 		return transform.position;
 	}
 
-	// Fabio:	getRotation ritorna la matrice
-	//			getQuaternion ritorna il quaternione
 	const Utils::Matrix& RigidBody::getRotation() const
 	{
 		return matrixRotation;
@@ -143,6 +141,26 @@ namespace PhysicEngine
 	{
 		assert(collider != nullptr);
 		return collider->getVolume();
+	}
+	
+	float RigidBody::getElasticity() const
+	{
+		return this->material.elasticity;
+	}
+
+	float RigidBody::getViscosity() const
+	{
+		return this->material.viscosity;
+	}
+
+	float RigidBody::getDynamicFriction() const
+	{
+		return this->material.dynamicFriction;
+	}
+
+	float RigidBody::getStaticFriction() const
+	{
+		return this->material.staticFriction;
 	}
 
 	void RigidBody::addForce(const Utils::Vector3& force)

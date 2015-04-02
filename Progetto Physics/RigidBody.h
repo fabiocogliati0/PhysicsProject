@@ -71,7 +71,13 @@ namespace PhysicEngine{
 
 		float getVolume() const;
 
+		float getElasticity() const;
 
+		float getViscosity() const;
+
+		float getDynamicFriction() const;
+
+		float getStaticFriction() const;
 
 		void addForce(const Utils::Vector3& point);
 
