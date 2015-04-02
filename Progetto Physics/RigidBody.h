@@ -73,6 +73,14 @@ namespace PhysicEngine{
 
 		float getVolume() const;
 
+		float getElasticity() const;
+
+		float getViscosity() const;
+
+		float getDynamicFriction() const;
+
+		float getStaticFriction() const;
+
 		bool isStatic() const;
 
 
