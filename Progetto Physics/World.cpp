@@ -35,7 +35,7 @@ namespace PhysicEngine{
 					float elasticity = bodies[i].getElasticity() >= bodies[j].getElasticity() ?
 											bodies[i].getElasticity() : bodies[j].getElasticity();
 
-					float elasticity = bodies[i].getViscosity() >= bodies[j].getViscosity() ? 
+					float viscosity = bodies[i].getViscosity() >= bodies[j].getViscosity() ? 
 											bodies[i].getViscosity() : bodies[j].getViscosity();
 					
 					// Faccio il prodotto fra i due attriti per trovare il totale
@@ -43,8 +43,8 @@ namespace PhysicEngine{
 
 					float staticFricion = bodies[i].getStaticFriction() * bodies[j].getStaticFriction();
 
-					// this->applyCollisionForce(&rigidBody, &RigidBody2, 
-					//							 collision, elasticity, vicosity, dynamicFricion, staticFricion)
+					this->applyCollisionForce(bodies[i], bodies[j],
+											 outputCollision, elasticity, viscosity, dynamicFricion, staticFricion);
 				}
 			}
 		}
