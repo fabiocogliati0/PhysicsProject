@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Vector3.h"
+#include "Matrix.h"
+#include "Quaternion.h"
 
 namespace PhysicEngine
 {
@@ -9,12 +11,12 @@ namespace PhysicEngine
 		Utils::Vector3 position;
 		Utils::Matrix rotationMatrix;
 
-		Vector3 getEulerRotation() const;
+		Utils::Vector3 getEulerRotation() const;
 
-		void setEulerRotation(const Vector3& eulerAngles);
+		void setEulerRotation(const Utils::Vector3& eulerAngles);
 
-		Quaternion getQuaternionRotation() const;
+		Utils::Quaternion getQuaternionRotation() const;
 
-		void setQuaternionRotation(const Quaternion& quaternionRotation);
+		void setQuaternionRotation(const Utils::Quaternion& quaternionRotation);
 	};
 }
