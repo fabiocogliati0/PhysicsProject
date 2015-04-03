@@ -9,11 +9,11 @@
 namespace PhysicEngine{
 
 	PlaneCollider::PlaneCollider() 
-		: axis(Y_coordinate), axisValue(0.0f), lookDirection(PlaneCollider::PositiveLookDirection)
+		: PlaneCollider(0.0f, 1.0f, 0.0f, 0.0f, MajorLookDirection)
 	{}
 
-	PlaneCollider::PlaneCollider(coordinate axis, float axisValue, lookDirections lookDirection)
-		: axis(axis), axisValue(axisValue), lookDirection(lookDirection)
+	PlaneCollider::PlaneCollider(float A, float B, float C, float D, lookDirections lookDirection)
+		: A(A), B(B), C(C), D(D), lookDirection(lookDirection)
 	{}
 
 	PlaneCollider* PlaneCollider::clone() const
@@ -26,14 +26,24 @@ namespace PhysicEngine{
 		return PlaneColliderType;
 	}
 
-	PlaneCollider::coordinate PlaneCollider::getAxis() const
+	float PlaneCollider::getAFunctionCoefficient() const
 	{
-		return axis;
+		return A;
 	}
 
-	float PlaneCollider::getAxisValue() const
+	float PlaneCollider::getBFunctionCoefficient() const
 	{
-		return axisValue;
+		return B;
+	}
+
+	float PlaneCollider::getCFunctionCoefficient() const
+	{
+		return C;
+	}
+
+	float PlaneCollider::getDFunctionCoefficient() const
+	{
+		return D;
 	}
 
 	PlaneCollider::lookDirections PlaneCollider::getLookingDirection() const

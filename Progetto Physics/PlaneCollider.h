@@ -16,38 +16,42 @@ namespace PhysicEngine
 
 	public:
 
-		enum coordinate
-		{
-			X_coordinate = 0,
-			Y_coordinate,
-			Z_coordinate
-		};
 		
 		enum lookDirections
 		{
-			PositiveLookDirection = 0,
-			NegativeLookDirection
+			MajorLookDirection = 0,
+			MinorLookDirection
 		};
 
 		PlaneCollider();
 
-		PlaneCollider(coordinate axis, float axisValue, lookDirections lookDirection);
+		PlaneCollider(float A, float B, float C, float D, lookDirections lookDirection);
 
 		PlaneCollider* clone() const;
 
 		ColliderType getColliderType() const;
 
-		coordinate getAxis() const;
+		float getAFunctionCoefficient() const;
 
-		float getAxisValue() const;
+		float getBFunctionCoefficient() const;
+
+		float getCFunctionCoefficient() const;
+
+		float getDFunctionCoefficient() const;
 
 		lookDirections getLookingDirection() const;
 
 
 	private:
 
-		coordinate axis;
-		float axisValue;
+		float A;
+
+		float B;
+
+		float C;
+
+		float D;
+
 		lookDirections lookDirection;
 
 	};

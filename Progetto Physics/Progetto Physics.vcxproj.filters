@@ -31,6 +31,9 @@
     <Filter Include="Source Files\PhysicEngine\Colliders">
       <UniqueIdentifier>{130c47ab-f9bb-42df-8f5f-207662370429}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\PhysicEngine\Colliders\IntersectOperations">
+      <UniqueIdentifier>{a7553cfd-4a84-47b9-aaab-b7091ae33a4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="World.h">
@@ -46,9 +49,6 @@
       <Filter>Header Files\PhysicEngine\Colliders</Filter>
     </ClInclude>
     <ClInclude Include="Collider.h">
-      <Filter>Header Files\PhysicEngine\Colliders</Filter>
-    </ClInclude>
-    <ClInclude Include="IntersectOperations.h">
       <Filter>Header Files\PhysicEngine\Colliders</Filter>
     </ClInclude>
     <ClInclude Include="SphereCollider.h">
@@ -71,6 +71,9 @@
     </ClInclude>
     <ClInclude Include="PlaneCollider.h">
       <Filter>Header Files\PhysicEngine\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="IntersectOperations.h">
+      <Filter>Header Files\PhysicEngine\Colliders\IntersectOperations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

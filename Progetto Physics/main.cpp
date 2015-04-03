@@ -29,7 +29,7 @@ int main()
 
 	PhysicEngine::BoxCollider a(1.0f,1.0f,1.0f);
 	PhysicEngine::SphereCollider b(3.0f);
-	PhysicEngine::PlaneCollider c(PlaneCollider::Y_coordinate, 0.0f, PlaneCollider::PositiveLookDirection);
+	PhysicEngine::PlaneCollider c(0.0f, 1.0f, 0.0f, 0.0f, PlaneCollider::MajorLookDirection);	//y>0
 
 	RigidBody rigidbody1(1.0f, material, a);
 	RigidBody rigidbody2(1.0f, material, b);

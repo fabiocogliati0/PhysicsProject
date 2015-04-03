@@ -188,8 +188,50 @@ namespace PhysicEngine
 																			)
 		{
 			o_collisions.clear();
-			//todo
-			return false;
+			
+			Utils::Vector3 boxPosition = i_rigidBody1.getPosition();
+			Utils::Matrix boxRotation = i_rigidBody1.getRotation();
+			Utils::Vector3 boxVelocity = i_rigidBody1.getVelocity();
+			Utils::Vector3 boxAngVelocity = i_rigidBody1.getAngularVelocity();
+
+			float A = i_collider2.getAFunctionCoefficient();
+			float B = i_collider2.getBFunctionCoefficient();
+			float C = i_collider2.getCFunctionCoefficient();
+			float D = i_collider2.getDFunctionCoefficient();
+
+			PlaneCollider::lookDirections look = i_collider2.getLookingDirection();
+
+			bool isCollision = false;
+
+			for (int i = 0; i < 8; ++i)
+			{
+				Collision o_collision;
+				o_collision.impactPoint = boxRotation.RotateAbsolute(o_collision.impactPoint);
+				o_collision.impactSpeed = boxAngVelocity.cross(o_collision.impactPoint);
+				o_collision.impactPoint = boxPosition + o_collision.impactPoint;
+				o_collision.impactSpeed = boxVelocity + o_collision.impactSpeed;
+
+				o_collision.deformation = -(A * o_collision.impactPoint.x 
+											+ B * o_collision.impactPoint.y
+											+ C * o_collision.impactPoint.z + D);
+
+				if (!((look == PlaneCollider::MajorLookDirection && o_collision.deformation < 0)
+					|| (look == PlaneCollider::MajorLookDirection && o_collision.deformation > 0)))
+				{
+					o_collision.normal.x = A;
+					o_collision.normal.y = B;
+					o_collision.normal.z = C;
+
+					o_collision.impactSpeed = o_collision.impactSpeed * -1.0f;
+
+					o_collisions.push_back(o_collision);
+
+					isCollision = true;
+				}
+
+			}
+
+			return isCollision;
 		}
 
 		template<> static bool intersect<SphereCollider, PlaneCollider>		(	const SphereCollider& i_collider1,
@@ -200,8 +242,52 @@ namespace PhysicEngine
 																			)
 		{
 			o_collisions.clear();
-			//todo
-			return false;
+			
+			float sphereRadius = i_collider1.getRadius();
+			Utils::Vector3 spherePosition = i_rigidBody1.getPosition();
+			Utils::Vector3 sphereVelocity = i_rigidBody1.getVelocity();
+			Utils::Vector3 sphereAngVelocity = i_rigidBody1.getAngularVelocity();
+
+			float A = i_collider2.getAFunctionCoefficient();
+			float B = i_collider2.getBFunctionCoefficient();
+			float C = i_collider2.getCFunctionCoefficient();
+			float D = i_collider2.getDFunctionCoefficient();
+
+			PlaneCollider::lookDirections look = i_collider2.getLookingDirection();
+
+			Collision o_collision;
+
+			o_collision.impactPoint.x = -A;
+			o_collision.impactPoint.y = -B;
+			o_collision.impactPoint.z = -C;
+			o_collision.impactPoint *= sphereRadius;
+
+			o_collision.impactSpeed = sphereAngVelocity.cross(o_collision.impactPoint);
+			o_collision.impactPoint = spherePosition + o_collision.impactPoint;
+			o_collision.impactSpeed = sphereVelocity + o_collision.impactSpeed;
+
+			o_collision.deformation = -(A * o_collision.impactPoint.x 
+											+ B * o_collision.impactPoint.y
+											+ C * o_collision.impactPoint.z + D);
+
+			if (!((look == PlaneCollider::MajorLookDirection && o_collision.deformation < 0)
+				|| (look == PlaneCollider::MajorLookDirection && o_collision.deformation > 0)))
+			{
+				o_collision.normal.x = A;
+				o_collision.normal.y = B;
+				o_collision.normal.z = C;
+
+				o_collision.impactSpeed *= -1.0f;
+
+				o_collisions.push_back(o_collision);
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+			
 		}
 
 	private:
