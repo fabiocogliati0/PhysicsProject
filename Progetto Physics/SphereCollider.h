@@ -6,9 +6,6 @@
 
 namespace PhysicEngine{
 
-	class BoxCollider;
-	class PlaneCollider;
-
 	class RigidBody;
 	struct Collision;
 
@@ -23,33 +20,11 @@ namespace PhysicEngine{
 
 		SphereCollider* clone() const;
 
-		bool intersect	(	const RigidBody& i_rigidBody, 
-							const Collider& i_colliderOther,
-							const RigidBody& i_rigidBodyOther,
-							std::vector<Collision>& o_collisions
-						)	const;
+		ColliderType getColliderType() const;
 
 		float getRadius() const;
 
 	private:
-
-		bool intersectWho	(	const RigidBody& i_rigidBody,
-								const BoxCollider& i_colliderOther,
-								const RigidBody& i_rigidBodyOther,
-								std::vector<Collision>& o_collisions
-							)	const;
-
-		bool intersectWho	(	const RigidBody& i_rigidBody,
-								const SphereCollider& i_colliderOther,
-								const RigidBody& i_rigidBodyOther,
-								std::vector<Collision>& o_collisions
-							)	const;
-
-		bool intersectWho	(	const RigidBody& i_rigidBody,
-								const PlaneCollider& i_colliderOther,
-								const RigidBody& i_rigidBodyOther,
-								std::vector<Collision>& o_collisions
-							)	const;
 
 		float radius;
 

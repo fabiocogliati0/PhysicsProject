@@ -8,7 +8,6 @@
 namespace PhysicEngine
 {
 
-	class SphereCollider;
 	struct Collision;
 	class RigidBody;
 
@@ -36,11 +35,7 @@ namespace PhysicEngine
 
 		PlaneCollider* clone() const;
 
-		bool intersect	(	const RigidBody& i_rigidBody,
-							const Collider& i_colliderOther,
-							const RigidBody& i_rigidBodyOther,
-							std::vector<Collision>& o_collisions
-						)	const;
+		ColliderType getColliderType() const;
 
 		coordinate getAxis() const;
 
@@ -50,24 +45,6 @@ namespace PhysicEngine
 
 
 	private:
-
-		bool intersectWho	(	const RigidBody& i_rigidBody,
-								const BoxCollider& i_colliderOther,
-								const RigidBody& i_rigidBodyOther,
-								std::vector<Collision>& o_collisions
-							)	const;
-
-		bool intersectWho	(	const RigidBody& i_rigidBody,
-								const SphereCollider& i_colliderOther,
-								const RigidBody& i_rigidBodyOther,
-								std::vector<Collision>& o_collisions
-							)	const;
-
-		bool intersectWho	(	const RigidBody& i_rigidBody,
-								const PlaneCollider& i_colliderOther,
-								const RigidBody& i_rigidBodyOther,
-								std::vector<Collision>& o_collisions
-							)	const;
 
 		coordinate axis;
 		float axisValue;

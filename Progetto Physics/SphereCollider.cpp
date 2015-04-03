@@ -1,9 +1,10 @@
 #include "SphereCollider.h"
-#include "IntersectOperations.h"
+
 #include "Collider.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+
 #include <cassert>
 
 namespace PhysicEngine{
@@ -33,47 +34,14 @@ namespace PhysicEngine{
 		return new SphereCollider(*this);
 	}
 
-	/*Itersects Operations*/
-
-	bool SphereCollider::intersect	(	const RigidBody& i_rigidBody, 
-										const Collider& i_colliderOther,
-										const RigidBody& i_rigidBodyOther,
-										std::vector<Collision>& o_collisions
-									)	const
+	Collider::ColliderType SphereCollider::getColliderType() const
 	{
-		return i_colliderOther.intersectWho(i_rigidBody, *this, i_rigidBodyOther, o_collisions);
+		return SphereColliderType;
 	}
+
 
 	float SphereCollider::getRadius() const
 	{
 		return radius;
-	}
-
-	bool SphereCollider::intersectWho	(	const RigidBody& i_rigidBody,
-											const BoxCollider& i_colliderOther,
-											const RigidBody& i_rigidBodyOther,
-											std::vector<Collision>& o_collisions
-										)	const
-	{
-		return IntersectOperations::intersect(*this, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collisions);
-	}
-
-	bool SphereCollider::intersectWho	(	const RigidBody& i_rigidBody,
-											const SphereCollider& i_colliderOther,
-											const RigidBody& i_rigidBodyOther,
-											std::vector<Collision>& o_collisions
-										)	const
-	{
-		return IntersectOperations::intersect(*this, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collisions);
-	}
-
-
-	bool SphereCollider::intersectWho	(	const RigidBody& i_rigidBody,
-											const PlaneCollider& i_colliderOther,
-											const RigidBody& i_rigidBodyOther,
-											std::vector<Collision>& o_collisions
-										)	const
-	{
-		return IntersectOperations::intersect(*this, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collisions);
 	}
 }
