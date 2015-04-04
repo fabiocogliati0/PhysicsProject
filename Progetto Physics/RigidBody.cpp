@@ -61,8 +61,8 @@ namespace PhysicEngine
 			staticBody(false)
 	{
 		this->collider = collider.clone();
-
-		this->Init(); // Initialize the parameter of a RigidBody
+		
+		this->Init();
 	}
 
 
@@ -78,14 +78,12 @@ namespace PhysicEngine
 		assert(other.collider != nullptr);
 		
 		this->collider = other.collider->clone();
-
-		this->Init();
 	}
 
 	void RigidBody::Init()
 	{
 		quaternionRotation.s = 1;
-		matrixRotation[0] = matrixRotation[4] = matrixRotation[8] = 1;
+		transform.rotationMatrix[0] = transform.rotationMatrix[4] = transform.rotationMatrix[8] = 1;
 	}
 
 	RigidBody::~RigidBody()
@@ -98,12 +96,12 @@ namespace PhysicEngine
 	{
 		if (this != &other)
 		{
-			this->mass = mass;
-			this->material = material;
-			this->transform = transform;
-			this->staticBody = staticBody;
-			this->velocity = velocity;
-			this->angularVelocity = angularVelocity;
+			this->mass = other.mass;
+			this->material = other.material;
+			this->transform = other.transform;
+			this->staticBody = other.staticBody;
+			this->velocity = other.velocity;
+			this->angularVelocity = other.angularVelocity;
 
 			assert(other.collider != nullptr);
 			this->collider = other.collider->clone();
@@ -125,7 +123,7 @@ namespace PhysicEngine
 
 	const Utils::Matrix& RigidBody::getRotation() const
 	{
-		return matrixRotation;
+		return transform.rotationMatrix;
 	}
 
 	const Utils::Vector3& RigidBody::getVelocity() const
@@ -189,7 +187,7 @@ namespace PhysicEngine
 			// *** Calcolo il momento risultante che mi servirà per ruotare l'oggetto
 			Utils::Vector3 newResultantMomentum = point.cross(force);
 			resultantMomentum += newResultantMomentum;
-			updateForce = true;
+		
 		}
 	}
 
@@ -208,11 +206,10 @@ namespace PhysicEngine
 		}
 
 		// Moto rettilineo uniforme
-		if (updateForce)
+		if (resultantForce != Utils::Vector3::zero)
 		{
 			momentum = resultantForce * dt; 
 			velocity += momentum / mass;
-			updateForce = false;
 		}
 
 		velocity += velocityOfGravity;
@@ -225,9 +222,11 @@ namespace PhysicEngine
 
 			// Per risolvere problemi di inerzia, "raddrizzo" il mio
 			// oggetto, altrimenti l'inerzia cambierebbe in base a come è disposto l'oggetto
-			tmpAngularVelocity = matrixRotation.RotateRelative(angularMomentum);
+			tmpAngularVelocity = transform.rotationMatrix.RotateRelative(angularMomentum);
 
-			// Ho effettivamente l'angularVelocity ora TODO: angular metterla in locale e considerare quella da fuori
+			// Ho effettivamente l'angularVelocity ora 
+			float debug = this->getInertia().z;
+
 			tmpAngularVelocity.x /= this->getInertia().x;
 			tmpAngularVelocity.y /= this->getInertia().y;
 			tmpAngularVelocity.z /= this->getInertia().z;
@@ -241,17 +240,17 @@ namespace PhysicEngine
 			newQuaternionRotation.set(1, angularVelocity.x * dt / 2, angularVelocity.y * dt / 2,
 									  angularVelocity.z * dt / 2);
 
-			// Normalizzo il quaternione per putilizzarlo per la rotazione
+			// Normalizzo il quaternione per utilizzarlo per la rotazione
 			newQuaternionRotation.normalize();
 
 			quaternionRotation *= newQuaternionRotation;
 			quaternionRotation.normalize();
 
 			// La velocità la ritorno in assoluto
-			angularVelocity = matrixRotation.RotateAbsolute(angularVelocity);
+			angularVelocity = transform.rotationMatrix.RotateAbsolute(angularVelocity);
 
 			// Creo la matrice attuale di rotazione da quaternione ricavato tramite velocità angolare
-			quaternionRotation.toMatrix(matrixRotation);
+			quaternionRotation.toMatrix(transform.rotationMatrix);
 		}
 
 		// Azzeramento forza risultante e momento risultante 

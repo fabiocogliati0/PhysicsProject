@@ -16,6 +16,14 @@ namespace Utils
 			return _Matrix[index];
 	}
 
+	const float& Matrix::operator[](size_t index) const
+	{
+		if (index >= _size)
+			return _Matrix[0];
+		else
+			return _Matrix[index];
+	}
+
 	Vector3 Matrix::RotateRelative(const Vector3 &input) const
 	{
 		Vector3 tmp;

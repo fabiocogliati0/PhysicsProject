@@ -15,6 +15,7 @@ namespace Utils
 		public:
 			Matrix();
 			float& operator[](unsigned int index);
+			const float& operator[](unsigned int index) const;
 			Vector3 RotateRelative(const Vector3 &input) const;
 			Vector3 RotateAbsolute(const Vector3 &input) const;
 			~Matrix();

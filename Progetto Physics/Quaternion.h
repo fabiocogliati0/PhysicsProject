@@ -28,6 +28,6 @@ namespace Utils
 			float module() const;
 			void normalize();
 			void toMatrix(Matrix &right) const;
-			Vector3 toEuler() const;
+			void toEuler(Vector3 &right) const;
 	};
 }

@@ -107,7 +107,6 @@ namespace PhysicEngine{
 		
 		Utils::Vector3 angularVelocity;
 
-		Utils::Matrix matrixRotation;			// Matrice di rotazione
 		Utils::Quaternion quaternionRotation;	// Quaternione di rotazione
 
 		// Temps

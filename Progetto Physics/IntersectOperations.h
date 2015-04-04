@@ -270,8 +270,9 @@ namespace PhysicEngine
 											+ B * o_collision.impactPoint.y
 											+ C * o_collision.impactPoint.z + D);
 
-			if (!((look == PlaneCollider::MajorLookDirection && o_collision.deformation < 0)
-				|| (look == PlaneCollider::MajorLookDirection && o_collision.deformation > 0)))
+			/*if (!((look == PlaneCollider::MajorLookDirection && o_collision.deformation > 0)
+				|| (look == PlaneCollider::MinorLookDirection && o_collision.deformation < 0)))*/
+			if ( o_collision.deformation >= 0 )
 			{
 				o_collision.normal.x = A;
 				o_collision.normal.y = B;

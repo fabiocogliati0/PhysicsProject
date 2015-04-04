@@ -49,8 +49,6 @@ namespace PhysicEngine{
 												:
 												bodies[i].getStaticFriction() * bodies[j].getStaticFriction();
 
-					// Note Manu: non dormo più la notte, non riesco a condurre una vita normale, quando finirà
-					// tutto questo? quando? quando?
 					this->applyCollisionForce(bodies[i], bodies[j],
 											  outputCollision, elasticity, viscosity, dynamicFricion, staticFricion, dt);
 				}
@@ -58,11 +56,12 @@ namespace PhysicEngine{
 		}
 		for (size_t i = 0; i < bodies.size(); ++i)
 		{
-			bodies[i].updatePhyisic(dt, *this);
+			if ( !bodies[i].isStatic() )
+				bodies[i].updatePhyisic(dt, *this);
 		}
 	}
 
-	void World::applyCollisionForce(RigidBody &rigidBodyA, RigidBody &RigidBodyB,
+	void World::applyCollisionForce(RigidBody &rigidBodyA, RigidBody &rigidBodyB,
 									Collision collision, float elasticity, float vicosity,
 									float dynamicFricion, float staticFricion, float dt) const
 	{
@@ -82,7 +81,7 @@ namespace PhysicEngine{
 		force = force < 0 ? 0 : force;
 		normalForce = collision.normal * force;
 		// Se entrami i corpi non si muovono uso l'attrito statico, altrimenti il dinamico
-		if (rigidBodyA.getVelocity() == Utils::Vector3::zero && RigidBodyB.getVelocity() == Utils::Vector3::zero)
+		if (rigidBodyA.getVelocity() == Utils::Vector3::zero && rigidBodyB.getVelocity() == Utils::Vector3::zero)
 			force *= staticFricion;
 		else
 			force *= dynamicFricion;
@@ -97,11 +96,21 @@ namespace PhysicEngine{
 		
 		totalForce = normalForce + tangentForce;
 		
-		rigidBodyA.addForce(normalForce, collision.impactPoint);
+		Utils::Vector3 localPosition;
+
+		if ( !rigidBodyA.isStatic() )
+		{
+			localPosition = collision.impactPoint - rigidBodyA.getPosition();
+			rigidBodyA.addForce(normalForce, localPosition);
+		}
 
 		normalForce.invert();
 
-		RigidBodyB.addForce(normalForce, collision.impactPoint);
+		if ( !rigidBodyB.isStatic() )
+		{
+			localPosition = collision.impactPoint - rigidBodyB.getPosition();
+			rigidBodyB.addForce(normalForce, localPosition);
+		}
 	}
 
 
@@ -118,6 +127,13 @@ namespace PhysicEngine{
 	}
 
 	const RigidBody& World::getBody(size_t index) const
+	{
+		assert(index < bodies.size());
+
+		return bodies[index];
+	}
+
+	RigidBody& World::getBody(size_t index)
 	{
 		assert(index < bodies.size());
 

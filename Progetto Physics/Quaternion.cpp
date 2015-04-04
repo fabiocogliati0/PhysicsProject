@@ -69,34 +69,31 @@ namespace Utils
 		right[8] = 1.0f - 2.0f * ((x * x) + (y * y));
 	}
 
-	Vector3 Quaternion::toEuler() const
+	void Quaternion::toEuler(Vector3 &right) const
 	{
-		Vector3 tmp;
-
 		float test = this->x * this->y + this->z * this->s;
 		
 		if (test > 0.499)
 		{
-			tmp.y = roundf(2 * atan2(this->x, this->s) * (180 / M_PI));
-			tmp.z = roundf(M_PI / 2 * (180 / M_PI));
-			tmp.x = 0;
-			return tmp;
+			right.y = roundf(2 * atan2(this->x, this->s) * (180 / M_PI));
+			right.z = roundf(M_PI / 2 * (180 / M_PI));
+			right.x = 0;
+			return;
 		}
 		
 		if (test < -0.499)
 		{
-			tmp.y = roundf(-2 * atan2(this->x, this->s) * (180 / M_PI));
-			tmp.z = roundf(-M_PI / 2 * (180 / M_PI));
-			tmp.x = 0;
-			return tmp;
+			right.y = roundf(-2 * atan2(this->x, this->s) * (180 / M_PI));
+			right.z = roundf(-M_PI / 2 * (180 / M_PI));
+			right.x = 0;
+			return;
 		}
 		
 		float sqx = this->x * this->x;
 		float sqy = this->y * this->y;
 		float sqz = this->z * this->z;
-		tmp.y = roundf(atan2(2 * this->y * this->s - 2 * this->x * this->z, 1 - 2 * sqy - 2 * sqz) * (180 / M_PI));
-		tmp.z = roundf(asin(2 * test) * (180 / M_PI));
-		tmp.x = roundf(atan2(2 * this->x * this->s - 2 * this->y * this->z, 1 - 2 * sqx - 2 * sqz) * (180 / M_PI));
-		return tmp;
+		right.y = roundf(atan2(2 * this->y * this->s - 2 * this->x * this->z, 1 - 2 * sqy - 2 * sqz) * (180 / M_PI));
+		right.z = roundf(asin(2 * test) * (180 / M_PI));
+		right.x = roundf(atan2(2 * this->x * this->s - 2 * this->y * this->z, 1 - 2 * sqx - 2 * sqz) * (180 / M_PI));
 	}
 }

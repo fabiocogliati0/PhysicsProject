@@ -28,6 +28,8 @@ namespace PhysicEngine{
 
 		const RigidBody& getBody(size_t index) const;
 
+		RigidBody& getBody(size_t index);
+
 		size_t getNumberOfBodies() const;
 
 		void setGravityForce(const Utils::Vector3& gravityForce);
