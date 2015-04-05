@@ -261,13 +261,13 @@ static void DisegnaTutto()
 int main(int argc, char **argv)
 {
 
-	world = World(10.0f, Vector3(0, -5.8f, 0));
+	world = World(10.0f, Vector3(0, -9.8f, 0));
 
 	PhysicMaterial material;
-	material.dynamicFriction = 1.0f;
-	material.elasticity = 1.0f;
-	material.staticFriction = 1.0f;
-	material.viscosity = 1.0f;
+	material.dynamicFriction = 10000.0f;
+	material.elasticity = 600.0f;
+	material.staticFriction = 2000.0f;
+	material.viscosity = 5.0f;
 
 	float mass = 5.0f;
 
@@ -279,7 +279,7 @@ int main(int argc, char **argv)
 
 	Transform transformSphere;
 	Transform transformCube;
-	transformSphere.position = Vector3(5, 0, 0);
+	transformSphere.position = Vector3(0.0f, -2, 0);
 	transformCube.position = Vector3(0, 0, 0);
 
 	rigidBody1 = RigidBody(1.0f, material, a, transformCube);
@@ -293,7 +293,7 @@ int main(int argc, char **argv)
 	world.addBody(rigidBody2);
 	world.addBody(rigidBody3);
 
-	world.getBody(1).addForce(Vector3(0.2f, 0, 0), Vector3(0, 500, 0));
+	//world.getBody(1).addForce(Vector3(0.2f, 0, 0), Vector3(0, 500, 0));
 
 	// Inizio codice Testbed
 	glutInit(&argc, argv);

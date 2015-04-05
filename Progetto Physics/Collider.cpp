@@ -16,15 +16,15 @@ namespace PhysicEngine
 	{
 		if (this->getColliderType() == BoxColliderType){
 			const BoxCollider& thisClass = reinterpret_cast<const BoxCollider&>(*this);
-			return i_colliderOther.intersect(i_rigidBody, thisClass, i_rigidBodyOther, o_collisions);
+			return i_colliderOther.intersect(i_rigidBodyOther, thisClass, i_rigidBody, o_collisions);
 		}
 		else if (this->getColliderType() == SphereColliderType){
 			const SphereCollider& thisClass = reinterpret_cast<const SphereCollider&>(*this);
-			return i_colliderOther.intersect(i_rigidBody, thisClass, i_rigidBodyOther, o_collisions);
+			return i_colliderOther.intersect(i_rigidBodyOther, thisClass, i_rigidBody, o_collisions);
 		}
 		else if (this->getColliderType() == PlaneColliderType){
 			const PlaneCollider& thisClass = reinterpret_cast<const PlaneCollider&>(*this);
-			return i_colliderOther.intersect(i_rigidBody, thisClass, i_rigidBodyOther, o_collisions);
+			return i_colliderOther.intersect(i_rigidBodyOther, thisClass, i_rigidBody, o_collisions);
 		}
 		else{
 			assert(false);

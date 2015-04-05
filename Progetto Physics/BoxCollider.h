@@ -20,7 +20,7 @@ namespace PhysicEngine
 
 		BoxCollider(float SemiX, float SemiY, float SemiZ);
 		
-		BoxCollider(const Utils::Vector3& size);
+		BoxCollider(const Utils::Vector3& semi);
 
 		BoxCollider* clone() const;
 

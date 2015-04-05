@@ -28,7 +28,7 @@ namespace PhysicEngine
 			{
 				for (size_t i = 0; i < o_collisions.size(); ++i)
 				{
-					o_collisions[i].normal *= -1.0f;
+					//o_collisions[i].normal *= -1.0f;
 				}
 			}
 			return isIntersection;
@@ -206,7 +206,7 @@ namespace PhysicEngine
 			for (int i = 0; i < 8; ++i)
 			{
 				Collision o_collision;
-				o_collision.impactPoint = boxRotation.RotateAbsolute(o_collision.impactPoint);
+				o_collision.impactPoint = boxRotation.RotateAbsolute(i_collider1.getVertex(i));
 				o_collision.impactSpeed = boxAngVelocity.cross(o_collision.impactPoint);
 				o_collision.impactPoint = boxPosition + o_collision.impactPoint;
 				o_collision.impactSpeed = boxVelocity + o_collision.impactSpeed;
@@ -215,8 +215,7 @@ namespace PhysicEngine
 											+ B * o_collision.impactPoint.y
 											+ C * o_collision.impactPoint.z + D);
 
-				if (!((look == PlaneCollider::MajorLookDirection && o_collision.deformation < 0)
-					|| (look == PlaneCollider::MajorLookDirection && o_collision.deformation > 0)))
+				if (o_collision.deformation > 0.0f)
 				{
 					o_collision.normal.x = A;
 					o_collision.normal.y = B;
@@ -272,7 +271,7 @@ namespace PhysicEngine
 
 			/*if (!((look == PlaneCollider::MajorLookDirection && o_collision.deformation > 0)
 				|| (look == PlaneCollider::MinorLookDirection && o_collision.deformation < 0)))*/
-			if ( o_collision.deformation >= 0 )
+			if ( o_collision.deformation > 0 )
 			{
 				o_collision.normal.x = A;
 				o_collision.normal.y = B;
