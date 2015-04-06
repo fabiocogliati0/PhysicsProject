@@ -212,11 +212,19 @@ namespace PhysicEngine
 											+ B * o_collision.impactPoint.y
 											+ C * o_collision.impactPoint.z + D);
 
-				if (o_collision.deformation > 0.0f)
+				if ((o_collision.deformation > 0 && look == PlaneCollider::MajorLookDirection)
+					|| (o_collision.deformation < 0 && look == PlaneCollider::MinorLookDirection)
+					)
 				{
 					o_collision.normal.x = A;
 					o_collision.normal.y = B;
 					o_collision.normal.z = C;
+
+					if (look == PlaneCollider::MinorLookDirection)
+					{
+						o_collision.normal *= -1.0f;
+						o_collision.deformation *= -1.0f;
+					}
 
 					o_collision.impactSpeed = o_collision.impactSpeed * -1.0f;
 
@@ -253,9 +261,18 @@ namespace PhysicEngine
 
 			Collision o_collision;
 
-			o_collision.impactPoint.x = -A;
-			o_collision.impactPoint.y = -B;
-			o_collision.impactPoint.z = -C;
+			if (look == PlaneCollider::MajorLookDirection)
+			{
+				o_collision.impactPoint.x = -A;
+				o_collision.impactPoint.y = -B;
+				o_collision.impactPoint.z = -C;
+			}
+			else
+			{
+				o_collision.impactPoint.x = A;
+				o_collision.impactPoint.y = B;
+				o_collision.impactPoint.z = C;
+			}
 			o_collision.impactPoint *= sphereRadius;
 
 			o_collision.impactSpeed = sphereAngVelocity.cross(o_collision.impactPoint);
@@ -268,11 +285,19 @@ namespace PhysicEngine
 
 			/*if (!((look == PlaneCollider::MajorLookDirection && o_collision.deformation > 0)
 				|| (look == PlaneCollider::MinorLookDirection && o_collision.deformation < 0)))*/
-			if ( o_collision.deformation > 0 )
+			if (( o_collision.deformation > 0 && look == PlaneCollider::MajorLookDirection)
+				|| (o_collision.deformation < 0 && look == PlaneCollider::MinorLookDirection)
+				)
 			{
 				o_collision.normal.x = A;
 				o_collision.normal.y = B;
 				o_collision.normal.z = C;
+
+				if (look == PlaneCollider::MinorLookDirection)
+				{
+					o_collision.normal *= -1.0f;
+					o_collision.deformation *= -1.0f;
+				}
 
 				o_collision.impactSpeed *= -1.0f;
 

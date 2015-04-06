@@ -17,19 +17,19 @@ namespace PhysicEngine
 		if (this->getColliderType() == BoxColliderType){
 			const BoxCollider& thisClass = reinterpret_cast<const BoxCollider&>(*this);
 			bool intersect = i_colliderOther.intersect(i_rigidBodyOther, thisClass, i_rigidBody, o_collisions);
-			for (int i = 0; i < o_collisions.size(); ++i) o_collisions[i].normal *= -1.0f;
+			for (size_t i = 0; i < o_collisions.size(); ++i) o_collisions[i].normal *= -1.0f;
 			return intersect;
 		}
 		else if (this->getColliderType() == SphereColliderType){
 			const SphereCollider& thisClass = reinterpret_cast<const SphereCollider&>(*this);
 			bool intersect = i_colliderOther.intersect(i_rigidBodyOther, thisClass, i_rigidBody, o_collisions);
-			for (int i = 0; i < o_collisions.size(); ++i) o_collisions[i].normal *= -1.0f;
+			for (size_t i = 0; i < o_collisions.size(); ++i) o_collisions[i].normal *= -1.0f;
 			return intersect;
 		}
 		else if (this->getColliderType() == PlaneColliderType){
 			const PlaneCollider& thisClass = reinterpret_cast<const PlaneCollider&>(*this);
 			bool intersect = i_colliderOther.intersect(i_rigidBodyOther, thisClass, i_rigidBody, o_collisions);
-			for (int i = 0; i < o_collisions.size(); ++i) o_collisions[i].normal *= -1.0f;
+			for (size_t i = 0; i < o_collisions.size(); ++i) o_collisions[i].normal *= -1.0f;
 			return intersect;
 		}
 		else{
