@@ -91,6 +91,8 @@ namespace PhysicEngine{
 
 		void updatePhyisic(float dt, const World& myWorld);
 
+		void setAngularMomentum(Utils::Vector3 &input);
+
 	private:
 
 		PhysicMaterial material;

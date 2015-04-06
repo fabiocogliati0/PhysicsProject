@@ -62,7 +62,7 @@ namespace PhysicEngine{
 	}
 
 	void World::applyCollisionForce(RigidBody &rigidBodyA, RigidBody &rigidBodyB,
-									Collision collision, float elasticity, float vicosity,
+									Collision collision, float elasticity, float viscosity,
 									float dynamicFricion, float staticFricion, float dt) const
 	{
 		float modNormalVelocity;
@@ -74,25 +74,35 @@ namespace PhysicEngine{
 		Utils::Vector3 tangentForce;
 		Utils::Vector3 totalForce;
 
+		// Bug con il piano
+		//collision.impactSpeed.invert();
+
 		modNormalVelocity = collision.impactSpeed.dot(collision.normal);
 		normalVelocity = collision.normal * modNormalVelocity;
 		tangentVelocity = collision.impactSpeed - normalVelocity;
-		force = (elasticity * collision.deformation) + (vicosity * modNormalVelocity);
+
+		// Force se è negativa diventa 0 e continua a compenetrare, ad un certo punto diventa positiva
+		// perchè la compenetrazione è talmente alta che restituisce una forza positiva (a causa dell'alta
+		// compenetrazione); scende ad una velocità talmente forte che compenetra maggiormente
+
+		force = (elasticity * collision.deformation) + (viscosity * modNormalVelocity);
 		force = force < 0 ? 0 : force;
 		normalForce = collision.normal * force;
-		// Se entrami i corpi non si muovono uso l'attrito statico, altrimenti il dinamico
+		// Se entrambi i corpi non si muovono uso l'attrito statico, altrimenti il dinamico
 		if (rigidBodyA.getVelocity() == Utils::Vector3::zero && rigidBodyB.getVelocity() == Utils::Vector3::zero)
 			force *= staticFricion;
 		else
 			force *= dynamicFricion;
+		
 		tangentForce = tangentVelocity * force;
 
 		modTangentVelocity = tangentVelocity.module();
 
-		if (modTangentVelocity > gravityForce.y * dt)
+		// Facendo il modulo funziona anche per gravità che non agisce su y
+		if (modTangentVelocity > gravityForce.module() * dt) 
 			tangentForce /= modTangentVelocity;
 		else
-			tangentForce /= gravityForce.y * dt;
+			tangentForce /= gravityForce.module() * dt;
 		
 		totalForce = normalForce + tangentForce;
 		
@@ -101,15 +111,15 @@ namespace PhysicEngine{
 		if ( !rigidBodyA.isStatic() )
 		{
 			localPosition = collision.impactPoint - rigidBodyA.getPosition();
-			rigidBodyA.addForce(localPosition,normalForce);
+			rigidBodyA.addForce(localPosition, totalForce);
 		}
 
-		normalForce.invert();
+		totalForce.invert();
 
 		if ( !rigidBodyB.isStatic() )
 		{
 			localPosition = collision.impactPoint - rigidBodyB.getPosition();
-			rigidBodyB.addForce(localPosition,normalForce);
+			rigidBodyB.addForce(localPosition, totalForce);
 		}
 	}
 

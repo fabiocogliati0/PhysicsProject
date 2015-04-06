@@ -191,6 +191,11 @@ namespace PhysicEngine
 		}
 	}
 
+	void RigidBody::setAngularMomentum(Utils::Vector3 &input)
+	{
+		angularMomentum = input;
+	}
+
 	void RigidBody::updatePhyisic(float dt, const World& myWorld)
 	{
 		Utils::Quaternion newQuaternionRotation;
@@ -216,24 +221,19 @@ namespace PhysicEngine
 		transform.position += velocity * dt;
 
 		// Moto angolare
-		if (resultantMomentum != Utils::Vector3::zero)
+		if (resultantMomentum == Utils::Vector3::zero)
 		{
-			angularMomentum = resultantMomentum * dt;
+			angularMomentum += resultantMomentum * dt;
 
 			// Per risolvere problemi di inerzia, "raddrizzo" il mio
 			// oggetto, altrimenti l'inerzia cambierebbe in base a come è disposto l'oggetto
-			tmpAngularVelocity = transform.rotationMatrix.RotateRelative(angularMomentum);
+			angularVelocity = transform.rotationMatrix.RotateRelative(angularMomentum);
 
 			// Ho effettivamente l'angularVelocity ora 
-			float debug = this->getInertia().z;
-
-			tmpAngularVelocity.x /= this->getInertia().x;
-			tmpAngularVelocity.y /= this->getInertia().y;
-			tmpAngularVelocity.z /= this->getInertia().z;
+			angularVelocity.x /= this->getInertia().x;
+			angularVelocity.y /= this->getInertia().y;
+			angularVelocity.z /= this->getInertia().z;
 		}
-
-		// Sommo l'angularVelocity settata con quella derivata dalle forze di collisione (tmpAngularVelocity)
-		angularVelocity += tmpAngularVelocity;
 
 		if (angularVelocity != Utils::Vector3::zero)
 		{

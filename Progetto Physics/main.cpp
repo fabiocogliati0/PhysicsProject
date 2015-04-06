@@ -88,7 +88,7 @@ static void AzioneTasto(unsigned char Tasto, int, int)
 	TastoPremuto(Tasto);
 }
 
-float DT = 0.010f; // Tempo di integrazione
+float DT = 0.015f; // Tempo di integrazione
 double TempoTotale = 0;
 
 static void EseguiCiclicamente()
@@ -225,7 +225,8 @@ void DisegnaParall(float X, float Y, float Z, float Lx, float Ly, float Lz, cons
 void DisegnaPianoYZ(float X)
 {
 	int i;
-	float Dim = 20;
+	float Dim = 5;
+	float DimZ = 20;
 
 	glMaterialfv(GL_FRONT, GL_AMBIENT, verde);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, verde);
@@ -235,10 +236,10 @@ void DisegnaPianoYZ(float X)
 	glBegin(GL_LINES);
 	glNormal3f(1, 0, 0);
 	for (i = -Dim; i < Dim; i++) {
-		glVertex3f(X, i, -Dim);
-		glVertex3f(X, i, Dim);
+		glVertex3f(X, i, -DimZ);
+		glVertex3f(X, i, DimZ);
 	}
-	for (i = -Dim; i < Dim; i++) {
+	for (i = -DimZ; i < DimZ; i++) {
 		glVertex3f(X, -Dim, i);
 		glVertex3f(X, Dim, i);
 	}
@@ -275,8 +276,8 @@ void DisegnaPianoXY(float Z)
 	int i;
 	float Dim = 5;	//ERA 20 PERò NON SI CAPIVA NULLA!
 
-	glMaterialfv(GL_FRONT, GL_AMBIENT, rosso);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, rosso);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, verde);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, verde);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, bianco);
 	glMateriali(GL_FRONT, GL_SHININESS, 16);
 
@@ -302,27 +303,27 @@ static GLfloat LucePos[4] = { 1, 2, 1, 0 };
 
 static void VisualizzaSistema()
 {
-	rigidBody1 = world.getBody(0);
-	rigidBody2 = world.getBody(1);
-	rigidBody3 = world.getBody(2);
-	rigidBody4 = world.getBody(3);
-	rigidBody5 = world.getBody(4);
-	rigidBody6 = world.getBody(5);
-	rigidBody7 = world.getBody(6);
-	rigidBody8 = world.getBody(7);
-	rigidBody9 = world.getBody(8);
-	rigidBody10 = world.getBody(9);
+	rigidBody1 = world.getBody(1);
+	//rigidBody2 = world.getBody(1);
+	//rigidBody3 = world.getBody(2);
+	//rigidBody4 = world.getBody(3);
+	//rigidBody5 = world.getBody(4);
+	//rigidBody6 = world.getBody(5);
+	rigidBody7 = world.getBody(0);
+	//rigidBody8 = world.getBody(2);
+	//rigidBody9 = world.getBody(8);
+	//rigidBody10 = world.getBody(9);
 
-	DisegnaParall(rigidBody1.getPosition().x, rigidBody1.getPosition().y, rigidBody1.getPosition().z, SDIM_X, SDIM_Y, SDIM_Z, rigidBody1.getRotation());
-	DisegnaSfera(rigidBody2.getPosition().x, rigidBody2.getPosition().y, rigidBody2.getPosition().z, RAD, rigidBody2.getRotation());
 	DisegnaPianoXZ(PLANEPOS1);
-	DisegnaPianoXZ(PLANEPOS2);
-	DisegnaPianoYZ(PLANEPOS3);
-	DisegnaPianoYZ(PLANEPOS4);
-	DisegnaPianoXY(PLANEPOS5);
-	DisegnaPianoXY(PLANEPOS6);
-	DisegnaParall(rigidBody9.getPosition().x, rigidBody9.getPosition().y, rigidBody9.getPosition().z, SDIM_X, SDIM_Y, SDIM_Z, rigidBody9.getRotation());
-	DisegnaSfera(rigidBody10.getPosition().x, rigidBody10.getPosition().y, rigidBody10.getPosition().z, RAD, rigidBody10.getRotation());
+	//DisegnaPianoXZ(PLANEPOS2);
+	//DisegnaPianoYZ(PLANEPOS3);
+	//DisegnaPianoYZ(PLANEPOS4);
+	//DisegnaPianoXY(PLANEPOS5);
+	//DisegnaPianoXY(PLANEPOS6);
+	DisegnaParall(rigidBody7.getPosition().x, rigidBody7.getPosition().y, rigidBody7.getPosition().z, SDIM_X, SDIM_Y, SDIM_Z, rigidBody7.getRotation());
+	//DisegnaSfera(rigidBody8.getPosition().x, rigidBody8.getPosition().y, rigidBody8.getPosition().z, RAD, rigidBody8.getRotation());
+	//DisegnaParall(rigidBody9.getPosition().x, rigidBody9.getPosition().y, rigidBody9.getPosition().z, SDIM_X, SDIM_Y, SDIM_Z, rigidBody9.getRotation());
+	//DisegnaSfera(rigidBody10.getPosition().x, rigidBody10.getPosition().y, rigidBody10.getPosition().z, RAD, rigidBody10.getRotation());
 }
 
 static void DisegnaTutto()
@@ -343,15 +344,15 @@ static void DisegnaTutto()
 int main(int argc, char **argv)
 {
 
-	world = World(10.0f, Vector3(0.0f, -9.8f, 0));
+	world = World(10.0f, Vector3(0.0f, -3.8f, 0));
 
 	PhysicMaterial material;
-	material.dynamicFriction = 0.9f;
+	material.dynamicFriction = 5.0f;
 	material.elasticity = 400.0f;
-	material.staticFriction = 0.9f;
-	material.viscosity = 1.0f;
+	material.staticFriction = 5.0f;
+	material.viscosity = 10.0f;
 
-	float mass = 5.0f;
+	float mass = 10.0f;
 
 	Vector3 inertia;
 
@@ -368,34 +369,35 @@ int main(int argc, char **argv)
 	Transform transformCube;
 	Transform transformSphere2;
 	Transform transformCube2;
-	transformSphere.position = Vector3(0.0f, -2, 0.0);
-	transformCube.position = Vector3(0.2f, 0, 0);
+	transformSphere.position = Vector3(1, -6, 0.0);
+	transformCube.position = Vector3(5, 0, 0);
 	transformSphere2.position = Vector3(3.0f, 0, -3.0);
 	transformCube2.position = Vector3(1.0f, 0, -3);
 
-	rigidBody1 = RigidBody(1.0f, material, a, transformCube);
-	rigidBody2 = RigidBody(1.0f, material, b, transformSphere);
-	rigidBody3 = RigidBody(1.0f, material, c, true);
-	rigidBody4 = RigidBody(1.0f, material, d, true);
-	rigidBody5 = RigidBody(1.0f, material, e, true);
-	rigidBody6 = RigidBody(1.0f, material, f, true);
-	rigidBody7 = RigidBody(1.0f, material, g, true);
-	rigidBody8 = RigidBody(1.0f, material, h, true);
+	rigidBody1 = RigidBody(1.0f, material, c, true);
+	rigidBody2 = RigidBody(1.0f, material, d, true);
+	rigidBody3 = RigidBody(1.0f, material, e, true);
+	rigidBody4 = RigidBody(1.0f, material, f, true);
+	rigidBody5 = RigidBody(1.0f, material, g, true);
+	rigidBody6 = RigidBody(1.0f, material, h, true);
+	rigidBody7 = RigidBody(10.0f, material, a, transformCube);
+	rigidBody8 = RigidBody(1.0f, material, b, transformSphere);
 	rigidBody9 = RigidBody(1.0f, material, a, transformCube2);
 	rigidBody10 = RigidBody(1.0f, material, b, transformSphere2);
 
-	world.addBody(rigidBody1);
-	world.addBody(rigidBody2);
-	world.addBody(rigidBody3);
-	world.addBody(rigidBody4);
-	world.addBody(rigidBody5);
-	world.addBody(rigidBody6);
 	world.addBody(rigidBody7);
-	world.addBody(rigidBody8);
-	world.addBody(rigidBody9);
-	world.addBody(rigidBody10);
+	//world.addBody(rigidBody2);
+	//world.addBody(rigidBody3);
+	//world.addBody(rigidBody4);
+	//world.addBody(rigidBody5);
+	//world.addBody(rigidBody6);
+	world.addBody(rigidBody1);
+	//world.addBody(rigidBody8);
+	//world.addBody(rigidBody9);
+	//world.addBody(rigidBody10);
 
 	//world.getBody(1).addForce(Vector3(0.2f, 0, 0), Vector3(0, 500, 0));
+	world.getBody(0).setAngularMomentum(Vector3(0, 0, 5));
 
 	// Inizio codice Testbed
 	glutInit(&argc, argv);
