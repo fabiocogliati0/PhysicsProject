@@ -28,7 +28,7 @@ namespace PhysicEngine
 			{
 				for (size_t i = 0; i < o_collisions.size(); ++i)
 				{
-					//o_collisions[i].normal *= -1.0f;
+					o_collisions[i].normal *= -1.0f;
 				}
 			}
 			return isIntersection;

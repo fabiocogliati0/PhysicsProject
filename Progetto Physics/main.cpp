@@ -280,14 +280,11 @@ int main(int argc, char **argv)
 	Transform transformSphere;
 	Transform transformCube;
 	transformSphere.position = Vector3(0.0f, -2, 0);
-	transformCube.position = Vector3(0, 0, 0);
+	transformCube.position = Vector3(0.2f, 0, 0);
 
 	rigidBody1 = RigidBody(1.0f, material, a, transformCube);
 	rigidBody2 = RigidBody(1.0f, material, b, transformSphere);
 	rigidBody3 = RigidBody(1.0f, material, c, true);
-
-	std::vector<Collision> outputCollision;
-	rigidBody1.intersect(rigidBody2, outputCollision);
 
 	world.addBody(rigidBody1);
 	world.addBody(rigidBody2);
