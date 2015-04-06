@@ -99,7 +99,6 @@ static void EseguiCiclicamente()
 		world.updatePhysic(DT);
 		TempoTotale += DT;
 	}
-
 	glutPostRedisplay();
 }
 
@@ -350,7 +349,7 @@ int main(int argc, char **argv)
 	material.dynamicFriction = 5.0f;
 	material.elasticity = 400.0f;
 	material.staticFriction = 5.0f;
-	material.viscosity = 10.0f;
+	material.viscosity = 15.0f;
 
 	float mass = 10.0f;
 
@@ -370,7 +369,7 @@ int main(int argc, char **argv)
 	Transform transformSphere2;
 	Transform transformCube2;
 	transformSphere.position = Vector3(1, -6, 0.0);
-	transformCube.position = Vector3(5, 0, 0);
+	transformCube.position = Vector3(3, 0, 0);
 	transformSphere2.position = Vector3(3.0f, 0, -3.0);
 	transformCube2.position = Vector3(1.0f, 0, -3);
 

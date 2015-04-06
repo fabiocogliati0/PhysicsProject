@@ -187,7 +187,6 @@ namespace PhysicEngine
 			// *** Calcolo il momento risultante che mi servirà per ruotare l'oggetto
 			Utils::Vector3 newResultantMomentum = point.cross(force);
 			resultantMomentum += newResultantMomentum;
-		
 		}
 	}
 
@@ -221,19 +220,19 @@ namespace PhysicEngine
 		transform.position += velocity * dt;
 
 		// Moto angolare
-		if (resultantMomentum == Utils::Vector3::zero)
+		if (resultantMomentum != Utils::Vector3::zero)
 		{
 			angularMomentum += resultantMomentum * dt;
-
-			// Per risolvere problemi di inerzia, "raddrizzo" il mio
-			// oggetto, altrimenti l'inerzia cambierebbe in base a come è disposto l'oggetto
-			angularVelocity = transform.rotationMatrix.RotateRelative(angularMomentum);
-
-			// Ho effettivamente l'angularVelocity ora 
-			angularVelocity.x /= this->getInertia().x;
-			angularVelocity.y /= this->getInertia().y;
-			angularVelocity.z /= this->getInertia().z;
 		}
+			
+		// Per risolvere problemi di inerzia, "raddrizzo" il mio
+		// oggetto, altrimenti l'inerzia cambierebbe in base a come è disposto l'oggetto
+		angularVelocity = transform.rotationMatrix.RotateRelative(angularMomentum);
+
+		// Ho effettivamente l'angularVelocity ora 
+		angularVelocity.x /= this->getInertia().x;
+		angularVelocity.y /= this->getInertia().y;
+		angularVelocity.z /= this->getInertia().z;
 
 		if (angularVelocity != Utils::Vector3::zero)
 		{
