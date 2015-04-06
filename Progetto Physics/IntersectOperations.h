@@ -26,10 +26,7 @@ namespace PhysicEngine
 			bool isIntersection = intersect(i_collider2, i_rigidBody2, i_collider1, i_rigidBody1, o_collisions);
 			if (isIntersection)
 			{
-				for (size_t i = 0; i < o_collisions.size(); ++i)
-				{
-					o_collisions[i].normal *= -1.0f;
-				}
+				for (size_t i = 0; i < o_collisions.size(); ++i) o_collisions[i].normal *= -1.0f;	
 			}
 			return isIntersection;
 		}
@@ -46,10 +43,10 @@ namespace PhysicEngine
 
 			Collision o_collision;
 
-			Utils::Vector3 spherePosition1 = i_rigidBody1.getPosition();
+			const Utils::Vector3& spherePosition1 = i_rigidBody1.getPosition();
 			float sphereRadius1 = i_collider1.getRadius();
 
-			Utils::Vector3 spherePosition2 = i_rigidBody2.getPosition();
+			const Utils::Vector3& spherePosition2 = i_rigidBody2.getPosition();
 			float sphereRadius2 = i_collider2.getRadius();
 
 			float distanceFromCenters = (spherePosition1 - spherePosition2).module();;
@@ -131,8 +128,8 @@ namespace PhysicEngine
 
 			Collision o_collision;
 
-			Utils::Vector3 boxPosition = i_rigidBody1.getPosition();
-			Utils::Vector3 spherePosition = i_rigidBody2.getPosition();
+			const Utils::Vector3& boxPosition = i_rigidBody1.getPosition();
+			const Utils::Vector3& spherePosition = i_rigidBody2.getPosition();
 			float sphereRadius = i_collider2.getRadius();
 
 			o_collision.impactPoint = spherePosition - boxPosition;
@@ -189,10 +186,10 @@ namespace PhysicEngine
 		{
 			o_collisions.clear();
 			
-			Utils::Vector3 boxPosition = i_rigidBody1.getPosition();
-			Utils::Matrix boxRotation = i_rigidBody1.getRotation();
-			Utils::Vector3 boxVelocity = i_rigidBody1.getVelocity();
-			Utils::Vector3 boxAngVelocity = i_rigidBody1.getAngularVelocity();
+			const Utils::Vector3& boxPosition = i_rigidBody1.getPosition();
+			const Utils::Matrix& boxRotation = i_rigidBody1.getRotation();
+			const Utils::Vector3& boxVelocity = i_rigidBody1.getVelocity();
+			const Utils::Vector3& boxAngVelocity = i_rigidBody1.getAngularVelocity();
 
 			float A = i_collider2.getAFunctionCoefficient();
 			float B = i_collider2.getBFunctionCoefficient();
@@ -243,9 +240,9 @@ namespace PhysicEngine
 			o_collisions.clear();
 			
 			float sphereRadius = i_collider1.getRadius();
-			Utils::Vector3 spherePosition = i_rigidBody1.getPosition();
-			Utils::Vector3 sphereVelocity = i_rigidBody1.getVelocity();
-			Utils::Vector3 sphereAngVelocity = i_rigidBody1.getAngularVelocity();
+			const Utils::Vector3& spherePosition = i_rigidBody1.getPosition();
+			const Utils::Vector3& sphereVelocity = i_rigidBody1.getVelocity();
+			const Utils::Vector3& sphereAngVelocity = i_rigidBody1.getAngularVelocity();
 
 			float A = i_collider2.getAFunctionCoefficient();
 			float B = i_collider2.getBFunctionCoefficient();

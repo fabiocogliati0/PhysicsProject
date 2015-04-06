@@ -31,9 +31,6 @@ namespace PhysicEngine{
 				{
 					PhysicEngine::Collision outputCollision = outputCollisions[k];
 
-					//if (outputCollision.normal.y < 0)			//DEBUG
-					//	outputCollision.normal *= -1;			//DEBUG
-
 					// Seleziono la più grande fra le due
 					float elasticity = bodies[i].getElasticity() >= bodies[j].getElasticity() ?
 											bodies[i].getElasticity() : bodies[j].getElasticity();
@@ -104,7 +101,7 @@ namespace PhysicEngine{
 		if ( !rigidBodyA.isStatic() )
 		{
 			localPosition = collision.impactPoint - rigidBodyA.getPosition();
-			rigidBodyA.addForce(localPosition,normalForce);	//*150 : DEBUG
+			rigidBodyA.addForce(localPosition,normalForce);
 		}
 
 		normalForce.invert();
@@ -112,7 +109,7 @@ namespace PhysicEngine{
 		if ( !rigidBodyB.isStatic() )
 		{
 			localPosition = collision.impactPoint - rigidBodyB.getPosition();
-			rigidBodyB.addForce(localPosition,normalForce);	//*150 : DEBUG
+			rigidBodyB.addForce(localPosition,normalForce);
 		}
 	}
 
