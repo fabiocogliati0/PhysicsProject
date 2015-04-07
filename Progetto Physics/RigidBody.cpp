@@ -61,8 +61,6 @@ namespace PhysicEngine
 			staticBody(false)
 	{
 		this->collider = collider.clone();
-		
-		this->Init();
 	}
 
 
@@ -78,12 +76,6 @@ namespace PhysicEngine
 		assert(other.collider != nullptr);
 		
 		this->collider = other.collider->clone();
-	}
-
-	void RigidBody::Init()
-	{
-		quaternionRotation.s = 1;
-		transform.rotationMatrix[0] = transform.rotationMatrix[4] = transform.rotationMatrix[8] = 1;
 	}
 
 	RigidBody::~RigidBody()
@@ -173,12 +165,27 @@ namespace PhysicEngine
 		return staticBody;
 	}
 
-	void RigidBody::addForce(const Utils::Vector3& force)
+
+	void RigidBody::setAngularMomentum(const Utils::Vector3 &input) // DEBUG
 	{
-		this->addForce(Utils::Vector3::zero, force);
+		angularMomentum = input; // lo aggiungo o lo setto nuovamente?
 	}
 
-	void RigidBody::addForce(const Utils::Vector3& point, const Utils::Vector3& force)
+	void RigidBody::setVelocity(const Utils::Vector3 &input)
+	{
+		velocity = input;
+	}
+
+	void RigidBody::setAngularVelocity(const Utils::Vector3 &input)
+	{
+	}
+
+	void RigidBody::addForceDT(const Utils::Vector3& force)
+	{
+		this->addForceDT(Utils::Vector3::zero, force);
+	}
+
+	void RigidBody::addForceDT(const Utils::Vector3& point, const Utils::Vector3& force)
 	{
 		// Sommo la forza ricevuta a quella che ho già
 		this->resultantForce += force;
@@ -190,15 +197,9 @@ namespace PhysicEngine
 		}
 	}
 
-	void RigidBody::setAngularMomentum(Utils::Vector3 &input)
-	{
-		angularMomentum = input;
-	}
-
 	void RigidBody::updatePhyisic(float dt, const World& myWorld)
 	{
 		Utils::Quaternion newQuaternionRotation;
-		Utils::Vector3 tmpAngularVelocity;
 
 		// Se la gravità è uguale l'ho già calcolata e mi evito una moltiplicazione
 		if (myWorld.getGravityForce() != gravity)
@@ -206,7 +207,7 @@ namespace PhysicEngine
 			// *** calcolo nuovamente la quantità di moto della gravità
 			// quantitadiMotoGravity = gravity * dt;
 			gravity = myWorld.getGravityForce();
-			velocityOfGravity = gravity * dt;
+			velocityOfGravity = gravity * dt; 
 		}
 
 		// Moto rettilineo uniforme

@@ -99,6 +99,10 @@ static void EseguiCiclicamente()
 		world.updatePhysic(DT);
 		TempoTotale += DT;
 	}
+	if (TempoTotale > 6.3)
+	{
+		int a = 2;
+	}
 	glutPostRedisplay();
 }
 
@@ -302,7 +306,7 @@ static GLfloat LucePos[4] = { 1, 2, 1, 0 };
 
 static void VisualizzaSistema()
 {
-	rigidBody1 = world.getBody(0);
+	rigidBody1 = world.getBody(2);
 	//rigidBody2 = world.getBody(1);
 	//rigidBody3 = world.getBody(2);
 	//rigidBody4 = world.getBody(3);
@@ -310,8 +314,8 @@ static void VisualizzaSistema()
 	//rigidBody6 = world.getBody(5);
 	//rigidBody7 = world.getBody(1);
 	//rigidBody8 = world.getBody(2);
-	//rigidBody9 = world.getBody(8);
-	rigidBody10 = world.getBody(1);
+	rigidBody9 = world.getBody(1);
+	rigidBody10 = world.getBody(0);
 
 	DisegnaPianoXZ(PLANEPOS1);
 	//DisegnaPianoXZ(PLANEPOS2);
@@ -321,7 +325,7 @@ static void VisualizzaSistema()
 	//DisegnaPianoXY(PLANEPOS6);
 	//DisegnaParall(rigidBody7.getPosition().x, rigidBody7.getPosition().y, rigidBody7.getPosition().z, SDIM_X, SDIM_Y, SDIM_Z, rigidBody7.getRotation());
 	//DisegnaSfera(rigidBody8.getPosition().x, rigidBody8.getPosition().y, rigidBody8.getPosition().z, RAD, rigidBody8.getRotation());
-	//DisegnaParall(rigidBody9.getPosition().x, rigidBody9.getPosition().y, rigidBody9.getPosition().z, SDIM_X, SDIM_Y, SDIM_Z, rigidBody9.getRotation());
+	DisegnaParall(rigidBody9.getPosition().x, rigidBody9.getPosition().y, rigidBody9.getPosition().z, SDIM_X, SDIM_Y, SDIM_Z, rigidBody9.getRotation());
 	DisegnaSfera(rigidBody10.getPosition().x, rigidBody10.getPosition().y, rigidBody10.getPosition().z, RAD, rigidBody10.getRotation());
 }
 
@@ -346,9 +350,9 @@ int main(int argc, char **argv)
 	world = World(10.0f, Vector3(0.0f, -3.8f, 0));
 
 	PhysicMaterial material;
-	material.dynamicFriction = 5;
+	material.dynamicFriction = 1;
 	material.elasticity = 400.0f;
-	material.staticFriction = 5;
+	material.staticFriction = 1;
 	material.viscosity = 10.0f;
 
 	float mass = 10.0f;
@@ -370,7 +374,7 @@ int main(int argc, char **argv)
 	Transform transformCube2;
 	transformSphere.position = Vector3(1, -6, 0.0);
 	transformCube.position = Vector3(3, 0, 0);
-	transformSphere2.position = Vector3(3.0f, 0, -20.0);
+	transformSphere2.position = Vector3(3.0f, 0, -3.0);
 	transformCube2.position = Vector3(1.0f, 0, -3);
 
 	rigidBody1 = RigidBody(1.0f, material, c, true);
@@ -381,10 +385,10 @@ int main(int argc, char **argv)
 	rigidBody6 = RigidBody(1.0f, material, h, true);
 	rigidBody7 = RigidBody(10.0f, material, a, transformCube);
 	rigidBody8 = RigidBody(1.0f, material, b, transformSphere);
-	rigidBody9 = RigidBody(1.0f, material, a, transformCube2);
+	rigidBody9 = RigidBody(10.0f, material, a, transformCube2);
 	rigidBody10 = RigidBody(10.0f, material, b, transformSphere2);
 
-	world.addBody(rigidBody1);
+	world.addBody(rigidBody10);
 	//world.addBody(rigidBody2);
 	//world.addBody(rigidBody3);
 	//world.addBody(rigidBody4);
@@ -392,11 +396,11 @@ int main(int argc, char **argv)
 	//world.addBody(rigidBody6);
 	//world.addBody(rigidBody7);
 	//world.addBody(rigidBody8);
-	//world.addBody(rigidBody9);
-	world.addBody(rigidBody10);
+	world.addBody(rigidBody9);
+	world.addBody(rigidBody1);
 
 	//world.getBody(1).addForce(Vector3(0.2f, 0, 0), Vector3(0, 500, 0));
-	world.getBody(1).setAngularMomentum(Vector3(0, 0, 2));
+	world.getBody(0).setAngularMomentum(Vector3(0, 0, 10));
 
 	// Inizio codice Testbed
 	glutInit(&argc, argv);

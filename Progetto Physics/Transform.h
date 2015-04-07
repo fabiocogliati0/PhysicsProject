@@ -6,17 +6,14 @@
 
 namespace PhysicEngine
 {
-	struct Transform
+	class Transform
 	{
-		Utils::Vector3 position;
-		Utils::Matrix rotationMatrix;
+		public:
+			Utils::Vector3 position;
+			Utils::Matrix rotationMatrix;
+			Utils::Quaternion quaternionMatrix;
 
-		Utils::Vector3 getEulerRotation() const;
-
-		void setEulerRotation(const Utils::Vector3& eulerAngles);
-
-		Utils::Quaternion getQuaternionRotation() const;
-
-		void setQuaternionRotation(const Utils::Quaternion& quaternionRotation);
+			Utils::Vector3 getEulerRotation() const;
+			void setEulerRotation(const Utils::Vector3& eulerAngles);
 	};
 }

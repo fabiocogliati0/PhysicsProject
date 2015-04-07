@@ -6,6 +6,7 @@ namespace Utils
 	{
 		for (size_t i = 0; i < _size; ++i)
 			_Matrix[i] = 0;
+		_Matrix[0] = _Matrix[4] = _Matrix[8] = 1;
 	}
 
 	float& Matrix::operator[](size_t index)

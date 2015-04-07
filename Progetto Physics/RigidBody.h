@@ -52,8 +52,6 @@ namespace PhysicEngine{
 
 		
 		RigidBody(const RigidBody& other);
-		
-		void RigidBody::Init();
 
 		~RigidBody();
 
@@ -84,14 +82,17 @@ namespace PhysicEngine{
 		bool isStatic() const;
 
 
+		void setAngularMomentum(const Utils::Vector3 &input); // DEBUG
 
-		void addForce(const Utils::Vector3& point);
+		void setVelocity(const Utils::Vector3 &input);
 
-		void addForce(const Utils::Vector3& point, const Utils::Vector3& force);
+		void setAngularVelocity(const Utils::Vector3 &input);
+
+		void addForceDT(const Utils::Vector3& point);
+
+		void addForceDT(const Utils::Vector3& point, const Utils::Vector3& force);
 
 		void updatePhyisic(float dt, const World& myWorld);
-
-		void setAngularMomentum(Utils::Vector3 &input);
 
 	private:
 

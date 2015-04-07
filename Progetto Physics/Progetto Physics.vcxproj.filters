@@ -104,5 +104,8 @@
     <ClCompile Include="PlaneCollider.cpp">
       <Filter>Source Files\PhysicEngine\Colliders</Filter>
     </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Source Files\PhysicEngine</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

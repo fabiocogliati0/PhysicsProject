@@ -74,6 +74,7 @@ namespace PhysicEngine{
 		Utils::Vector3 tangentForce;
 		Utils::Vector3 totalForce;
 
+		// Impactspeed indefinita 0/0
 		modNormalVelocity = collision.impactSpeed.dot(collision.normal);
 		normalVelocity = collision.normal * modNormalVelocity;
 		tangentVelocity = collision.impactSpeed - normalVelocity;
@@ -108,7 +109,7 @@ namespace PhysicEngine{
 		if ( !rigidBodyA.isStatic() )
 		{
 			localPosition = collision.impactPoint - rigidBodyA.getPosition();
-			rigidBodyA.addForce(localPosition, totalForce);
+			rigidBodyA.addForceDT(localPosition, totalForce);
 		}
 
 		totalForce.invert();
@@ -116,7 +117,7 @@ namespace PhysicEngine{
 		if ( !rigidBodyB.isStatic() )
 		{
 			localPosition = collision.impactPoint - rigidBodyB.getPosition();
-			rigidBodyB.addForce(localPosition, totalForce);
+			rigidBodyB.addForceDT(localPosition, totalForce);
 		}
 	}
 
