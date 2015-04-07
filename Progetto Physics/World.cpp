@@ -75,7 +75,7 @@ namespace PhysicEngine{
 		Utils::Vector3 totalForce;
 
 		// Bug con il piano
-		//collision.impactSpeed.invert();
+		collision.impactSpeed.invert();
 
 		modNormalVelocity = collision.impactSpeed.dot(collision.normal);
 		normalVelocity = collision.normal * modNormalVelocity;
