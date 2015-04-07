@@ -26,12 +26,16 @@ namespace PhysicEngine
 
 		ColliderType getColliderType() const;
 
+		const Utils::Vector3& getSemiDimension() const;
+
 		const Utils::Vector3& getVertex(int vertex) const;
 
 
 	private:
 
 		Utils::Vector3 vertices[8];
+
+		Utils::Vector3 semiDimensions;
 
 	};
 

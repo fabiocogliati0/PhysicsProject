@@ -310,7 +310,7 @@ static void VisualizzaSistema()
 	//rigidBody6 = world.getBody(5);
 	rigidBody7 = world.getBody(0);
 	//rigidBody8 = world.getBody(2);
-	//rigidBody9 = world.getBody(8);
+	rigidBody9 = world.getBody(2);
 	//rigidBody10 = world.getBody(9);
 
 	DisegnaPianoXZ(PLANEPOS1);
@@ -321,7 +321,7 @@ static void VisualizzaSistema()
 	//DisegnaPianoXY(PLANEPOS6);
 	DisegnaParall(rigidBody7.getPosition().x, rigidBody7.getPosition().y, rigidBody7.getPosition().z, SDIM_X, SDIM_Y, SDIM_Z, rigidBody7.getRotation());
 	//DisegnaSfera(rigidBody8.getPosition().x, rigidBody8.getPosition().y, rigidBody8.getPosition().z, RAD, rigidBody8.getRotation());
-	//DisegnaParall(rigidBody9.getPosition().x, rigidBody9.getPosition().y, rigidBody9.getPosition().z, SDIM_X, SDIM_Y, SDIM_Z, rigidBody9.getRotation());
+	DisegnaParall(rigidBody9.getPosition().x, rigidBody9.getPosition().y, rigidBody9.getPosition().z, SDIM_X, SDIM_Y, SDIM_Z, rigidBody9.getRotation());
 	//DisegnaSfera(rigidBody10.getPosition().x, rigidBody10.getPosition().y, rigidBody10.getPosition().z, RAD, rigidBody10.getRotation());
 }
 
@@ -369,9 +369,9 @@ int main(int argc, char **argv)
 	Transform transformSphere2;
 	Transform transformCube2;
 	transformSphere.position = Vector3(1, -6, 0.0);
-	transformCube.position = Vector3(3, 0, 0);
+	transformCube.position = Vector3(0, 0, 0);
 	transformSphere2.position = Vector3(3.0f, 0, -3.0);
-	transformCube2.position = Vector3(1.0f, 0, -3);
+	transformCube2.position = Vector3(0, -3, 0);
 
 	rigidBody1 = RigidBody(1.0f, material, c, true);
 	rigidBody2 = RigidBody(1.0f, material, d, true);
@@ -392,7 +392,7 @@ int main(int argc, char **argv)
 	//world.addBody(rigidBody6);
 	world.addBody(rigidBody1);
 	//world.addBody(rigidBody8);
-	//world.addBody(rigidBody9);
+	world.addBody(rigidBody9);
 	//world.addBody(rigidBody10);
 
 	//world.getBody(1).addForce(Vector3(0.2f, 0, 0), Vector3(0, 500, 0));
