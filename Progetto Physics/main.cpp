@@ -88,7 +88,7 @@ static void AzioneTasto(unsigned char Tasto, int, int)
 	TastoPremuto(Tasto);
 }
 
-float DT = 0.015f; // Tempo di integrazione
+float DT = 0.005f; // Tempo di integrazione
 double TempoTotale = 0;
 
 static void EseguiCiclicamente()
