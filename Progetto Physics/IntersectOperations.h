@@ -56,6 +56,11 @@ namespace PhysicEngine
 			float distanceFromCenters = (spherePosition1 - spherePosition2).module();;
 			float radiusSum = sphereRadius1 + sphereRadius2;
 
+			if (distanceFromCenters < 0.001f)
+			{
+				return false;
+			}
+
 			if (distanceFromCenters > radiusSum)
 			{
 				return false;
@@ -151,6 +156,11 @@ namespace PhysicEngine
 			
 			o_collision.normal = o_collision.impactPoint - spherePosition;
 			float d = o_collision.normal.module();
+
+			if (d < 0.001f)
+			{
+				return false;
+			}
 
 			if (d > sphereRadius)
 			{
