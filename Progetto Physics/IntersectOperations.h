@@ -26,7 +26,11 @@ namespace PhysicEngine
 			bool isIntersection = intersect(i_collider2, i_rigidBody2, i_collider1, i_rigidBody1, o_collisions);
 			if (isIntersection)
 			{
-				for (size_t i = 0; i < o_collisions.size(); ++i) o_collisions[i].normal *= -1.0f;	
+				for (size_t i = 0; i < o_collisions.size(); ++i)
+				{
+					o_collisions[i].normal.invert();
+					o_collisions[i].impactSpeed.invert();
+				}
 			}
 			return isIntersection;
 		}
@@ -133,9 +137,7 @@ namespace PhysicEngine
 			float sphereRadius = i_collider2.getRadius();
 
 			o_collision.impactPoint = spherePosition - boxPosition;
-			//RuotaRelative(r->MRot, c[0].PuntoImpatto, c[0].PuntoImpatto);	//
 			o_collision.impactPoint = i_rigidBody1.getRotation().RotateRelative(o_collision.impactPoint);
-
 
 			if (o_collision.impactPoint.x > i_collider1.getVertex(2).x) o_collision.impactPoint.x = i_collider1.getVertex(2).x;
 			if (o_collision.impactPoint.x < i_collider1.getVertex(0).x) o_collision.impactPoint.x = i_collider1.getVertex(0).x;
@@ -144,7 +146,6 @@ namespace PhysicEngine
 			if (o_collision.impactPoint.z > i_collider1.getVertex(0).z) o_collision.impactPoint.y = i_collider1.getVertex(0).z;
 			if (o_collision.impactPoint.z < i_collider1.getVertex(4).z) o_collision.impactPoint.z = i_collider1.getVertex(4).z;
 
-			//RuotaAssolute(r->MRot, c[0].PuntoImpatto, c[0].PuntoImpatto); //
 			o_collision.impactPoint = i_rigidBody1.getRotation().RotateAbsolute(o_collision.impactPoint);
 			o_collision.impactPoint = o_collision.impactPoint + boxPosition;
 			
@@ -222,11 +223,11 @@ namespace PhysicEngine
 
 					if (look == PlaneCollider::MinorLookDirection)
 					{
-						o_collision.normal *= -1.0f;
-						o_collision.deformation *= -1.0f;
+						o_collision.normal.invert();
+						o_collision.deformation = -o_collision.deformation;
 					}
 
-					o_collision.impactSpeed = o_collision.impactSpeed * -1.0f;
+					o_collision.impactSpeed.invert();
 
 					o_collisions.push_back(o_collision);
 
@@ -295,11 +296,11 @@ namespace PhysicEngine
 
 				if (look == PlaneCollider::MinorLookDirection)
 				{
-					o_collision.normal *= -1.0f;
-					o_collision.deformation *= -1.0f;
+					o_collision.normal.invert();
+					o_collision.deformation = -o_collision.deformation;
 				}
 
-				o_collision.impactSpeed *= -1.0f;
+				o_collision.impactSpeed.invert();
 
 				o_collisions.push_back(o_collision);
 

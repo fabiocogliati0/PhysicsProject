@@ -74,9 +74,6 @@ namespace PhysicEngine{
 		Utils::Vector3 tangentForce;
 		Utils::Vector3 totalForce;
 
-		// Bug con il piano
-		//collision.impactSpeed.invert();
-
 		modNormalVelocity = collision.impactSpeed.dot(collision.normal);
 		normalVelocity = collision.normal * modNormalVelocity;
 		tangentVelocity = collision.impactSpeed - normalVelocity;

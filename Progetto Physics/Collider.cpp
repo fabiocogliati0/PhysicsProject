@@ -14,28 +14,36 @@ namespace PhysicEngine
 		std::vector<Collision>& o_collisions
 		)	const
 	{
-		if (this->getColliderType() == BoxColliderType){
+
+		bool intersect = false;
+
+		if (this->getColliderType() == BoxColliderType)
+		{
 			const BoxCollider& thisClass = reinterpret_cast<const BoxCollider&>(*this);
-			bool intersect = i_colliderOther.intersect(i_rigidBodyOther, thisClass, i_rigidBody, o_collisions);
-			for (size_t i = 0; i < o_collisions.size(); ++i) o_collisions[i].normal *= -1.0f;
-			return intersect;
+			intersect = i_colliderOther.intersect(i_rigidBodyOther, thisClass, i_rigidBody, o_collisions);
 		}
-		else if (this->getColliderType() == SphereColliderType){
+		else if (this->getColliderType() == SphereColliderType)
+		{
 			const SphereCollider& thisClass = reinterpret_cast<const SphereCollider&>(*this);
-			bool intersect = i_colliderOther.intersect(i_rigidBodyOther, thisClass, i_rigidBody, o_collisions);
-			for (size_t i = 0; i < o_collisions.size(); ++i) o_collisions[i].normal *= -1.0f;
-			return intersect;
+			intersect = i_colliderOther.intersect(i_rigidBodyOther, thisClass, i_rigidBody, o_collisions);
 		}
-		else if (this->getColliderType() == PlaneColliderType){
+		else if (this->getColliderType() == PlaneColliderType)
+		{
 			const PlaneCollider& thisClass = reinterpret_cast<const PlaneCollider&>(*this);
-			bool intersect = i_colliderOther.intersect(i_rigidBodyOther, thisClass, i_rigidBody, o_collisions);
-			for (size_t i = 0; i < o_collisions.size(); ++i) o_collisions[i].normal *= -1.0f;
-			return intersect;
+			intersect = i_colliderOther.intersect(i_rigidBodyOther, thisClass, i_rigidBody, o_collisions);
 		}
-		else{
+		else
+		{
 			assert(false);
-			return false;
 		}
+
+
+		for (size_t i = 0; i < o_collisions.size(); ++i)
+		{
+			o_collisions[i].normal.invert();
+			o_collisions[i].impactSpeed.invert();
+		}
+		return intersect;
 		
 	}
 
@@ -46,19 +54,23 @@ namespace PhysicEngine
 		)	const
 	{
 
-		if (this->getColliderType() == BoxColliderType){
+		if (this->getColliderType() == BoxColliderType)
+		{
 			const BoxCollider& thisClass = reinterpret_cast<const BoxCollider&>(*this);
 			return IntersectOperations::intersect(thisClass, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collisions);
 		}
-		else if (this->getColliderType() == SphereColliderType){
+		else if (this->getColliderType() == SphereColliderType)
+		{
 			const SphereCollider& thisClass = reinterpret_cast<const SphereCollider&>(*this);
 			return IntersectOperations::intersect(thisClass, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collisions);
 		}
-		else if (this->getColliderType() == PlaneColliderType){
+		else if (this->getColliderType() == PlaneColliderType)
+		{
 			const PlaneCollider& thisClass = reinterpret_cast<const PlaneCollider&>(*this);
 			return IntersectOperations::intersect(thisClass, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collisions);
 		}
-		else{
+		else
+		{
 			assert(false);
 			return false;
 		}
@@ -70,19 +82,23 @@ namespace PhysicEngine
 		std::vector<Collision>& o_collisions
 		)	const
 	{
-		if (this->getColliderType() == BoxColliderType){
+		if (this->getColliderType() == BoxColliderType)
+		{
 			const BoxCollider& thisClass = reinterpret_cast<const BoxCollider&>(*this);
 			return IntersectOperations::intersect(thisClass, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collisions);
 		}
-		else if (this->getColliderType() == SphereColliderType){
+		else if (this->getColliderType() == SphereColliderType)
+		{
 			const SphereCollider& thisClass = reinterpret_cast<const SphereCollider&>(*this);
 			return IntersectOperations::intersect(thisClass, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collisions);
 		}
-		else if (this->getColliderType() == PlaneColliderType){
+		else if (this->getColliderType() == PlaneColliderType)
+		{
 			const PlaneCollider& thisClass = reinterpret_cast<const PlaneCollider&>(*this);
 			return IntersectOperations::intersect(thisClass, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collisions);
 		}
-		else{
+		else
+		{
 			assert(false);
 			return false;
 		}
@@ -94,19 +110,23 @@ namespace PhysicEngine
 		std::vector<Collision>& o_collisions
 		)	const
 	{
-		if (this->getColliderType() == BoxColliderType){
+		if (this->getColliderType() == BoxColliderType)
+		{
 			const BoxCollider& thisClass = reinterpret_cast<const BoxCollider&>(*this);
 			return IntersectOperations::intersect(thisClass, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collisions);
 		}
-		else if (this->getColliderType() == SphereColliderType){
+		else if (this->getColliderType() == SphereColliderType)
+		{
 			const SphereCollider& thisClass = reinterpret_cast<const SphereCollider&>(*this);
 			return IntersectOperations::intersect(thisClass, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collisions);
 		}
-		else if (this->getColliderType() == PlaneColliderType){
+		else if (this->getColliderType() == PlaneColliderType)
+		{
 			const PlaneCollider& thisClass = reinterpret_cast<const PlaneCollider&>(*this);
 			return IntersectOperations::intersect(thisClass, i_rigidBody, i_colliderOther, i_rigidBodyOther, o_collisions);
 		}
-		else{
+		else
+		{
 			assert(false);
 			return false;
 		}
