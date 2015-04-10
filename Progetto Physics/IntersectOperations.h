@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <cmath>
 
 namespace PhysicEngine
 {
@@ -105,314 +106,133 @@ namespace PhysicEngine
 			const Utils::Matrix& boxRotation2 = i_rigidBody2.getRotation();
 			const Utils::Vector3& boxSemiDim2 = i_collider2.getSemiDimension();
 
-			Utils::Vector3 centersDistance = boxPosition2 - boxPosition1;
-			centersDistance *= -1.0f;
-
-			//verificare se porta in object space, chiedere a manu
-			Utils::Vector3 secondCenteredInFirst = i_rigidBody1.getRotation().RotateRelative(boxPosition2);			
 			Utils::Vector3 radiusSum = boxSemiDim1 + boxSemiDim2;
-			
-			//SphereTest for early reject
-			bool sphereConsideration = (centersDistance.x * centersDistance.x  < radiusSum.x * radiusSum.x)
-									&& (centersDistance.y * centersDistance.y  < radiusSum.y * radiusSum.y)
-									&& (centersDistance.z * centersDistance.z  < radiusSum.z * radiusSum.z)
-									&& (centersDistance.module() < radiusSum.module());
 
-			if (!sphereConsideration)
+
+			for (int i = 0; i < 1; ++i)
 			{
-				//compute min and max for first box
-				Utils::Vector3 min = boxPosition1 - boxSemiDim1;
-				Utils::Vector3 max = boxPosition1 + boxSemiDim1;
 
-				min = boxRotation1.RotateRelative(min);	//todo: stessa roba
-				max = boxRotation1.RotateRelative(max);
+				Utils::Vector3 centersDistance = boxPosition2 - boxPosition1;		//distanza dai centri
+				centersDistance *= -1.0f;
 
-				Utils::Vector3 SecondHalfSizeInFistSystem(boxSemiDim2);
+				//verificare se porta in object space, chiedere a manu
+				Utils::Vector3 secondCenteredInFirst = i_rigidBody1.getRotation().RotateRelative(boxPosition2);
 
-				SecondHalfSizeInFistSystem = boxRotation2.RotateRelative(SecondHalfSizeInFistSystem);
-				SecondHalfSizeInFistSystem = boxRotation1.RotateRelative(SecondHalfSizeInFistSystem);
 
-				//second vs first
-				Utils::Vector3 vertex[8];
-				for (int i = 0; i < 8; ++i)
+				//SphereTest for early reject
+				bool sphereConsideration = (centersDistance.x * centersDistance.x < radiusSum.x * radiusSum.x)
+					&& (centersDistance.y * centersDistance.y < radiusSum.y * radiusSum.y)
+					&& (centersDistance.z * centersDistance.z < radiusSum.z * radiusSum.z)
+					&& (centersDistance.module() < radiusSum.module());
+
+				if (sphereConsideration)
 				{
-					vertex[i] = secondCenteredInFirst;
+					//compute min and max for first box
+					Utils::Vector3 min = boxSemiDim1 * -1.0f;
+					Utils::Vector3 max = boxSemiDim1;
 
-					bool signX, signY, signZ;
+					min = boxRotation1.RotateRelative(min);
+					max = boxRotation1.RotateRelative(max);
 
-					switch (i)
-					{
-					case 0:
-						signX = 1;
-						signY = 1;
-						signZ = 1;
-						break;
-					case 1:
-						signX = 1;
-						signY = 1;
-						signZ = -1;
-						break;
-					case 2:
-						signX = 1;
-						signY = -1;
-						signZ = 1;
-						break;
-					case 3:
-						signX = 1;
-						signY = -1;
-						signZ = -1;
-						break;
-					case 4:
-						signX = -1;
-						signY = 1;
-						signZ = 1;
-						break;
-					case 5:
-						signX = -1;
-						signY = 1;
-						signZ = -1;
-						break;
-					case 6:
-						signX = -1;
-						signY = -1;
-						signZ = 1;
-						break;
-					case 7:
-						signX = -1;
-						signY = -1;
-						signZ = -1;
-						break;
-					default:
-						break;
-					}
+					Utils::Vector3 SecondHalfSizeInFistSystem(boxSemiDim2);
 
-					vertex[i].x += SecondHalfSizeInFistSystem.x * signX;
-					vertex[i].y += SecondHalfSizeInFistSystem.y * signY;
-					vertex[i].z += SecondHalfSizeInFistSystem.z * signZ;
-				}
+					SecondHalfSizeInFistSystem = boxRotation2.RotateRelative(SecondHalfSizeInFistSystem);
+					SecondHalfSizeInFistSystem = boxRotation1.RotateRelative(SecondHalfSizeInFistSystem);
 
-				//Debug
-				const Utils::Vector3 debug1 = SecondHalfSizeInFistSystem * i_collider1.getVertex(0) + secondCenteredInFirst;
-				const Utils::Vector3 debug2 = SecondHalfSizeInFistSystem * i_collider2.getVertex(0) + secondCenteredInFirst;
-				//---Debug
-
-
-				//compute points inside
-				int indexes[8];
-				float compenetration[8];
-				unsigned int  pointsInside = 0;
-				bool isInside = false;
-
-				for (unsigned int i = 0; i < 8; ++i)
-				{
-					isInside =	(vertex[i].x > min.x && vertex[i].y > min.y && vertex[i].z > min.z)
-							&&	(vertex[i].x < max.x && vertex[i].y < max.y && vertex[i].z < max.z);
-
-					if (isInside)
-					{
-						indexes[pointsInside] = i;
-						compenetration[pointsInside] = (vertex[i] - boxPosition1).module();
-						++pointsInside;	
-					}
-				}
-
-
-				//Compute Collision Data iff there is a collision
-				if (pointsInside)
-				{
-					float CompenetrationSum = compenetration[0];
-					vertex[indexes[0]] *= compenetration[0];
-
-					//centroid of points which is the point of collision impact
-					for (unsigned int i = 1; i < pointsInside; ++i)
-					{
-						vertex[indexes[0]] += vertex[indexes[i]];
-						CompenetrationSum += compenetration[i];
-						compenetration[0] = std::fmaxf(compenetration[0], compenetration[i]);
-					}
-
-					vertex[indexes[0]] /= CompenetrationSum;
-
-					centersDistance.normalize();
-
-					if (centersDistance.x > centersDistance.y)
-					{
-						if (centersDistance.x > centersDistance.z)
-						{
-							centersDistance = Utils::Vector3(centersDistance.x, 0.0f, 0.0f);
-						}
-						else
-						{
-							centersDistance = Utils::Vector3(0.0f, 0.0f, centersDistance.z);
-						}
-					}
-					else
-					{
-						if (centersDistance.y > centersDistance.z)
-						{
-							centersDistance = Utils::Vector3(0.0f, centersDistance.y, 0.0f);
-						}
-						else
-						{
-							centersDistance = Utils::Vector3(0.0f, 0.0f, centersDistance.z);
-						}
-					}
-
-					centersDistance.normalize();
-
-					Collision o_collision;
-					o_collision.deformation = compenetration[0];
-					o_collision.impactPoint = vertex[indexes[0]];
-					o_collision.normal = centersDistance;
-					o_collision.impactSpeed = o_collision.normal;		//todo;
-
-					o_collisions.push_back(o_collision);
-
-					intersection = true;
-
-				}
-				else
-				{
-					//First vs Second
+					//second vs first
 					Utils::Vector3 vertex[8];
 
 					for (int i = 0; i < 8; ++i)
 					{
-						vertex[i] = secondCenteredInFirst;
+						vertex[i] = i_collider2.getVertex(i);							//prendo la posizione del vertice locale
 
-						bool signX, signY, signZ;
+						//trasformo la posizione in globale
+						vertex[i] = boxRotation2.RotateAbsolute(vertex[i]);
+						vertex[i] += boxPosition2;
 
-						switch (i)
-						{
-						case 0:
-							signX = 1;
-							signY = 1;
-							signZ = 1;
-							break;
-						case 1:
-							signX = 1;
-							signY = 1;
-							signZ = -1;
-							break;
-						case 2:
-							signX = 1;
-							signY = -1;
-							signZ = 1;
-							break;
-						case 3:
-							signX = 1;
-							signY = -1;
-							signZ = -1;
-							break;
-						case 4:
-							signX = -1;
-							signY = 1;
-							signZ = 1;
-							break;
-						case 5:
-							signX = -1;
-							signY = 1;
-							signZ = -1;
-							break;
-						case 6:
-							signX = -1;
-							signY = -1;
-							signZ = 1;
-							break;
-						case 7:
-							signX = -1;
-							signY = -1;
-							signZ = -1;
-							break;
-						default:
-							break;
-						}
-
-						vertex[i].x += SecondHalfSizeInFistSystem.x * signX;
-						vertex[i].y += SecondHalfSizeInFistSystem.y * signY;
-						vertex[i].z += SecondHalfSizeInFistSystem.z * signZ;
+						//metto il vertice nello spazio locale dell'altro oggetto
+						vertex[i] = boxRotation1.RotateRelative(vertex[i]);
+						vertex[i] -= boxPosition1;
 					}
+
 
 					//compute points inside
 					int indexes[8];
-					float compenetration[8];
 					unsigned int  pointsInside = 0;
-					bool isInside = false;
 
 					for (unsigned int i = 0; i < 8; ++i)
 					{
-						isInside = (vertex[i].x > min.x && vertex[i].y > min.y && vertex[i].z > min.z)
-							&& (vertex[i].x < max.x && vertex[i].y < max.y && vertex[i].z < max.z);
+						bool isInside = (vertex[i].x >= min.x && vertex[i].y >= min.y && vertex[i].z >= min.z)
+							&& (vertex[i].x <= max.x && vertex[i].y <= max.y && vertex[i].z <= max.z);
 
 						if (isInside)
 						{
 							indexes[pointsInside] = i;
-							compenetration[pointsInside] = (vertex[i] - boxPosition2).module();
 							++pointsInside;
 						}
 					}
 
 
+					//Compute Collision Data iff there is a collision
 					if (pointsInside)
 					{
-						float CompenetrationSum = compenetration[0];
-						vertex[indexes[0]] *= compenetration[0];
 
 						//centroid of points which is the point of collision impact
 						for (unsigned int i = 1; i < pointsInside; ++i)
 						{
-							vertex[indexes[0]] += vertex[indexes[i]];
-							CompenetrationSum += compenetration[i];
-							compenetration[0] = std::fmaxf(compenetration[0], compenetration[i]);
-						}
 
-						vertex[indexes[0]] /= CompenetrationSum;
+							Collision coll;
 
-						centersDistance.normalize();
+							//impact point
+							coll.impactPoint = boxRotation1.RotateAbsolute(coll.impactPoint);
+							coll.impactPoint = vertex[indexes[i]] + boxPosition1;
 
-						if (centersDistance.x > centersDistance.y)
-						{
-							if (centersDistance.x > centersDistance.z)
+							Utils::Vector3 distanceBox1fromCenter = coll.impactPoint - boxPosition1;
+
+							//normal
+							coll.normal = centersDistance;
+							coll.normal.normalize();
+
+							if (coll.normal.x * coll.normal.x > coll.normal.y * coll.normal.y)
 							{
-								centersDistance = Utils::Vector3(centersDistance.x, 0.0f, 0.0f);
+								if (coll.normal.x * coll.normal.x > coll.normal.z * coll.normal.z)
+								{
+									coll.normal = Utils::Vector3(coll.normal.x, 0.0f, 0.0f);
+								}
+								else
+								{
+									coll.normal = Utils::Vector3(0.0f, 0.0f, coll.normal.z);
+								}
 							}
 							else
 							{
-								centersDistance = Utils::Vector3(0.0f, 0.0f, centersDistance.z);
+								if (coll.normal.y * coll.normal.y > coll.normal.z * coll.normal.z)
+								{
+									coll.normal = Utils::Vector3(0.0f, coll.normal.y, 0.0f);
+								}
+								else
+								{
+									coll.normal = Utils::Vector3(0.0f, 0.0f, coll.normal.z);
+								}
 							}
+
+							//deformation
+							coll.deformation = 1.0f - abs((coll.normal.dot(distanceBox1fromCenter)));
+
+							//impact speed
+							coll.impactSpeed = coll.normal;
+
+							o_collisions.push_back(coll);
+
+							intersection = true;
 						}
-						else
-						{
-							if (centersDistance.y > centersDistance.z)
-							{
-								centersDistance = Utils::Vector3(0.0f, centersDistance.y, 0.0f);
-							}
-							else
-							{
-								centersDistance = Utils::Vector3(0.0f, 0.0f, centersDistance.z);
-							}
-						}
 
-						centersDistance.normalize();
-
-						Collision o_collision;
-						o_collision.deformation = compenetration[0];
-						o_collision.impactPoint = vertex[indexes[0]];
-						o_collision.normal = centersDistance;
-						o_collision.impactSpeed = o_collision.normal;		//todo;
-
-						o_collisions.push_back(o_collision);
-
-						intersection = true;
 					}
-					else
-					{
-						intersection = false;
-					}
+
+
 				}
 
 			}
-
 
 			return intersection;
 		}

@@ -323,6 +323,9 @@ static void VisualizzaSistema()
 	//DisegnaSfera(rigidBody8.getPosition().x, rigidBody8.getPosition().y, rigidBody8.getPosition().z, RAD, rigidBody8.getRotation());
 	DisegnaParall(rigidBody9.getPosition().x, rigidBody9.getPosition().y, rigidBody9.getPosition().z, SDIM_X, SDIM_Y, SDIM_Z, rigidBody9.getRotation());
 	//DisegnaSfera(rigidBody10.getPosition().x, rigidBody10.getPosition().y, rigidBody10.getPosition().z, RAD, rigidBody10.getRotation());
+
+	//DEBUG
+	DisegnaParall(-0.0239171386, -0.591916561, 1.00000000, 0.1f, 0.1f, 0.1f, rigidBody7.getRotation());
 }
 
 static void DisegnaTutto()
