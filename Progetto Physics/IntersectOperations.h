@@ -95,147 +95,15 @@ namespace PhysicEngine
 																			)
 		{
 			o_collisions.clear();
-
-			bool intersection = false;
-
-			const Utils::Vector3& boxPosition1 = i_rigidBody1.getPosition();
-			const Utils::Matrix& boxRotation1 = i_rigidBody1.getRotation();
-			const Utils::Vector3& boxSemiDim1 = i_collider1.getSemiDimension();
-
-			const Utils::Vector3& boxPosition2 = i_rigidBody2.getPosition();
-			const Utils::Matrix& boxRotation2 = i_rigidBody2.getRotation();
-			const Utils::Vector3& boxSemiDim2 = i_collider2.getSemiDimension();
-
-			Utils::Vector3 radiusSum = boxSemiDim1 + boxSemiDim2;
-
-
-			for (int i = 0; i < 1; ++i)
-			{
-
-				Utils::Vector3 centersDistance = boxPosition2 - boxPosition1;		//distanza dai centri
-				centersDistance *= -1.0f;
-
-				//verificare se porta in object space, chiedere a manu
-				Utils::Vector3 secondCenteredInFirst = i_rigidBody1.getRotation().RotateRelative(boxPosition2);
-
-
-				//SphereTest for early reject
-				bool sphereConsideration = (centersDistance.x * centersDistance.x < radiusSum.x * radiusSum.x)
-					&& (centersDistance.y * centersDistance.y < radiusSum.y * radiusSum.y)
-					&& (centersDistance.z * centersDistance.z < radiusSum.z * radiusSum.z)
-					&& (centersDistance.module() < radiusSum.module());
-
-				if (sphereConsideration)
-				{
-					//compute min and max for first box
-					Utils::Vector3 min = boxSemiDim1 * -1.0f;
-					Utils::Vector3 max = boxSemiDim1;
-
-					min = boxRotation1.RotateRelative(min);
-					max = boxRotation1.RotateRelative(max);
-
-					Utils::Vector3 SecondHalfSizeInFistSystem(boxSemiDim2);
-
-					SecondHalfSizeInFistSystem = boxRotation2.RotateRelative(SecondHalfSizeInFistSystem);
-					SecondHalfSizeInFistSystem = boxRotation1.RotateRelative(SecondHalfSizeInFistSystem);
-
-					//second vs first
-					Utils::Vector3 vertex[8];
-
-					for (int i = 0; i < 8; ++i)
-					{
-						vertex[i] = i_collider2.getVertex(i);							//prendo la posizione del vertice locale
-
-						//trasformo la posizione in globale
-						vertex[i] = boxRotation2.RotateAbsolute(vertex[i]);
-						vertex[i] += boxPosition2;
-
-						//metto il vertice nello spazio locale dell'altro oggetto
-						vertex[i] = boxRotation1.RotateRelative(vertex[i]);
-						vertex[i] -= boxPosition1;
-					}
-
-
-					//compute points inside
-					int indexes[8];
-					unsigned int  pointsInside = 0;
-
-					for (unsigned int i = 0; i < 8; ++i)
-					{
-						bool isInside = (vertex[i].x >= min.x && vertex[i].y >= min.y && vertex[i].z >= min.z)
-							&& (vertex[i].x <= max.x && vertex[i].y <= max.y && vertex[i].z <= max.z);
-
-						if (isInside)
-						{
-							indexes[pointsInside] = i;
-							++pointsInside;
-						}
-					}
-
-
-					//Compute Collision Data iff there is a collision
-					if (pointsInside)
-					{
-
-						//centroid of points which is the point of collision impact
-						for (unsigned int i = 1; i < pointsInside; ++i)
-						{
-
-							Collision coll;
-
-							//impact point
-							coll.impactPoint = boxRotation1.RotateAbsolute(coll.impactPoint);
-							coll.impactPoint = vertex[indexes[i]] + boxPosition1;
-
-							Utils::Vector3 distanceBox1fromCenter = coll.impactPoint - boxPosition1;
-
-							//normal
-							coll.normal = centersDistance;
-							coll.normal.normalize();
-
-							if (coll.normal.x * coll.normal.x > coll.normal.y * coll.normal.y)
-							{
-								if (coll.normal.x * coll.normal.x > coll.normal.z * coll.normal.z)
-								{
-									coll.normal = Utils::Vector3(coll.normal.x, 0.0f, 0.0f);
-								}
-								else
-								{
-									coll.normal = Utils::Vector3(0.0f, 0.0f, coll.normal.z);
-								}
-							}
-							else
-							{
-								if (coll.normal.y * coll.normal.y > coll.normal.z * coll.normal.z)
-								{
-									coll.normal = Utils::Vector3(0.0f, coll.normal.y, 0.0f);
-								}
-								else
-								{
-									coll.normal = Utils::Vector3(0.0f, 0.0f, coll.normal.z);
-								}
-							}
-
-							//deformation
-							coll.deformation = 1.0f - abs((coll.normal.dot(distanceBox1fromCenter)));
-
-							//impact speed
-							coll.impactSpeed = coll.normal;
-
-							o_collisions.push_back(coll);
-
-							intersection = true;
-						}
-
-					}
-
-
-				}
-
-			}
-
+			bool intersection;
+			intersection = checkBoxBoxIntersect(i_collider1, i_rigidBody1, i_collider2, i_rigidBody2, o_collisions);
+			intersection = intersection || checkBoxBoxIntersect(i_collider2, i_rigidBody2, i_collider1, i_rigidBody1, o_collisions);
 			return intersection;
 		}
+
+
+
+
 
 		template<> static bool intersect<PlaneCollider, PlaneCollider>		(	const PlaneCollider& i_collider1,
 																				const RigidBody& i_rigidBody1,
@@ -442,6 +310,164 @@ namespace PhysicEngine
 		}
 
 	private:
+
+
+		static bool checkBoxBoxIntersect	(	const BoxCollider& i_collider1,
+												const RigidBody& i_rigidBody1,
+												const BoxCollider& i_collider2,
+												const RigidBody& i_rigidBody2,
+												std::vector<Collision>& o_collisions
+											)
+		{
+			bool intersection = false;
+
+			const Utils::Vector3& boxPosition1 = i_rigidBody1.getPosition();
+			const Utils::Matrix& boxRotation1 = i_rigidBody1.getRotation();
+			const Utils::Vector3& boxSemiDim1 = i_collider1.getSemiDimension();
+			const Utils::Vector3& boxVelocity1 = i_rigidBody1.getVelocity();
+			const Utils::Vector3& boxAngularVel1 = i_rigidBody1.getAngularVelocity();
+
+			const Utils::Vector3& boxPosition2 = i_rigidBody2.getPosition();
+			const Utils::Matrix& boxRotation2 = i_rigidBody2.getRotation();
+			const Utils::Vector3& boxSemiDim2 = i_collider2.getSemiDimension();
+			const Utils::Vector3& boxVelocity2 = i_rigidBody2.getVelocity();
+			const Utils::Vector3& boxAngularVel2 = i_rigidBody2.getAngularVelocity();
+
+			Utils::Vector3 radiusSum = boxSemiDim1 + boxSemiDim2;
+
+
+			Utils::Vector3 centersDistance = boxPosition2 - boxPosition1;		//distanza dai centri
+			centersDistance *= -1.0f;
+
+			//verificare se porta in object space, chiedere a manu
+			Utils::Vector3 secondCenteredInFirst = i_rigidBody1.getRotation().RotateRelative(boxPosition2);
+
+
+			//SphereTest for early reject
+			bool sphereConsideration = (centersDistance.x * centersDistance.x < radiusSum.x * radiusSum.x)
+				&& (centersDistance.y * centersDistance.y < radiusSum.y * radiusSum.y)
+				&& (centersDistance.z * centersDistance.z < radiusSum.z * radiusSum.z)
+				&& (centersDistance.module() < radiusSum.module());
+
+			if (sphereConsideration)
+			{
+				//compute min and max for first box
+				Utils::Vector3 min = boxSemiDim1;
+				min.invert();
+				Utils::Vector3 max = boxSemiDim1;
+
+				//second vs first
+				Utils::Vector3 vertex[8];
+
+				for (int i = 0; i < 8; ++i)
+				{
+					//prendo la posizione del vertice locale nel primo oggetto
+					vertex[i] = i_collider2.getVertex(i);							
+
+					//trasformo la posizione in globale
+					vertex[i] = boxRotation2.RotateAbsolute(vertex[i]);
+					vertex[i] += boxPosition2;
+
+					//metto il vertice nello spazio locale dell'altro oggetto
+					vertex[i] -= boxPosition1;
+					vertex[i] = boxRotation1.RotateRelative(vertex[i]);
+					
+				}
+
+
+				//compute points inside
+				int indexes[8];
+				unsigned int  pointsInside = 0;
+
+				for (unsigned int i = 0; i < 8; ++i)
+				{
+					bool isInside = (vertex[i].x >= min.x && vertex[i].y >= min.y && vertex[i].z >= min.z)
+						&& (vertex[i].x <= max.x && vertex[i].y <= max.y && vertex[i].z <= max.z);
+
+					if (isInside)
+					{
+						indexes[pointsInside] = i;
+						++pointsInside;
+					}
+				}
+
+
+				//Compute Collision Data iff there is a collision
+				if (pointsInside)
+				{
+
+					//centroid of points which is the point of collision impact
+					for (unsigned int i = 1; i < pointsInside; ++i)
+					{
+
+						Collision coll;
+
+						//impact point
+						coll.impactPoint = vertex[indexes[i]];
+						coll.impactPoint = boxRotation1.RotateAbsolute(coll.impactPoint);
+						coll.impactPoint += boxPosition1;
+
+						Utils::Vector3 distanceBox1fromCenter = coll.impactPoint - boxPosition1;
+
+						//normal
+						coll.normal = centersDistance;
+						coll.normal.normalize();
+
+						if (coll.normal.x * coll.normal.x > coll.normal.y * coll.normal.y)
+						{
+							if (coll.normal.x * coll.normal.x > coll.normal.z * coll.normal.z)
+							{
+								coll.normal = Utils::Vector3(coll.normal.x, 0.0f, 0.0f);
+							}
+							else
+							{
+								coll.normal = Utils::Vector3(0.0f, 0.0f, coll.normal.z);
+							}
+						}
+						else
+						{
+							if (coll.normal.y * coll.normal.y > coll.normal.z * coll.normal.z)
+							{
+								coll.normal = Utils::Vector3(0.0f, coll.normal.y, 0.0f);
+							}
+							else
+							{
+								coll.normal = Utils::Vector3(0.0f, 0.0f, coll.normal.z);
+							}
+						}
+
+						coll.normal.normalize();
+
+						//deformation
+						coll.deformation = 1.0f - abs((coll.normal.dot(distanceBox1fromCenter)));
+
+						//impact speed
+						coll.impactSpeed = coll.normal;
+						//coll.impactSpeed = coll.impactPoint - boxPosition2;
+						coll.impactSpeed = boxAngularVel2.cross(coll.impactPoint);
+						coll.impactSpeed = boxVelocity2 + coll.impactSpeed;
+
+						Utils::Vector3 temp = coll.normal * -1.0f;//= coll.impactPoint - boxPosition1;
+						temp = boxAngularVel1.cross(temp);
+						temp = boxVelocity1 + temp;
+
+						coll.impactSpeed = temp - coll.impactSpeed;
+
+						coll.impactSpeed.invert();
+
+						o_collisions.push_back(coll);
+
+						intersection = true;
+					}
+
+				}
+
+
+			}
+
+			return intersection;
+		}
+
 
 		IntersectOperations();
 

@@ -99,6 +99,11 @@ static void EseguiCiclicamente()
 		world.updatePhysic(DT);
 		TempoTotale += DT;
 	}
+
+	if (TempoTotale > 2.0)
+	{
+		int a = 3;
+	}
 	glutPostRedisplay();
 }
 
@@ -325,7 +330,7 @@ static void VisualizzaSistema()
 	//DisegnaSfera(rigidBody10.getPosition().x, rigidBody10.getPosition().y, rigidBody10.getPosition().z, RAD, rigidBody10.getRotation());
 
 	//DEBUG
-	DisegnaParall(-0.0239171386, -0.591916561, 1.00000000, 0.1f, 0.1f, 0.1f, rigidBody7.getRotation());
+	DisegnaParall(-1.54662766, -4.7703717, -1.00000000, 0.1f, 0.1f, 0.1f, rigidBody7.getRotation());
 }
 
 static void DisegnaTutto()
@@ -372,9 +377,9 @@ int main(int argc, char **argv)
 	Transform transformSphere2;
 	Transform transformCube2;
 	transformSphere.position = Vector3(1, -6, 0.0);
-	transformCube.position = Vector3(0, 0, 0);
+	transformCube.position = Vector3(0, -3, 0);
 	transformSphere2.position = Vector3(3.0f, 0, -3.0);
-	transformCube2.position = Vector3(0, -3, 0);
+	transformCube2.position = Vector3(-1, 0, 0);
 
 	rigidBody1 = RigidBody(1.0f, material, c, true);
 	rigidBody2 = RigidBody(1.0f, material, d, true);
@@ -399,7 +404,8 @@ int main(int argc, char **argv)
 	//world.addBody(rigidBody10);
 
 	//world.getBody(1).addForce(Vector3(0.2f, 0, 0), Vector3(0, 500, 0));
-	world.getBody(0).setAngularMomentum(Vector3(0, 0, 5));
+	//world.getBody(0).setAngularMomentum(Vector3(0, 0, 5));
+	//world.getBody(2).setAngularMomentum(Vector3(0, 0, -3.5));
 
 	// Inizio codice Testbed
 	glutInit(&argc, argv);
@@ -430,3 +436,4 @@ int main(int argc, char **argv)
 
 	return 0;
 }
+
