@@ -27,7 +27,7 @@ namespace Utils
 			void set(float s, float x, float y, float z);
 			float module() const;
 			void normalize();
-			void toMatrix(Matrix &right) const;
-			void toEuler(Vector3 &right) const;
+			Matrix toMatrix() const;
+			Vector3 toEuler() const;
 	};
 }

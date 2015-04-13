@@ -82,8 +82,6 @@ namespace PhysicEngine{
 		bool isStatic() const;
 
 
-		void setAngularMomentum(const Utils::Vector3 &input); // DEBUG
-
 		void setVelocity(const Utils::Vector3 &input);
 
 		void setAngularVelocity(const Utils::Vector3 &input);
@@ -110,7 +108,6 @@ namespace PhysicEngine{
 		
 		Utils::Vector3 angularVelocity;
 
-		Utils::Quaternion quaternionRotation;	// Quaternione di rotazione
 
 		// Temps
 		Utils::Vector3 momentum;				// quantità di moto
@@ -119,8 +116,6 @@ namespace PhysicEngine{
 		Utils::Vector3 resultantMomentum;		// momento risultante
 		Utils::Vector3 gravity;					// Gravità
 		Utils::Vector3 velocityOfGravity;		// velocità di gravità
-		bool updateForce;						// flag nel caso la forza venisse aggiornata
-
 	};
 
 }

@@ -28,7 +28,6 @@ RigidBody rigidBody1, rigidBody2, rigidBody3, rigidBody4, rigidBody5, rigidBody6
 //sfera
 #define RAD 1
 
-
 //piano 1 y
 #define PLANEPOS1 -5
 
@@ -99,7 +98,7 @@ static void EseguiCiclicamente()
 		world.updatePhysic(DT);
 		TempoTotale += DT;
 	}
-	if (TempoTotale > 3.0f)
+	if (TempoTotale > 5.5f)
 	{
 		int a = 2;
 	}
@@ -372,10 +371,11 @@ int main(int argc, char **argv)
 	Transform transformCube;
 	Transform transformSphere2;
 	Transform transformCube2;
-	transformSphere.position = Vector3(3.0f, 4.0f, 1.0f);
-	transformSphere2.position = Vector3(3.0f, 2.0f, 1.0f);
-	transformCube.position = Vector3(0.5f, 3.0f, 0.0f);
-	transformCube2.position = Vector3(0.0f, 0.0f, 0.0f);
+	transformSphere.setPosition(Vector3(3.0f, 4.0f, 1.0f));
+	transformSphere2.setPosition(Vector3(3.0f, 0.0f, 1.0f));
+	transformCube.setPosition(Vector3(0.5f, 3.0f, 0.0f));
+	//transformCube2.setEulerRotation(Vector3(0, 45.0f, 0));
+	transformCube2.setPosition(Vector3(0.0f, 3.0f, 0.0f));
 
 	rigidBody1 = RigidBody(1.0f, material, c, true);
 	rigidBody2 = RigidBody(1.0f, material, d, true);
@@ -387,6 +387,8 @@ int main(int argc, char **argv)
 	rigidBody8 = RigidBody(1.0f, material, b, transformSphere);
 	rigidBody9 = RigidBody(10.0f, material, a, transformCube2);
 	rigidBody10 = RigidBody(10.0f, material, b, transformSphere2);
+	//rigidBody10.setVelocity(Vector3(0, 20.0f, 0));
+	rigidBody10.setAngularVelocity(Vector3(20.0f, 10.0f, 0));
 
 	world.addBody(rigidBody1);
 	world.addBody(rigidBody2);

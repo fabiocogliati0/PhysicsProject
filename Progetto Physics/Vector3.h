@@ -36,8 +36,8 @@ namespace Utils{
 		void invert();  // invert of vector
 		float module() const; // module of vector
 		void normalize(); // normalize vector
-		float distance(Vector3 &right) const; // distance from two vector
-		void toQuaternion(Quaternion &right) const; // from euler to quaternion
+		float distance(const Vector3 &right) const; // distance from two vector
+		Quaternion toQuaternion() const; // from euler to quaternion
 		~Vector3();
 	};
 

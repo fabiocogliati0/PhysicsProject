@@ -56,44 +56,50 @@ namespace Utils
 		}
 	}
 
-	void Quaternion::toMatrix(Matrix &right) const
+	Matrix Quaternion::toMatrix() const
 	{
-		right[0] = 1.0f - 2.0f * ((y * y) + (z * z));
-		right[1] = 2.0f * ((x * y) + (s * z));
-		right[2] = 2.0f * ((x * z) - (s * y));
-		right[3] = 2.0f * ((x * y) - (s * z));
-		right[4] = 1.0f - 2.0f * ((z * z) + (x * x));
-		right[5] = 2.0f * ((y * z) + (s * x));
-		right[6] = 2.0f * ((x * z) + (s * y));
-		right[7] = 2.0f * ((y * z) - (s * x));
-		right[8] = 1.0f - 2.0f * ((x * x) + (y * y));
+		Matrix tmp;
+
+		tmp[0] = 1.0f - 2.0f * ((y * y) + (z * z));
+		tmp[1] = 2.0f * ((x * y) + (s * z));
+		tmp[2] = 2.0f * ((x * z) - (s * y));
+		tmp[3] = 2.0f * ((x * y) - (s * z));
+		tmp[4] = 1.0f - 2.0f * ((z * z) + (x * x));
+		tmp[5] = 2.0f * ((y * z) + (s * x));
+		tmp[6] = 2.0f * ((x * z) + (s * y));
+		tmp[7] = 2.0f * ((y * z) - (s * x));
+		tmp[8] = 1.0f - 2.0f * ((x * x) + (y * y));
+		return tmp;
 	}
 
-	void Quaternion::toEuler(Vector3 &right) const
+	Vector3 Quaternion::toEuler() const
 	{
+		Vector3 tmp;
+
 		float test = this->x * this->y + this->z * this->s;
 		
 		if (test > 0.499)
 		{
-			right.y = roundf(2 * atan2(this->x, this->s) * (180 / M_PI));
-			right.z = roundf(M_PI / 2 * (180 / M_PI));
-			right.x = 0;
-			return;
+			tmp.y = roundf(2 * atan2(this->x, this->s) * (180 / M_PI));
+			tmp.z = roundf(M_PI / 2 * (180 / M_PI));
+			tmp.x = 0;
+			return tmp;
 		}
 		
 		if (test < -0.499)
 		{
-			right.y = roundf(-2 * atan2(this->x, this->s) * (180 / M_PI));
-			right.z = roundf(-M_PI / 2 * (180 / M_PI));
-			right.x = 0;
-			return;
+			tmp.y = roundf(-2 * atan2(this->x, this->s) * (180 / M_PI));
+			tmp.z = roundf(-M_PI / 2 * (180 / M_PI));
+			tmp.x = 0;
+			return tmp;
 		}
 		
 		float sqx = this->x * this->x;
 		float sqy = this->y * this->y;
 		float sqz = this->z * this->z;
-		right.y = roundf(atan2(2 * this->y * this->s - 2 * this->x * this->z, 1 - 2 * sqy - 2 * sqz) * (180 / M_PI));
-		right.z = roundf(asin(2 * test) * (180 / M_PI));
-		right.x = roundf(atan2(2 * this->x * this->s - 2 * this->y * this->z, 1 - 2 * sqx - 2 * sqz) * (180 / M_PI));
+		tmp.y = roundf(atan2(2 * this->y * this->s - 2 * this->x * this->z, 1 - 2 * sqy - 2 * sqz) * (180 / M_PI));
+		tmp.z = roundf(asin(2 * test) * (180 / M_PI));
+		tmp.x = roundf(atan2(2 * this->x * this->s - 2 * this->y * this->z, 1 - 2 * sqx - 2 * sqz) * (180 / M_PI));
+		return tmp;
 	}
 }
