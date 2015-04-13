@@ -18,7 +18,7 @@ namespace PhysicEngine
 	RigidBody::RigidBody(float mass,
 		const PhysicMaterial& material,
 		const Collider& collider,
-		bool isStatic
+		staticBodyType isStatic
 		)
 		: RigidBody(mass, material, collider, Transform(), Utils::Vector3::zero, Utils::Vector3::zero)
 	{
@@ -29,7 +29,7 @@ namespace PhysicEngine
 		const PhysicMaterial& material,
 		const Collider& collider,
 		const Transform& transform,
-		bool isStatic
+		staticBodyType isStatic
 		)
 		: RigidBody(mass, material, collider, transform, Utils::Vector3::zero, Utils::Vector3::zero)
 	{
@@ -58,7 +58,7 @@ namespace PhysicEngine
 			transform(transform), 
 			velocity(velocity), 
 			angularVelocity(angularVelocity),
-			staticBody(false)
+			staticBody(Non_Static_Body)
 	{
 		this->collider = collider.clone();
 	}
@@ -160,7 +160,7 @@ namespace PhysicEngine
 		return this->material.staticFriction;
 	}
 
-	bool RigidBody::isStatic() const
+	RigidBody::staticBodyType RigidBody::getStaticBodyType() const
 	{
 		return staticBody;
 	}

@@ -99,10 +99,6 @@ static void EseguiCiclicamente()
 		world.updatePhysic(DT);
 		TempoTotale += DT;
 	}
-	if (TempoTotale > 3.0f)
-	{
-		int a = 2;
-	}
 	glutPostRedisplay();
 }
 
@@ -377,12 +373,12 @@ int main(int argc, char **argv)
 	transformCube.position = Vector3(0.5f, 3.0f, 0.0f);
 	transformCube2.position = Vector3(0.0f, 0.0f, 0.0f);
 
-	rigidBody1 = RigidBody(1.0f, material, c, true);
-	rigidBody2 = RigidBody(1.0f, material, d, true);
-	rigidBody3 = RigidBody(1.0f, material, e, true);
-	rigidBody4 = RigidBody(1.0f, material, f, true);
-	rigidBody5 = RigidBody(1.0f, material, g, true);
-	rigidBody6 = RigidBody(1.0f, material, h, true);
+	rigidBody1 = RigidBody(1.0f, material, c, RigidBody::Static_Body);
+	rigidBody2 = RigidBody(1.0f, material, d, RigidBody::Static_Body);
+	rigidBody3 = RigidBody(1.0f, material, e, RigidBody::Static_Body);
+	rigidBody4 = RigidBody(1.0f, material, f, RigidBody::Static_Body);
+	rigidBody5 = RigidBody(1.0f, material, g, RigidBody::Static_Body);
+	rigidBody6 = RigidBody(1.0f, material, h, RigidBody::Static_Body);
 	rigidBody7 = RigidBody(10.0f, material, a, transformCube);
 	rigidBody8 = RigidBody(1.0f, material, b, transformSphere);
 	rigidBody9 = RigidBody(10.0f, material, a, transformCube2);

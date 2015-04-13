@@ -290,10 +290,6 @@ namespace PhysicEngine
 			bool intersection;
 			intersection = checkBoxBoxIntersect(i_collider1, i_rigidBody1, i_collider2, i_rigidBody2, o_collisions);
 			intersection = intersection || checkBoxBoxIntersect(i_collider2, i_rigidBody2, i_collider1, i_rigidBody1, o_collisions);
-
-			if (intersection) 
-				int a = 3;
-
 			return intersection;
 		}
 
@@ -427,7 +423,12 @@ namespace PhysicEngine
 						coll.normal.normalize();
 
 						//deformation
-						coll.deformation = 1.0f - abs((coll.normal.dot(distanceBox1fromCenter)));
+						if (coll.normal.x * coll.normal.x > 0.0f)
+							coll.deformation = boxSemiDim1.x - abs((coll.normal.dot(distanceBox1fromCenter)));
+						else if (coll.normal.y * coll.normal.y > 0.0f)
+							coll.deformation = boxSemiDim1.y - abs((coll.normal.dot(distanceBox1fromCenter)));
+						else if (coll.normal.z * coll.normal.z > 0.0f)
+							coll.deformation = boxSemiDim1.z - abs((coll.normal.dot(distanceBox1fromCenter)));
 
 						if (coll.deformation < 0.0001f  || coll.normal.module() <0.000f || isnan(coll.deformation))
 							continue;

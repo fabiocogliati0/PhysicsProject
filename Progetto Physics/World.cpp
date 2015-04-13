@@ -56,7 +56,7 @@ namespace PhysicEngine{
 		}
 		for (size_t i = 0; i < bodies.size(); ++i)
 		{
-			if ( !bodies[i].isStatic() )
+			if (bodies[i].getStaticBodyType() == RigidBody::Non_Static_Body)
 				bodies[i].updatePhyisic(dt, *this);
 		}
 	}
@@ -118,7 +118,7 @@ namespace PhysicEngine{
 		
 		Utils::Vector3 localPosition;
 
-		if ( !rigidBodyA.isStatic() )
+		if (rigidBodyA.getStaticBodyType() == RigidBody::Non_Static_Body)
 		{
 			localPosition = collision.impactPoint - rigidBodyA.getPosition();
 			rigidBodyA.addForceDT(localPosition, totalForce);
@@ -126,7 +126,7 @@ namespace PhysicEngine{
 
 		totalForce.invert();
 
-		if ( !rigidBodyB.isStatic() )
+		if (rigidBodyB.getStaticBodyType() == RigidBody::Non_Static_Body)
 		{
 			localPosition = collision.impactPoint - rigidBodyB.getPosition();
 			rigidBodyB.addForceDT(localPosition, totalForce);
