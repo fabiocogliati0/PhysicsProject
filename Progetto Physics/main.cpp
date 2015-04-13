@@ -99,7 +99,7 @@ static void EseguiCiclicamente()
 		world.updatePhysic(DT);
 		TempoTotale += DT;
 	}
-	if (TempoTotale > 6.3)
+	if (TempoTotale > 3.0f)
 	{
 		int a = 2;
 	}
@@ -347,7 +347,7 @@ static void DisegnaTutto()
 int main(int argc, char **argv)
 {
 
-	world = World(10.0f, Vector3(0.0f, -3.8f, 0));
+	world = World(10.0f, Vector3(0.0f, -9.8f, 0.0f));
 
 	PhysicMaterial material;
 	material.dynamicFriction = 0.2;
@@ -372,10 +372,10 @@ int main(int argc, char **argv)
 	Transform transformCube;
 	Transform transformSphere2;
 	Transform transformCube2;
-	transformSphere.position = Vector3(1, 4, -1);
-	transformCube.position = Vector3(3, 0, 0);
-	transformSphere2.position = Vector3(3.0f, 0, -1);
-	transformCube2.position = Vector3(1.0f, 0, -3);
+	transformSphere.position = Vector3(3.0f, 4.0f, 1.0f);
+	transformSphere2.position = Vector3(3.0f, 2.0f, 1.0f);
+	transformCube.position = Vector3(0.5f, 3.0f, 0.0f);
+	transformCube2.position = Vector3(0.0f, 0.0f, 0.0f);
 
 	rigidBody1 = RigidBody(1.0f, material, c, true);
 	rigidBody2 = RigidBody(1.0f, material, d, true);
@@ -398,9 +398,6 @@ int main(int argc, char **argv)
 	world.addBody(rigidBody8);
 	world.addBody(rigidBody9);
 	world.addBody(rigidBody10);
-
-	//world.getBody(1).addForce(Vector3(0.2f, 0, 0), Vector3(0, 500, 0));
-	//world.getBody(0).setAngularMomentum(Vector3(0, 0, 10));
 
 	// Inizio codice Testbed
 	glutInit(&argc, argv);

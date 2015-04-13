@@ -10,7 +10,6 @@ namespace PhysicEngine
 		float deformation;
 		Utils::Vector3 impactPoint;
 		Utils::Vector3 normal;
-		Utils::Vector3 impactSpeed;
 	};
 
 }

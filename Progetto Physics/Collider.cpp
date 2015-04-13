@@ -41,7 +41,6 @@ namespace PhysicEngine
 		for (size_t i = 0; i < o_collisions.size(); ++i)
 		{
 			o_collisions[i].normal.invert();
-			o_collisions[i].impactSpeed.invert();
 		}
 		return intersect;
 		

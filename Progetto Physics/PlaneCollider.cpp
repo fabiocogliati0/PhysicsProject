@@ -5,6 +5,7 @@
 #include "Vector3.h"
 
 #include <vector>
+#include <cassert>
 
 namespace PhysicEngine{
 
@@ -14,7 +15,9 @@ namespace PhysicEngine{
 
 	PlaneCollider::PlaneCollider(float A, float B, float C, float D, lookDirections lookDirection)
 		: A(A), B(B), C(C), D(D), lookDirection(lookDirection)
-	{}
+	{
+		assert(A != 0.0f || B!=0.0f || C!= 0.0f);
+	}
 
 	PlaneCollider* PlaneCollider::clone() const
 	{

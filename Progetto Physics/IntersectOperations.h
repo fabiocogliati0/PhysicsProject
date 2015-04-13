@@ -31,7 +31,6 @@ namespace PhysicEngine
 				for (size_t i = 0; i < o_collisions.size(); ++i)
 				{
 					o_collisions[i].normal.invert();
-					o_collisions[i].impactSpeed.invert();
 				}
 			}
 			return isIntersection;
@@ -58,11 +57,6 @@ namespace PhysicEngine
 			float distanceFromCenters = (spherePosition1 - spherePosition2).module();;
 			float radiusSum = sphereRadius1 + sphereRadius2;
 
-			if (distanceFromCenters < 0.001f)
-			{
-				return false;
-			}
-
 			if (distanceFromCenters > radiusSum)
 			{
 				return false;
@@ -70,45 +64,24 @@ namespace PhysicEngine
 			else
 			{
 				o_collision.deformation = radiusSum - distanceFromCenters;
+				if (o_collision.deformation < 0.0001f || distanceFromCenters < 0.0001 || isnan(o_collision.deformation))
+					return false;
+
 				o_collision.impactPoint = (spherePosition1 + spherePosition2) / 2.0f;
 
 				o_collision.normal = o_collision.impactPoint - spherePosition2;
 				o_collision.normal.normalize();
 				o_collision.normal = o_collision.normal / distanceFromCenters;
 
-				o_collision.impactSpeed = o_collision.impactPoint - spherePosition2;
-				o_collision.impactSpeed = i_rigidBody2.getAngularVelocity().cross(o_collision.impactSpeed);
-				o_collision.impactSpeed = i_rigidBody2.getVelocity() + o_collision.impactSpeed;
-
 				Utils::Vector3 temp = o_collision.impactPoint + spherePosition1;
 				temp = i_rigidBody1.getAngularVelocity().cross(temp);
 				temp = i_rigidBody1.getVelocity() + temp;
-
-				o_collision.impactSpeed = temp - o_collision.impactSpeed;
 
 				o_collisions.push_back(o_collision);
 
 				return true;
 			}
 		}
-
-		template<> static bool intersect<BoxCollider, BoxCollider>			(	const BoxCollider& i_collider1,
-																				const RigidBody& i_rigidBody1,
-																				const BoxCollider& i_collider2,
-																				const RigidBody& i_rigidBody2,
-																				std::vector<Collision>& o_collisions
-																			)
-		{
-			o_collisions.clear();
-			bool intersection;
-			intersection = checkBoxBoxIntersect(i_collider1, i_rigidBody1, i_collider2, i_rigidBody2, o_collisions);
-			intersection = intersection || checkBoxBoxIntersect(i_collider2, i_rigidBody2, i_collider1, i_rigidBody1, o_collisions);
-			return intersection;
-		}
-
-
-
-
 
 		template<> static bool intersect<PlaneCollider, PlaneCollider>		(	const PlaneCollider& i_collider1,
 																				const RigidBody& i_rigidBody1,
@@ -153,11 +126,6 @@ namespace PhysicEngine
 			o_collision.normal = o_collision.impactPoint - spherePosition;
 			float d = o_collision.normal.module();
 
-			if (d < 0.001f)
-			{
-				return false;
-			}
-
 			if (d > sphereRadius)
 			{
 				return false;
@@ -165,17 +133,14 @@ namespace PhysicEngine
 			else
 			{
 				o_collision.deformation = sphereRadius - d;
-				o_collision.normal = o_collision.normal / d;
+				if (o_collision.deformation < 0.0001f || d < 0.0001f || isnan(o_collision.deformation))
+					return false;
 
-				o_collision.impactSpeed = o_collision.impactPoint - spherePosition;
-				o_collision.impactSpeed = i_rigidBody2.getAngularVelocity().cross(o_collision.impactSpeed);
-				o_collision.impactSpeed = i_rigidBody2.getVelocity() + o_collision.impactSpeed;
+				o_collision.normal = o_collision.normal / d;
 
 				Utils::Vector3 temp = o_collision.impactPoint + boxPosition;
 				temp = i_rigidBody1.getAngularVelocity().cross(temp);
 				temp = i_rigidBody1.getVelocity() + temp;
-
-				o_collision.impactSpeed = temp - o_collision.impactSpeed;
 
 				o_collisions.push_back(o_collision);
 
@@ -211,9 +176,7 @@ namespace PhysicEngine
 			{
 				Collision o_collision;
 				o_collision.impactPoint = boxRotation.RotateAbsolute(i_collider1.getVertex(i));
-				o_collision.impactSpeed = boxAngVelocity.cross(o_collision.impactPoint);
 				o_collision.impactPoint = boxPosition + o_collision.impactPoint;
-				o_collision.impactSpeed = boxVelocity + o_collision.impactSpeed;
 
 				o_collision.deformation = -(A * o_collision.impactPoint.x 
 											+ B * o_collision.impactPoint.y
@@ -232,8 +195,7 @@ namespace PhysicEngine
 						o_collision.normal.invert();
 						o_collision.deformation = -o_collision.deformation;
 					}
-
-					o_collision.impactSpeed.invert();
+					if (o_collision.deformation < 0.0001f  || isnan(o_collision.deformation)) continue;
 
 					o_collisions.push_back(o_collision);
 
@@ -281,10 +243,7 @@ namespace PhysicEngine
 				o_collision.impactPoint.z = C;
 			}
 			o_collision.impactPoint *= sphereRadius;
-
-			o_collision.impactSpeed = sphereAngVelocity.cross(o_collision.impactPoint);
 			o_collision.impactPoint = spherePosition + o_collision.impactPoint;
-			o_collision.impactSpeed = sphereVelocity + o_collision.impactSpeed;
 
 			o_collision.deformation = -(A * o_collision.impactPoint.x 
 											+ B * o_collision.impactPoint.y
@@ -305,8 +264,7 @@ namespace PhysicEngine
 					o_collision.normal.invert();
 					o_collision.deformation = -o_collision.deformation;
 				}
-
-				o_collision.impactSpeed.invert();
+				if (o_collision.deformation < 0.0001f  || isnan(o_collision.deformation)) return false;
 
 				o_collisions.push_back(o_collision);
 
@@ -317,6 +275,26 @@ namespace PhysicEngine
 				return false;
 			}
 			
+		}
+
+
+
+		template<> static bool intersect<BoxCollider, BoxCollider>			(	const BoxCollider& i_collider1,
+																				const RigidBody& i_rigidBody1,
+																				const BoxCollider& i_collider2,
+																				const RigidBody& i_rigidBody2,
+																				std::vector<Collision>& o_collisions
+																			)
+		{
+			o_collisions.clear();
+			bool intersection;
+			intersection = checkBoxBoxIntersect(i_collider1, i_rigidBody1, i_collider2, i_rigidBody2, o_collisions);
+			intersection = intersection || checkBoxBoxIntersect(i_collider2, i_rigidBody2, i_collider1, i_rigidBody1, o_collisions);
+
+			if (intersection) 
+				int a = 3;
+
+			return intersection;
 		}
 
 	private:
@@ -407,7 +385,7 @@ namespace PhysicEngine
 				{
 
 					//centroid of points which is the point of collision impact
-					for (unsigned int i = 1; i < pointsInside; ++i)
+					for (unsigned int i = 0; i < pointsInside; ++i)
 					{
 
 						Collision coll;
@@ -451,19 +429,8 @@ namespace PhysicEngine
 						//deformation
 						coll.deformation = 1.0f - abs((coll.normal.dot(distanceBox1fromCenter)));
 
-						//impact speed
-						coll.impactSpeed = coll.normal;
-						//coll.impactSpeed = coll.impactPoint - boxPosition2;
-						coll.impactSpeed = boxAngularVel2.cross(coll.impactPoint);
-						coll.impactSpeed = boxVelocity2 + coll.impactSpeed;
-
-						Utils::Vector3 temp = coll.normal * -1.0f;//= coll.impactPoint - boxPosition1;
-						temp = boxAngularVel1.cross(temp);
-						temp = boxVelocity1 + temp;
-
-						coll.impactSpeed = temp - coll.impactSpeed;
-
-						coll.impactSpeed.invert();
+						if (coll.deformation < 0.0001f  || coll.normal.module() <0.000f || isnan(coll.deformation))
+							continue;
 
 						o_collisions.push_back(coll);
 

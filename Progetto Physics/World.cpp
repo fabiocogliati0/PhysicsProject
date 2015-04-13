@@ -75,9 +75,21 @@ namespace PhysicEngine{
 		Utils::Vector3 totalForce;
 
 		// Impactspeed indefinita 0/0
-		modNormalVelocity = collision.impactSpeed.dot(collision.normal);
+		Utils::Vector3 impactSpeed = collision.impactPoint - rigidBodyB.getPosition();
+		impactSpeed = rigidBodyB.getAngularVelocity().cross(impactSpeed);
+		impactSpeed = rigidBodyB.getVelocity() + impactSpeed;
+
+		Utils::Vector3 temp = collision.impactPoint + rigidBodyA.getPosition();
+		temp = rigidBodyA.getAngularVelocity().cross(temp);
+		temp = rigidBodyA.getVelocity() + temp;
+
+		impactSpeed = temp - impactSpeed;
+
+		impactSpeed.invert();
+
+		modNormalVelocity = impactSpeed.dot(collision.normal);
 		normalVelocity = collision.normal * modNormalVelocity;
-		tangentVelocity = collision.impactSpeed - normalVelocity;
+		tangentVelocity = impactSpeed - normalVelocity;
 
 		// Force se è negativa diventa 0 e continua a compenetrare, ad un certo punto diventa positiva
 		// perchè la compenetrazione è talmente alta che restituisce una forza positiva (a causa dell'alta
