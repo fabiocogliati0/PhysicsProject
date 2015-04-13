@@ -14,7 +14,8 @@ namespace PhysicEngine
 	{
 	}
 
-	BoxCollider::BoxCollider(float semiX, float semiY, float semiZ)
+	BoxCollider::BoxCollider(float semiX, float semiY, float semiZ) 
+		: semiDimensions(Utils::Vector3(semiX,semiY, semiZ))
 	{
 
 		//font and back x coordinate
@@ -66,6 +67,11 @@ namespace PhysicEngine
 	Collider::ColliderType BoxCollider::getColliderType() const
 	{
 		return BoxColliderType;
+	}
+
+	const Utils::Vector3& BoxCollider::getSemiDimension() const
+	{
+		return semiDimensions;
 	}
 
 	const Utils::Vector3& BoxCollider::getVertex(int vertex) const

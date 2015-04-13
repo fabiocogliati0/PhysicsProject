@@ -74,6 +74,11 @@ namespace Utils
 		tmp *= right;
 		return tmp;
 	}
+	
+	Vector3 Vector3::operator*(const Vector3 &right) const
+	{
+		return Vector3(x*right.x, y*right.y, z*right.z);
+	}
 
 	Vector3& Vector3::operator*=(const float &right)
 	{
