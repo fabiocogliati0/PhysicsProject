@@ -66,21 +66,21 @@ namespace PhysicEngine
 
 		const Utils::Vector3& getRawInertia() const;
 
-		float getVolume() const;
+		float getArea() const;
 
 
 	protected:
 
 		void setRawInertia(const Utils::Vector3& rawInertia);
 
-		void setVolume(float volume);
+		void setArea(float area);
 
 
 	private:
 
 		Utils::Vector3 rawInertia;
 		
-		float volume;
+		float area;
 
 	};
 

@@ -20,8 +20,8 @@ namespace PhysicEngine{
 
 		assert(radius > 0.0f);
 
-		//calculates volume
-		setVolume((4.0f * static_cast<float>(M_PI) *radius * radius * radius) / 3.0f);
+		//calculates area
+		setArea(static_cast<float>(M_PI) * radius * radius);
 
 		//calculates raw inertia
 		Utils::Vector3 rawInertia;

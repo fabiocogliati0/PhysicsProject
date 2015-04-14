@@ -39,18 +39,13 @@ namespace PhysicEngine{
 											bodies[i].getViscosity() : bodies[j].getViscosity();
 					
 					// Eseguo il prodotto fra i due attriti per trovare il totale se non sono uguali
-					float dynamicFricion = bodies[i].getDynamicFriction() == bodies[j].getDynamicFriction() ?
-												bodies[i].getDynamicFriction()
+					float friction = bodies[i].getFriction() == bodies[j].getFriction() ?
+												bodies[i].getFriction()
 												:
-												bodies[i].getDynamicFriction() * bodies[j].getDynamicFriction();
-
-					float staticFricion = bodies[i].getStaticFriction() == bodies[j].getStaticFriction() ?
-												bodies[i].getStaticFriction()
-												:
-												bodies[i].getStaticFriction() * bodies[j].getStaticFriction();
+												bodies[i].getFriction() * bodies[j].getFriction();
 
 					this->applyCollisionForce(bodies[i], bodies[j],
-											  outputCollision, elasticity, viscosity, dynamicFricion, staticFricion, dt);
+											  outputCollision, elasticity, viscosity, friction, dt);
 				}
 			}
 		}
@@ -62,7 +57,7 @@ namespace PhysicEngine{
 
 	void World::applyCollisionForce(RigidBody &rigidBodyA, RigidBody &rigidBodyB,
 									Collision collision, float elasticity, float viscosity,
-									float dynamicFricion, float staticFricion, float dt) const
+									float friction, float dt) const
 	{
 		float modNormalVelocity;
 		float modTangentVelocity;
@@ -97,11 +92,8 @@ namespace PhysicEngine{
 		force = (elasticity * collision.deformation) + (viscosity * modNormalVelocity);
 		force = force < 0 ? 0 : force;
 		normalForce = collision.normal * force;
-		// Se entrambi i corpi non si muovono uso l'attrito statico, altrimenti il dinamico
-		if (rigidBodyA.getVelocity() == Utils::Vector3::zero && rigidBodyB.getVelocity() == Utils::Vector3::zero)
-			force *= staticFricion;
-		else
-			force *= dynamicFricion;
+			
+		force *= friction;
 		
 		tangentForce = tangentVelocity * force;
 

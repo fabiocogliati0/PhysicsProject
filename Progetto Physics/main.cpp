@@ -346,13 +346,12 @@ static void DisegnaTutto()
 int main(int argc, char **argv)
 {
 
-	world = World(10.0f, Vector3(0.0f, -9.8f, 0.0f));
+	world = World(1.0f, Vector3(0.0f, -9.8f, 0.0f));
 
 	PhysicMaterial material;
-	material.dynamicFriction = 0.2;
-	material.elasticity = 250.0f;
-	material.staticFriction = 0.2;
-	material.viscosity = 5.0f;
+	material.friction = 0.2;
+	material.elasticity = 600.0f;
+	material.viscosity = 50.0f;
 
 	float mass = 10.0f;
 
@@ -373,8 +372,10 @@ int main(int argc, char **argv)
 	Transform transformCube2;
 	transformSphere.setPosition(Vector3(3.0f, 4.0f, 1.0f));
 	transformSphere2.setPosition(Vector3(3.0f, 0.0f, 1.0f));
+	
 	transformCube.setPosition(Vector3(0.5f, 3.0f, 0.0f));
-	//transformCube2.setEulerRotation(Vector3(0, 45.0f, 0));
+	//transformCube.setEulerRotation(Vector3(0, 0, 315.0f));
+	
 	transformCube2.setPosition(Vector3(0.0f, 3.0f, 0.0f));
 
 	rigidBody1 = RigidBody(1.0f, material, c, RigidBody::Static_Body);
@@ -388,7 +389,7 @@ int main(int argc, char **argv)
 	rigidBody9 = RigidBody(10.0f, material, a, transformCube2);
 	rigidBody10 = RigidBody(10.0f, material, b, transformSphere2);
 	//rigidBody10.setVelocity(Vector3(0, 20.0f, 0));
-	rigidBody10.setAngularVelocity(Vector3(20.0f, 10.0f, 0));
+	//rigidBody9.setAngularVelocity(Vector3(10.0f, 0, 20.0f));
 
 	world.addBody(rigidBody1);
 	world.addBody(rigidBody2);

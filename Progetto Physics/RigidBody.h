@@ -76,15 +76,14 @@ namespace PhysicEngine{
 
 		Utils::Vector3 getInertia() const;
 
-		float getVolume() const;
+		float getArea() const;
 
 		float getElasticity() const;
 
 		float getViscosity() const;
 
-		float getDynamicFriction() const;
+		float getFriction() const;
 
-		float getStaticFriction() const;
 
 		staticBodyType getStaticBodyType() const;
 

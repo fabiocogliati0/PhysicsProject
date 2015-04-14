@@ -7,6 +7,9 @@
 #include <cassert>
 #include <vector>
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 namespace PhysicEngine
 {
 
@@ -152,10 +155,10 @@ namespace PhysicEngine
 		return collider->getRawInertia() * mass;
 	}
 
-	float RigidBody::getVolume() const
+	float RigidBody::getArea() const
 	{
 		assert(collider != nullptr);
-		return collider->getVolume();
+		return collider->getArea();
 	}
 	
 	float RigidBody::getElasticity() const
@@ -168,14 +171,9 @@ namespace PhysicEngine
 		return this->material.viscosity;
 	}
 
-	float RigidBody::getDynamicFriction() const
+	float RigidBody::getFriction() const
 	{
-		return this->material.dynamicFriction;
-	}
-
-	float RigidBody::getStaticFriction() const
-	{
-		return this->material.staticFriction;
+		return this->material.friction;
 	}
 
 	RigidBody::staticBodyType RigidBody::getStaticBodyType() const
@@ -241,21 +239,52 @@ namespace PhysicEngine
 			}
 
 			velocity += velocityOfGravity;
+
+			// Calcolo la forza di attrito dell'aria
+			Utils::Matrix newRotationMatrix = transform.getRotationMatrix();
+			float area = this->getArea();
+			float drag = 0.0f;
+			float modVelocity;
+			Utils::Vector3 inverseVelocity;
+
+			// operazioni comuni
+			inverseVelocity = velocity;
+			inverseVelocity.invert();
+			modVelocity = velocity.module();
+
+			if (collider->getColliderType() == Collider::SphereColliderType)
+				drag = 0.47f;
+			else if (collider->getColliderType() == Collider::BoxColliderType)
+			{
+				Utils::Vector3 down = Utils::Vector3(0, -1, 0);
+				Utils::Vector3 rotate = newRotationMatrix.RotateAbsolute(down);
+				float dot = acos(down.dot(rotate)) * (180.0f / static_cast<float>(M_PI));
+				if (dot > 35 && dot < 55 || dot > 125 && dot < 145)
+					drag = 0.80f;
+				else
+					drag = 1.05f;
+			}
+
+			// F = 1/2 * area * drag * airD * v^2 
+			inverseVelocity *= ((0.5f * area * drag * myWorld.getAirDensity() * modVelocity) / mass ) * dt;
+			velocity += inverseVelocity;
+
 			transform.setPosition(transform.getPosition() + (velocity * dt));
 
 			// Moto angolare
 			if (resultantMomentum != Utils::Vector3::zero)
 			{
 				angularMomentum += resultantMomentum * dt;
-				// Per risolvere problemi di inerzia, "raddrizzo" il mio
-				// oggetto, altrimenti l'inerzia cambierebbe in base a come è disposto l'oggetto
-				angularVelocity = rotationMatrix.RotateRelative(angularMomentum);
-
-				// Ho effettivamente l'angularVelocity ora 
-				angularVelocity.x /= this->getInertia().x;
-				angularVelocity.y /= this->getInertia().y;
-				angularVelocity.z /= this->getInertia().z;
 			}
+			
+			// Per risolvere problemi di inerzia, "raddrizzo" il mio
+			// oggetto, altrimenti l'inerzia cambierebbe in base a come è disposto l'oggetto
+			angularVelocity = rotationMatrix.RotateRelative(angularMomentum);
+
+			// Ho effettivamente l'angularVelocity ora 
+			angularVelocity.x /= this->getInertia().x;
+			angularVelocity.y /= this->getInertia().y;
+			angularVelocity.z /= this->getInertia().z;
 
 			if (angularVelocity != Utils::Vector3::zero)
 			{
@@ -273,9 +302,6 @@ namespace PhysicEngine
 
 				// Setto il nuovo quaternione creando la matrice di rotazione attuale
 				transform.setQuaternionRotation(totalRotationQuaternion);
-
-				Utils::Vector3 debug = transform.getEulerRotation();
-
 			}
 
 			// Azzeramento forza risultante e momento risultante 

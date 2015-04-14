@@ -6,7 +6,6 @@ namespace PhysicEngine
 	{
 		float elasticity;
 		float viscosity;
-		float dynamicFriction;
-		float staticFriction;
+		float friction;
 	};
 }

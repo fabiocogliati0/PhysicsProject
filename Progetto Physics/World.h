@@ -44,7 +44,7 @@ namespace PhysicEngine{
 
 		void applyCollisionForce(RigidBody &rigidBodyA, RigidBody &RigidBodyB,
 								 Collision collision, float elasticity, float vicosity,
-								 float dynamicFricion, float staticFricion, float dt) const;
+								 float friction, float dt) const;
 
 		std::vector<RigidBody> bodies;
 
