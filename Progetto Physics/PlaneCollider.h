@@ -1,9 +1,6 @@
 #pragma once
 
 #include "Collider.h"
-#include "Vector3.h"
-
-#include <vector>
 
 namespace PhysicEngine
 {

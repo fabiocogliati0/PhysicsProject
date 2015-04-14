@@ -56,7 +56,7 @@ namespace PhysicEngine{
 		}
 		for (size_t i = 0; i < bodies.size(); ++i)
 		{
-			if ( !bodies[i].isStatic() )
+			if (bodies[i].getStaticBodyType() == RigidBody::Non_Static_Body)
 				bodies[i].updatePhyisic(dt, *this);
 		}
 	}
@@ -73,8 +73,8 @@ namespace PhysicEngine{
 		Utils::Vector3 normalForce;
 		Utils::Vector3 tangentForce;
 		Utils::Vector3 totalForce;
-	
-		// Inizio calcolo impactSpeed
+
+		// Impactspeed indefinita 0/0
 		Utils::Vector3 impactSpeed = collision.impactPoint - rigidBodyB.getPosition();
 		impactSpeed = rigidBodyB.getAngularVelocity().cross(impactSpeed);
 		impactSpeed = rigidBodyB.getVelocity() + impactSpeed;
@@ -86,7 +86,6 @@ namespace PhysicEngine{
 		impactSpeed = temp - impactSpeed;
 
 		impactSpeed.invert();
-		// fine calcolo impactSpeed
 
 		modNormalVelocity = impactSpeed.dot(collision.normal);
 		normalVelocity = collision.normal * modNormalVelocity;
@@ -119,14 +118,19 @@ namespace PhysicEngine{
 		
 		Utils::Vector3 localPosition;
 
-		// Non vi è controllo se è statico perchè avviene dentro ad addForceDT()
-		localPosition = collision.impactPoint - rigidBodyA.getPosition();
-		rigidBodyA.addForceDT(localPosition, totalForce);
+		if (rigidBodyA.getStaticBodyType() == RigidBody::Non_Static_Body)
+		{
+			localPosition = collision.impactPoint - rigidBodyA.getPosition();
+			rigidBodyA.addForceDT(localPosition, totalForce);
+		}
 
 		totalForce.invert();
 
-		localPosition = collision.impactPoint - rigidBodyB.getPosition();
-		rigidBodyB.addForceDT(localPosition, totalForce);
+		if (rigidBodyB.getStaticBodyType() == RigidBody::Non_Static_Body)
+		{
+			localPosition = collision.impactPoint - rigidBodyB.getPosition();
+			rigidBodyB.addForceDT(localPosition, totalForce);
+		}
 	}
 
 

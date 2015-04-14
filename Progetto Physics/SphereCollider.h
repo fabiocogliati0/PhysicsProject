@@ -2,8 +2,6 @@
 
 #include "Collider.h"
 
-#include <vector>
-
 namespace PhysicEngine{
 
 	class RigidBody;

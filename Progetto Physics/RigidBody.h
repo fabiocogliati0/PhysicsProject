@@ -20,19 +20,26 @@ namespace PhysicEngine{
 
 	public:
 
+		enum staticBodyType
+		{
+			Static_Body = 1,
+			Non_Static_Body
+		};
+
+
 		RigidBody	();
 
 		RigidBody	(	float mass,
 						const PhysicMaterial& material,
 						const Collider& collider,
-						bool isStatic = false
+						staticBodyType isStatic = Non_Static_Body
 					);
 
 		RigidBody	(	float mass,
 						const PhysicMaterial& material,
 						const Collider& collider,
 						const Transform& transform,
-						bool isStatic = false
+						staticBodyType isStatic = Non_Static_Body
 					);
 
 		RigidBody	(	float mass,
@@ -79,7 +86,7 @@ namespace PhysicEngine{
 
 		float getStaticFriction() const;
 
-		bool isStatic() const;
+		staticBodyType getStaticBodyType() const;
 
 
 		void setVelocity(const Utils::Vector3 &input);
@@ -102,7 +109,7 @@ namespace PhysicEngine{
 
 		float mass;
 
-		bool staticBody;
+		staticBodyType staticBody;
 
 		Utils::Vector3 velocity;
 		
