@@ -38,8 +38,8 @@ namespace PhysicEngine
 		vertices[6].z = -semiZ;
 		vertices[7].z = -semiZ;
 
-		//set volume
-		setVolume(8.0f * semiX * semiY * semiZ);
+		//set area
+		setArea(4.0f * semiX * semiX);
 
 		//set raw inertia
 		Utils::Vector3 rawInertia;

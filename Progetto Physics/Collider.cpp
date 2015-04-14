@@ -143,18 +143,18 @@ namespace PhysicEngine
 		return rawInertia;
 	}
 
-	float Collider::getVolume() const
+	float Collider::getArea() const
 	{
-		return volume;
+		return area;
 	}
 
 	void Collider::setRawInertia(const Utils::Vector3& rawInertia){
 		this->rawInertia = rawInertia;
 	}
 
-	void Collider::setVolume(float volume)
+	void Collider::setArea(float volume)
 	{
-		this->volume = volume;
+		this->area = volume;
 	}
 
 

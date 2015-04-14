@@ -68,8 +68,8 @@ namespace PhysicEngine
 		/*Restitusce il punto di inerzia tenendo conto della geometria dell'oggetto senza tenere conto della massa*/
 		const Utils::Vector3& getRawInertia() const;
 
-		/*Restituisce il volume del collider*/
-		float getVolume() const;
+		/*Restituisce l'area del collider*/
+		float getArea() const;
 
 
 	protected:
@@ -77,8 +77,8 @@ namespace PhysicEngine
 		/*Funzione che setta il punto di inerzia dell'oggetto, verrà chiamata dalle classi derivate*/
 		void setRawInertia(const Utils::Vector3& rawInertia);
 
-		/*Funzione che setta il volume dell'oggetto, verrà chiamata dalle classi derivate*/
-		void setVolume(float volume);
+		/*Funzione che setta l'area dell'oggetto, verrà chiamata dalle classi derivate*/
+		void setArea(float volume);
 
 
 	private:
@@ -86,8 +86,8 @@ namespace PhysicEngine
 		/*Punto di inerzia dell'oggetto senza tenere conto della massa*/
 		Utils::Vector3 rawInertia;
 		
-		/*volume dell'oggetto*/
-		float volume;
+		/*area dell'oggetto*/
+		float area;
 
 	};
 
