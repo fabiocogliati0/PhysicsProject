@@ -195,7 +195,7 @@ namespace PhysicEngine
 
 	void RigidBody::addForceDT(const Utils::Vector3& force)
 	{
-		if (!this->staticBody)
+		if (this->getStaticBodyType() == Non_Static_Body)
 		{
 			this->addForceDT(Utils::Vector3::zero, force);
 		}
@@ -203,7 +203,7 @@ namespace PhysicEngine
 
 	void RigidBody::addForceDT(const Utils::Vector3& point, const Utils::Vector3& force)
 	{
-		if (!this->staticBody)
+		if (this->getStaticBodyType()==Non_Static_Body)
 		{
 			// Sommo la forza ricevuta a quella che ho già
 			this->resultantForce += force;
