@@ -88,6 +88,7 @@ namespace PhysicEngine
 		this->angularMomentum = other.angularMomentum;
 		this->gravity = other.gravity;
 		this->velocityOfGravity = other.velocityOfGravity;
+		this->angularVelocityInserted = other.angularVelocityInserted;
 
 		assert(other.collider != nullptr);
 		this->collider = other.collider->clone();
@@ -181,14 +182,14 @@ namespace PhysicEngine
 		return staticBody;
 	}
 
-	void RigidBody::setVelocity(const Utils::Vector3 &input)
+	void RigidBody::setVelocity(const Utils::Vector3 &velocityInput)
 	{
-		velocity = input;
+		this->velocity = velocityInput;
 	}
 
-	void RigidBody::setAngularVelocity(const Utils::Vector3 &input)
+	void RigidBody::setAngularVelocity(const Utils::Vector3 &angularVelocityInput)
 	{
-		angularMomentum = input * this->getInertia();
+		this->angularVelocityInserted = angularVelocityInput;
 	}
 
 	void RigidBody::addForceDT(const Utils::Vector3& force)
@@ -286,6 +287,8 @@ namespace PhysicEngine
 			angularVelocity.y /= this->getInertia().y;
 			angularVelocity.z /= this->getInertia().z;
 
+			angularVelocity += angularVelocityInserted;
+
 			if (angularVelocity != Utils::Vector3::zero)
 			{
 				newRotationQuaternion.set(1, angularVelocity.x * dt / 2, angularVelocity.y * dt / 2,
@@ -298,7 +301,9 @@ namespace PhysicEngine
 				totalRotationQuaternion.normalize();
 
 				// La velocità la ritorno in assoluto
+				angularVelocity -= angularVelocityInserted;
 				angularVelocity = rotationMatrix.RotateAbsolute(angularVelocity);
+				angularVelocity += angularVelocityInserted;
 
 				// Setto il nuovo quaternione creando la matrice di rotazione attuale
 				transform.setQuaternionRotation(totalRotationQuaternion);

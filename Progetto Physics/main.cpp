@@ -312,9 +312,9 @@ static void VisualizzaSistema()
 	rigidBody5 = world.getBody(4);
 	rigidBody6 = world.getBody(5);
 	rigidBody7 = world.getBody(6);
-	rigidBody8 = world.getBody(7);
-	rigidBody9 = world.getBody(8);
-	rigidBody10 = world.getBody(9);
+	//rigidBody8 = world.getBody(7);
+	//rigidBody9 = world.getBody(8);
+	//rigidBody10 = world.getBody(9);
 
 	DisegnaPianoXZ(PLANEPOS1);
 	DisegnaPianoXZ(PLANEPOS2);
@@ -323,9 +323,9 @@ static void VisualizzaSistema()
 	DisegnaPianoXY(PLANEPOS5);
 	DisegnaPianoXY(PLANEPOS6);
 	DisegnaParall(rigidBody7.getPosition().x, rigidBody7.getPosition().y, rigidBody7.getPosition().z, SDIM_X, SDIM_Y, SDIM_Z, rigidBody7.getRotation());
-	DisegnaSfera(rigidBody8.getPosition().x, rigidBody8.getPosition().y, rigidBody8.getPosition().z, RAD, rigidBody8.getRotation());
-	DisegnaParall(rigidBody9.getPosition().x, rigidBody9.getPosition().y, rigidBody9.getPosition().z, SDIM_X, SDIM_Y, SDIM_Z, rigidBody9.getRotation());
-	DisegnaSfera(rigidBody10.getPosition().x, rigidBody10.getPosition().y, rigidBody10.getPosition().z, RAD, rigidBody10.getRotation());
+	//DisegnaSfera(rigidBody8.getPosition().x, rigidBody8.getPosition().y, rigidBody8.getPosition().z, RAD, rigidBody8.getRotation());
+	//DisegnaParall(rigidBody9.getPosition().x, rigidBody9.getPosition().y, rigidBody9.getPosition().z, SDIM_X, SDIM_Y, SDIM_Z, rigidBody9.getRotation());
+	//DisegnaSfera(rigidBody10.getPosition().x, rigidBody10.getPosition().y, rigidBody10.getPosition().z, RAD, rigidBody10.getRotation());
 }
 
 static void DisegnaTutto()
@@ -385,11 +385,11 @@ int main(int argc, char **argv)
 	rigidBody5 = RigidBody(1.0f, material, g, RigidBody::Static_Body);
 	rigidBody6 = RigidBody(1.0f, material, h, RigidBody::Static_Body);
 	rigidBody7 = RigidBody(10.0f, material, a, transformCube);
-	rigidBody8 = RigidBody(1.0f, material, b, transformSphere);
-	rigidBody9 = RigidBody(10.0f, material, a, transformCube2);
-	rigidBody10 = RigidBody(10.0f, material, b, transformSphere2);
+	//rigidBody8 = RigidBody(1.0f, material, b, transformSphere);
+	//rigidBody9 = RigidBody(10.0f, material, a, transformCube2);
+	//rigidBody10 = RigidBody(10.0f, material, b, transformSphere2);
 	//rigidBody10.setVelocity(Vector3(0, 20.0f, 0));
-	//rigidBody9.setAngularVelocity(Vector3(10.0f, 0, 20.0f));
+	//rigidBody10.setAngularVelocity(Vector3(0, 0, 10.0f));
 
 	world.addBody(rigidBody1);
 	world.addBody(rigidBody2);
@@ -398,9 +398,9 @@ int main(int argc, char **argv)
 	world.addBody(rigidBody5);
 	world.addBody(rigidBody6);
 	world.addBody(rigidBody7);
-	world.addBody(rigidBody8);
-	world.addBody(rigidBody9);
-	world.addBody(rigidBody10);
+	//world.addBody(rigidBody8);
+	//world.addBody(rigidBody9);
+	//world.addBody(rigidBody10);
 
 	// Inizio codice Testbed
 	glutInit(&argc, argv);

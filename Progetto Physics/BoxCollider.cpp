@@ -1,11 +1,7 @@
 #include "BoxCollider.h"
 
 #include "Collider.h"
-#include "Collision.h"
-
 #include "Vector3.h"
-
-#include <vector>
 
 namespace PhysicEngine
 {

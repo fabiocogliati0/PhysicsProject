@@ -88,9 +88,9 @@ namespace PhysicEngine{
 		staticBodyType getStaticBodyType() const;
 
 
-		void setVelocity(const Utils::Vector3 &input);
+		void setVelocity(const Utils::Vector3 &velocityInput);
 
-		void setAngularVelocity(const Utils::Vector3 &input);
+		void setAngularVelocity(const Utils::Vector3 &angularVelocityInput);
 
 		void addForceDT(const Utils::Vector3& point);
 
@@ -122,6 +122,7 @@ namespace PhysicEngine{
 		Utils::Vector3 resultantMomentum;		// momento risultante
 		Utils::Vector3 gravity;					// Gravità
 		Utils::Vector3 velocityOfGravity;		// velocità di gravità
+		Utils::Vector3 angularVelocityInserted;
 	};
 
 }

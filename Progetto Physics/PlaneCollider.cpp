@@ -1,17 +1,16 @@
 #include "PlaneCollider.h"
 
 #include "Collider.h"
-#include "Collision.h"
 #include "Vector3.h"
-
-#include <vector>
 #include <cassert>
 
-namespace PhysicEngine{
+namespace PhysicEngine
+{
 
 	PlaneCollider::PlaneCollider() 
 		: PlaneCollider(0.0f, 1.0f, 0.0f, 0.0f, MajorLookDirection)
-	{}
+	{
+	}
 
 	PlaneCollider::PlaneCollider(float A, float B, float C, float D, lookDirections lookDirection)
 		: A(A), B(B), C(C), D(D), lookDirection(lookDirection)
