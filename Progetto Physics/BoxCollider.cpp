@@ -39,7 +39,7 @@ namespace PhysicEngine
 		vertices[7].z = -semiZ;
 
 		//set area
-		setArea(2 * semiX * 2 * semiX);
+		setArea(4.0f * semiX * semiX);
 
 		//set raw inertia
 		Utils::Vector3 rawInertia;
