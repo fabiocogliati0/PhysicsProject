@@ -448,7 +448,7 @@ namespace PhysicEngine
 			return intersection;
 		}
 
-
+		/*Costruttore messo privato per non permettere di costruire un'istanza della classe */
 		IntersectOperations();
 
 	};
