@@ -218,65 +218,68 @@ namespace PhysicEngine
 
 	void RigidBody::updatePhyisic(float dt, const World& myWorld)
 	{
-		Utils::Quaternion newRotationQuaternion;
-		Utils::Quaternion totalRotationQuaternion = transform.getRotationQuaternion();
-		Utils::Matrix rotationMatrix = transform.getRotationMatrix();
-
-		// Se la gravità è uguale l'ho già calcolata e mi evito una moltiplicazione
-		if (myWorld.getGravityForce() != gravity)
+		if (this->getStaticBodyType() == RigidBody::Non_Static_Body)
 		{
-			// *** calcolo nuovamente la quantità di moto della gravità
-			// quantitadiMotoGravity = gravity * dt;
-			gravity = myWorld.getGravityForce();
-			velocityOfGravity = gravity * dt; 
+			Utils::Quaternion newRotationQuaternion;
+			Utils::Quaternion totalRotationQuaternion = transform.getRotationQuaternion();
+			Utils::Matrix rotationMatrix = transform.getRotationMatrix();
+
+			// Se la gravità è uguale l'ho già calcolata e mi evito una moltiplicazione
+			if (myWorld.getGravityForce() != gravity)
+			{
+				// *** calcolo nuovamente la quantità di moto della gravità
+				// quantitadiMotoGravity = gravity * dt;
+				gravity = myWorld.getGravityForce();
+				velocityOfGravity = gravity * dt;
+			}
+
+			// Moto rettilineo uniforme
+			if (resultantForce != Utils::Vector3::zero)
+			{
+				momentum = resultantForce * dt;
+				velocity += momentum / mass;
+			}
+
+			velocity += velocityOfGravity;
+			transform.setPosition(transform.getPosition() + (velocity * dt));
+
+			// Moto angolare
+			if (resultantMomentum != Utils::Vector3::zero)
+			{
+				angularMomentum += resultantMomentum * dt;
+				// Per risolvere problemi di inerzia, "raddrizzo" il mio
+				// oggetto, altrimenti l'inerzia cambierebbe in base a come è disposto l'oggetto
+				angularVelocity = rotationMatrix.RotateRelative(angularMomentum);
+
+				// Ho effettivamente l'angularVelocity ora 
+				angularVelocity.x /= this->getInertia().x;
+				angularVelocity.y /= this->getInertia().y;
+				angularVelocity.z /= this->getInertia().z;
+			}
+
+			if (angularVelocity != Utils::Vector3::zero)
+			{
+				newRotationQuaternion.set(1, angularVelocity.x * dt / 2, angularVelocity.y * dt / 2,
+					angularVelocity.z * dt / 2);
+
+				// Normalizzo il quaternione per utilizzarlo per la rotazione
+				newRotationQuaternion.normalize();
+
+				totalRotationQuaternion *= newRotationQuaternion;
+				totalRotationQuaternion.normalize();
+
+				// La velocità la ritorno in assoluto
+				angularVelocity = rotationMatrix.RotateAbsolute(angularVelocity);
+
+				// Setto il nuovo quaternione creando la matrice di rotazione attuale
+				transform.setQuaternionRotation(totalRotationQuaternion);
+
+				Utils::Vector3 debug = transform.getEulerRotation();
+
+			}
+
+			// Azzeramento forza risultante e momento risultante 
+			resultantForce = resultantMomentum = Utils::Vector3::zero;
 		}
-
-		// Moto rettilineo uniforme
-		if (resultantForce != Utils::Vector3::zero)
-		{
-			momentum = resultantForce * dt; 
-			velocity += momentum / mass;
-		}
-
-		velocity += velocityOfGravity;
-		transform.setPosition(transform.getPosition() + (velocity * dt));
-
-		// Moto angolare
-		if (resultantMomentum != Utils::Vector3::zero)
-		{
-			angularMomentum += resultantMomentum * dt;
-			// Per risolvere problemi di inerzia, "raddrizzo" il mio
-			// oggetto, altrimenti l'inerzia cambierebbe in base a come è disposto l'oggetto
-			angularVelocity = rotationMatrix.RotateRelative(angularMomentum);
-
-			// Ho effettivamente l'angularVelocity ora 
-			angularVelocity.x /= this->getInertia().x;
-			angularVelocity.y /= this->getInertia().y;
-			angularVelocity.z /= this->getInertia().z;
-		}
-
-		if (angularVelocity != Utils::Vector3::zero)
-		{
-			newRotationQuaternion.set(1, angularVelocity.x * dt / 2, angularVelocity.y * dt / 2,
-									  angularVelocity.z * dt / 2);
-
-			// Normalizzo il quaternione per utilizzarlo per la rotazione
-			newRotationQuaternion.normalize();
-
-			totalRotationQuaternion *= newRotationQuaternion;
-			totalRotationQuaternion.normalize();
-
-			// La velocità la ritorno in assoluto
-			angularVelocity = rotationMatrix.RotateAbsolute(angularVelocity);
-
-			// Setto il nuovo quaternione creando la matrice di rotazione attuale
-			transform.setQuaternionRotation(totalRotationQuaternion);
-
-			Utils::Vector3 debug = transform.getEulerRotation();
-
-		}
-
-		// Azzeramento forza risultante e momento risultante 
-		resultantForce = resultantMomentum = Utils::Vector3::zero;
 	}
 }
