@@ -78,7 +78,7 @@ namespace PhysicEngine
 		void setRawInertia(const Utils::Vector3& rawInertia);
 
 		/*Funzione che setta l'area dell'oggetto, verrà chiamata dalle classi derivate*/
-		void setArea(float volume);
+		void setArea(float area);
 
 
 	private:
