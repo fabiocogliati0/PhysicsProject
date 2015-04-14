@@ -19,9 +19,7 @@ namespace PhysicEngine
 	
 	Utils::Vector3 Transform::getEulerRotation() const
 	{
-		Utils::Vector3 tmp;
-		tmp = rotationQuaternion.toEuler();
-		return tmp;
+		return rotationQuaternion.toEuler();
 	}
 
 

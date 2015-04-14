@@ -1,8 +1,8 @@
 #include "Collider.h"
+
 #include "IntersectOperations.h"
-
 #include "Vector3.h"
-
+#include <vector>
 #include <cassert>
 
 namespace PhysicEngine
@@ -17,6 +17,8 @@ namespace PhysicEngine
 
 		bool intersect = false;
 
+		/*A seconda del tipo di collider dell'oggetto si effettua un reinterpret_cast per upcastarlo al tipo corretto e si richiama
+		  La stessa funzione sull'oggetto passato per identificarne il tipo*/
 		if (this->getColliderType() == BoxColliderType)
 		{
 			const BoxCollider& thisClass = reinterpret_cast<const BoxCollider&>(*this);
@@ -40,6 +42,7 @@ namespace PhysicEngine
 
 		for (size_t i = 0; i < o_collisions.size(); ++i)
 		{
+			//si invertono le normali poichè si è invertito l'ordine di passaggio dei parametri alla funzione intersect di IntersectOperations.h
 			o_collisions[i].normal.invert();
 		}
 		return intersect;
@@ -131,7 +134,9 @@ namespace PhysicEngine
 		}
 	}
 
-	Collider::~Collider() {}
+	Collider::~Collider() 
+	{
+	}
 
 	const Utils::Vector3& Collider::getRawInertia() const
 	{

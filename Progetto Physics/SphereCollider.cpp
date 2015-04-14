@@ -1,15 +1,12 @@
 #include "SphereCollider.h"
 
 #include "Collider.h"
-
-#define _USE_MATH_DEFINES
 #include <math.h>
-
 #include <cassert>
 
-namespace PhysicEngine{
+#define _USE_MATH_DEFINES	//per utilizzare il pi-greco
 
-	class BoxCollider;
+namespace PhysicEngine{
 
 	SphereCollider::SphereCollider() : SphereCollider(1.0f)
 	{
