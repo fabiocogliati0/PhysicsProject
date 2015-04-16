@@ -1,70 +1,69 @@
 
 #include <iostream>
 #include <vector>
+#include <stdlib.h>
 
 #include "World.h"
+#include "RigidBody.h"
 #include "PhyisicMaterial.h"
+#include "Transform.h"
 #include "BoxCollider.h"
 #include "SphereCollider.h"
 #include "PlaneCollider.h"
-#include "Collision.h"
-
-// Define glut and OpenGL
-#include <stdlib.h>
+#include "Vector3.h"
+#include "Matrix.h"
 #include "GLUT/glut.h"
 
 
-using namespace PhysicEngine;
-using namespace Utils;
+/*---------------------Oggetti del motore fisico--------------------------------------------------------------------------------------------*/
 
-World world;
-RigidBody rigidBody1, rigidBody2, rigidBody3, rigidBody4, rigidBody5, rigidBody6, rigidBody7, rigidBody8, rigidBody9, rigidBody10;
+PhysicEngine::World world;
+PhysicEngine::RigidBody rigidBody1, rigidBody2, rigidBody3, rigidBody4, rigidBody5, rigidBody6, rigidBody7, rigidBody8, rigidBody9, rigidBody10;
 
-// Grandezza parallelepipedo
-#define SDIM_X	1
-#define SDIM_Y	1
-#define SDIM_Z	1
-
-//sfera
-#define RAD 1
-
-//piano 1 y
-#define PLANEPOS1 -5
-
-//Piano 2 y
-#define PLANEPOS2 5
-
-//piano 3 x
-#define PLANEPOS3 -5
-
-//Piano 4 x
-#define PLANEPOS4 5
-
-//Piano 5 z
-#define PLANEPOS5 11
-
-//Piano 6 z
-#define PLANEPOS6 -20
-
-/* Tutto quanto segue e' legato alla sola creazione del testbed
-* utilizzando OpenGL e Glut - non ha importanza ai fini della
-* trattazione
-*/
+/*---------------------Grandezze degli oggetti----------------------------------------------------------------------------------------------*/
 
 
-/* La funzione di visualizzazione.
-* Viene periodicamente invocata per visualizzare la simulazione
-*/
+const float SDIM1_X = 1.0f;			// Grandezza parallelepipedo1 X
+const float SDIM1_Y = 1.0f;			// Grandezza parallelepipedo1 Y
+const float SDIM1_Z = 1.0f;			// Grandezza parallelepipedo1 Z
+const float SDIM2_X = 1.0f;			// Grandezza parallelepipedo2 X
+const float SDIM2_Y = 1.0f;			// Grandezza parallelepipedo2 Y
+const float SDIM2_Z = 1.0f;			// Grandezza parallelepipedo2 Z
+const float RAD1 = 1.0f;			// Raggio sfera1
+const float RAD2 = 1.0f;			// Raggio sfera2
+const float PLANEPOS1 = -5.0f;		// piano 1 y position
+const float PLANEPOS2 = 5.0f;		// Piano 2 y position
+const float PLANEPOS3 = - 5.0f;		// piano 3 x position
+const float PLANEPOS4 = 5.0f;		// Piano 4 x position
+const float PLANEPOS5 = 11.0f;		// Piano 5 z position
+const float PLANEPOS6 = -20.0f;		// Piano 6 z position
+
+/*---------------------Variabili per il timing ----------------------------------------------------------------------------------------------*/
+
+const float DT = 0.005f; // Tempo di integrazione
+double TempoTotale = 0.0;
+
+
+/*---------------------Variabili per il rendering --------------------------------------------------------------------------------------------*/
+
+static GLfloat black[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+static GLfloat aLite[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+static GLfloat dLite[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+static GLfloat sLite[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+static GLfloat rosso[] = { 1.0f, 0.2f, 0.2f, 1.0f };
+static GLfloat verde[] = { 0.2f, 0.8f, 0.2f, 1.0f };
+static GLfloat verde2[] = { 0.4f, 1.0f, 0.4f, 1.0f };
+static GLfloat blu[] = { 0.4f, 0.4f, 1.0f, 1.0f };
+static GLfloat bianco[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+static GLfloat LucePos[4] = { 1, 2, 1, 0 };
+static GLfloat Rot[16];
 
 
 
-/* La funzione di interazione.
-* Viene invocata se l'utente preme un tasto
-*/
+/*---------------------Funzioni -------------------------------------------------------------------------------------------------------------*/
 
 static void TastoPremuto(unsigned char Tasto)
 {
-
 }
 
 static void CambiaDimensioni(int w, int h)
@@ -81,39 +80,25 @@ static void CambiaDimensioni(int w, int h)
 	glTranslatef(0, 0, -12);
 }
 
-
 static void AzioneTasto(unsigned char Tasto, int, int)
 {
 	TastoPremuto(Tasto);
 }
 
-float DT = 0.005f; // Tempo di integrazione
-double TempoTotale = 0;
-
 static void EseguiCiclicamente()
 {
 	double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
 
-	while (TempoTotale < t) {
+	while (TempoTotale < t) 
+	{
 		world.updatePhysic(DT);
 		TempoTotale += DT;
 	}
-	if (TempoTotale > 5.5f)
-	{
-		int a = 2;
-	}
+
 	glutPostRedisplay();
 }
 
-static GLfloat Rot[16];
-
-static GLfloat rosso[] = { 1.0f, 0.2f, 0.2f, 1.0f };
-static GLfloat verde[] = { 0.2f, 0.8f, 0.2f, 1.0f };
-static GLfloat verde2[] = { 0.4f, 1.0f, 0.4f, 1.0f };
-static GLfloat blu[] = { 0.4f, 0.4f, 1.0f, 1.0f };
-static GLfloat bianco[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-void DisegnaSfera(float X, float Y, float Z, float R, const Matrix &M)
+void DisegnaSfera(float X, float Y, float Z, float R, const Utils::Matrix &M)
 {
 	int i;
 	float j, X1, Y1, X2, Y2, s, c;
@@ -133,7 +118,6 @@ void DisegnaSfera(float X, float Y, float Z, float R, const Matrix &M)
 	glMaterialfv(GL_FRONT, GL_SPECULAR, bianco);
 	glMateriali(GL_FRONT, GL_SHININESS, 16);
 
-	//glutSolidSphere(R, 64, 64);
 	X2 = 0;
 	Y2 = -1;
 	for (i = 1; i <= 64; i++) {
@@ -167,7 +151,7 @@ void DisegnaSfera(float X, float Y, float Z, float R, const Matrix &M)
 	glPopMatrix();
 }
 
-void DisegnaParall(float X, float Y, float Z, float Lx, float Ly, float Lz, const Matrix& R)
+void DisegnaParall(float X, float Y, float Z, float Lx, float Ly, float Lz, const Utils::Matrix& R)
 {
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
@@ -276,7 +260,7 @@ void DisegnaPianoXZ(float Y)
 void DisegnaPianoXY(float Z)
 {
 	int i;
-	float Dim = 5;	//ERA 20 PERò NON SI CAPIVA NULLA!
+	float Dim = 5;
 
 	glMaterialfv(GL_FRONT, GL_AMBIENT, verde);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, verde);
@@ -297,35 +281,37 @@ void DisegnaPianoXY(float Z)
 
 }
 
-static GLfloat black[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-static GLfloat aLite[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-static GLfloat dLite[] = { 0.8f, 0.8f, 0.8f, 1.0f };
-static GLfloat sLite[] = { 0.8f, 0.8f, 0.8f, 1.0f };
-static GLfloat LucePos[4] = { 1, 2, 1, 0 };
-
 static void VisualizzaSistema()
 {
 	rigidBody1 = world.getBody(0);
-	rigidBody2 = world.getBody(1);
-	rigidBody3 = world.getBody(2);
-	rigidBody4 = world.getBody(3);
-	rigidBody5 = world.getBody(4);
-	rigidBody6 = world.getBody(5);
-	rigidBody7 = world.getBody(6);
-	//rigidBody8 = world.getBody(7);
-	//rigidBody9 = world.getBody(8);
-	//rigidBody10 = world.getBody(9);
-
 	DisegnaPianoXZ(PLANEPOS1);
+
+	rigidBody2 = world.getBody(1);
 	DisegnaPianoXZ(PLANEPOS2);
+
+	rigidBody3 = world.getBody(2);
 	DisegnaPianoYZ(PLANEPOS3);
+
+	rigidBody4 = world.getBody(3);
 	DisegnaPianoYZ(PLANEPOS4);
+
+	rigidBody5 = world.getBody(4);
 	DisegnaPianoXY(PLANEPOS5);
+
+	rigidBody6 = world.getBody(5);
 	DisegnaPianoXY(PLANEPOS6);
-	DisegnaParall(rigidBody7.getPosition().x, rigidBody7.getPosition().y, rigidBody7.getPosition().z, SDIM_X, SDIM_Y, SDIM_Z, rigidBody7.getRotation());
-	//DisegnaSfera(rigidBody8.getPosition().x, rigidBody8.getPosition().y, rigidBody8.getPosition().z, RAD, rigidBody8.getRotation());
-	//DisegnaParall(rigidBody9.getPosition().x, rigidBody9.getPosition().y, rigidBody9.getPosition().z, SDIM_X, SDIM_Y, SDIM_Z, rigidBody9.getRotation());
-	//DisegnaSfera(rigidBody10.getPosition().x, rigidBody10.getPosition().y, rigidBody10.getPosition().z, RAD, rigidBody10.getRotation());
+
+	rigidBody7 = world.getBody(6);
+	DisegnaParall(rigidBody7.getPosition().x, rigidBody7.getPosition().y, rigidBody7.getPosition().z, SDIM1_X, SDIM1_Y, SDIM1_Z, rigidBody7.getRotation());
+
+	rigidBody8 = world.getBody(7);
+	DisegnaSfera(rigidBody8.getPosition().x, rigidBody8.getPosition().y, rigidBody8.getPosition().z, RAD1, rigidBody8.getRotation());
+
+	rigidBody9 = world.getBody(8);
+	DisegnaParall(rigidBody9.getPosition().x, rigidBody9.getPosition().y, rigidBody9.getPosition().z, SDIM2_X, SDIM2_Y, SDIM2_Z, rigidBody9.getRotation());
+
+	rigidBody10 = world.getBody(9);
+	DisegnaSfera(rigidBody10.getPosition().x, rigidBody10.getPosition().y, rigidBody10.getPosition().z, RAD2, rigidBody10.getRotation());
 }
 
 static void DisegnaTutto()
@@ -343,54 +329,56 @@ static void DisegnaTutto()
 	glutSwapBuffers();
 }
 
+
+/*---------------------Main -------------------------------------------------------------------------------------------------------------*/
+
 int main(int argc, char **argv)
 {
 
-	world = World(1.0f, Vector3(0.0f, -9.8f, 0.0f));
+	//Creo il mondo fisico
+	world = PhysicEngine::World(1.0f, Utils::Vector3(0.0f, -9.8f, 0.0f));
 
-	PhysicMaterial material;
-	material.friction = 0.2;
+	//Creo un materiale
+	PhysicEngine::PhysicMaterial material;
+	material.friction	= 0.2;
 	material.elasticity = 600.0f;
-	material.viscosity = 50.0f;
+	material.viscosity	= 50.0f;
 
-	float mass = 10.0f;
+	//creo un collider per ogni RigidBody che andrò a creare
+	PhysicEngine::PlaneCollider  collider1(0.0f, 1.0f, 0.0f, -PLANEPOS1, PhysicEngine::PlaneCollider::MajorLookDirection);	//y>-5
+	PhysicEngine::PlaneCollider  collider2(0.0f, 1.0f, 0.0f, -PLANEPOS2, PhysicEngine::PlaneCollider::MinorLookDirection);	//y<5
+	PhysicEngine::PlaneCollider  collider3(1.0f, 0.0f, 0.0f, -PLANEPOS3, PhysicEngine::PlaneCollider::MajorLookDirection);	//x>-5
+	PhysicEngine::PlaneCollider  collider4(1.0f, 0.0f, 0.0f, -PLANEPOS4, PhysicEngine::PlaneCollider::MinorLookDirection);	//x<5
+	PhysicEngine::PlaneCollider  collider5(0.0f, 0.0f, 1.0f, -PLANEPOS3, PhysicEngine::PlaneCollider::MajorLookDirection);	//z>-5
+	PhysicEngine::PlaneCollider  collider6(0.0f, 0.0f, 1.0f, -PLANEPOS4, PhysicEngine::PlaneCollider::MinorLookDirection);	//z<5
+	PhysicEngine::BoxCollider	 collider7(SDIM1_X, SDIM1_Y, SDIM1_Z);
+	PhysicEngine::SphereCollider collider8(RAD1);
+	PhysicEngine::BoxCollider	 collider9(SDIM2_X, SDIM2_Y, SDIM2_Z);
+	PhysicEngine::SphereCollider collider10(RAD2);
 
-	Vector3 inertia;
+	//creo la transform per ogni rigidBody (a parte per i rigidbody con planeCollider che hanno una posizione definita dalla funzione di piano)
+	PhysicEngine::Transform bodyTransform7;
+	PhysicEngine::Transform bodyTransform8;
+	PhysicEngine::Transform bodyTransform9;
+	PhysicEngine::Transform bodyTransform10;
+	bodyTransform7.setPosition (Utils::Vector3(3.0f, 4.0f, 1.0f));
+	bodyTransform8.setPosition (Utils::Vector3(-1.5f, 1.0f, 1.0f));
+	bodyTransform9.setPosition (Utils::Vector3(3.5f, 2.0f, 1.0f));
+	bodyTransform10.setPosition(Utils::Vector3(0.0f, 3.0f, 1.0f));
 
-	PhysicEngine::BoxCollider a(SDIM_X, SDIM_Y, SDIM_Z);
-	PhysicEngine::SphereCollider b(RAD);
-	PhysicEngine::PlaneCollider c(0.0f, 1.0f, 0.0f, -PLANEPOS1, PlaneCollider::MajorLookDirection);	//y>-5
-	PhysicEngine::PlaneCollider d(0.0f, 1.0f, 0.0f, -PLANEPOS2, PlaneCollider::MinorLookDirection);	//y<5
-	PhysicEngine::PlaneCollider e(1.0f, 0.0f, 0.0f, -PLANEPOS3, PlaneCollider::MajorLookDirection);	//x>-5
-	PhysicEngine::PlaneCollider f(1.0f, 0.0f, 0.0f, -PLANEPOS4, PlaneCollider::MinorLookDirection);	//x<5
-	PhysicEngine::PlaneCollider g(0.0f, 0.0f, 1.0f, -PLANEPOS3, PlaneCollider::MajorLookDirection);	//z>-5
-	PhysicEngine::PlaneCollider h(0.0f, 0.0f, 1.0f, -PLANEPOS4, PlaneCollider::MinorLookDirection);	//z<5
+	//Creo i corpi rigidi assegnandogli il materiale, il collider, e la transform per i non statici
+	rigidBody1 = PhysicEngine::RigidBody(1.0f,  material, collider1,  PhysicEngine::RigidBody::Static_Body);
+	rigidBody2 = PhysicEngine::RigidBody(1.0f,  material, collider2,  PhysicEngine::RigidBody::Static_Body);
+	rigidBody3 = PhysicEngine::RigidBody(1.0f,  material, collider3,  PhysicEngine::RigidBody::Static_Body);
+	rigidBody4 = PhysicEngine::RigidBody(1.0f,  material, collider4,  PhysicEngine::RigidBody::Static_Body);
+	rigidBody5 = PhysicEngine::RigidBody(1.0f,  material, collider5,  PhysicEngine::RigidBody::Static_Body);
+	rigidBody6 = PhysicEngine::RigidBody(1.0f,  material, collider6,  PhysicEngine::RigidBody::Static_Body);
+	rigidBody7 = PhysicEngine::RigidBody(10.0f, material, collider7,  bodyTransform7);
+	rigidBody8 = PhysicEngine::RigidBody(1.0f,  material, collider8,  bodyTransform8);
+	rigidBody9 = PhysicEngine::RigidBody(10.0f, material, collider9,  bodyTransform9);
+	rigidBody10 = PhysicEngine::RigidBody(10.0f,material, collider10, bodyTransform10);
 
-	Transform transformSphere;
-	Transform transformCube;
-	Transform transformSphere2;
-	Transform transformCube2;
-	transformSphere.setPosition(Vector3(3.0f, 4.0f, 1.0f));
-	transformSphere2.setPosition(Vector3(3.0f, 0.0f, 1.0f));
-	
-	transformCube.setPosition(Vector3(0.5f, 3.0f, 0.0f));
-	//transformCube.setEulerRotation(Vector3(0, 0, 315.0f));
-	
-	transformCube2.setPosition(Vector3(0.0f, 3.0f, 0.0f));
-
-	rigidBody1 = RigidBody(1.0f, material, c, RigidBody::Static_Body);
-	rigidBody2 = RigidBody(1.0f, material, d, RigidBody::Static_Body);
-	rigidBody3 = RigidBody(1.0f, material, e, RigidBody::Static_Body);
-	rigidBody4 = RigidBody(1.0f, material, f, RigidBody::Static_Body);
-	rigidBody5 = RigidBody(1.0f, material, g, RigidBody::Static_Body);
-	rigidBody6 = RigidBody(1.0f, material, h, RigidBody::Static_Body);
-	rigidBody7 = RigidBody(10.0f, material, a, transformCube);
-	//rigidBody8 = RigidBody(1.0f, material, b, transformSphere);
-	//rigidBody9 = RigidBody(10.0f, material, a, transformCube2);
-	//rigidBody10 = RigidBody(10.0f, material, b, transformSphere2);
-	//rigidBody10.setVelocity(Vector3(0, 20.0f, 0));
-	//rigidBody10.setAngularVelocity(Vector3(0, 0, 10.0f));
-
+	//Aggiungo i corpi rigidi al mondo
 	world.addBody(rigidBody1);
 	world.addBody(rigidBody2);
 	world.addBody(rigidBody3);
@@ -398,35 +386,27 @@ int main(int argc, char **argv)
 	world.addBody(rigidBody5);
 	world.addBody(rigidBody6);
 	world.addBody(rigidBody7);
-	//world.addBody(rigidBody8);
-	//world.addBody(rigidBody9);
-	//world.addBody(rigidBody10);
+	world.addBody(rigidBody8);
+	world.addBody(rigidBody9);
+	world.addBody(rigidBody10);
 
-	// Inizio codice Testbed
+	//OpenGL
 	glutInit(&argc, argv);
-
 	glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
 	glutInitWindowPosition(600, 100);
-	//glutInitWindowPosition(800, 100);
 	glutInitWindowSize(500, 500);
 	glutCreateWindow("Physics Testbed");
-
 	glutReshapeFunc(CambiaDimensioni);
 	glutDisplayFunc(DisegnaTutto);
 	glutKeyboardFunc(AzioneTasto);
 	glutIdleFunc(EseguiCiclicamente);
-
-	// Z buffer
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
-
-	// luci
 	glEnable(GL_LIGHTING);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, black);
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_NORMALIZE);
-
 	glutMainLoop();
 
 	return 0;
