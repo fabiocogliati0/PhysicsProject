@@ -70,6 +70,7 @@ namespace PhysicEngine
 		this->resultantMomentum = Utils::Vector3::zero;
 		this->gravity = Utils::Vector3::zero;
 		this->velocityOfGravity = Utils::Vector3::zero;
+		this->angularVelocityInserted = Utils::Vector3::zero;
 		
 		this->collider = collider.clone();
 	}
@@ -110,12 +111,14 @@ namespace PhysicEngine
 			this->staticBody = other.staticBody;
 			this->velocity = other.velocity;
 			this->angularVelocity = other.angularVelocity;
+			this->angularVelocity = other.angularVelocityInserted;
 
 			// TEMP
 			this->momentum = other.momentum;
 			this->angularMomentum = other.angularMomentum;
 			this->gravity = other.gravity;
 			this->velocityOfGravity = other.velocityOfGravity;
+			this->angularVelocityInserted = other.angularVelocityInserted;
 
 			assert(other.collider != nullptr);
 			this->collider = other.collider->clone();
@@ -145,9 +148,15 @@ namespace PhysicEngine
 		return velocity;
 	}
 
-	const Utils::Vector3& RigidBody::getAngularVelocity() const
+	const Utils::Vector3 RigidBody::getAngularVelocity() const
 	{
-		return angularVelocity;
+		if (angularVelocity == Utils::Vector3::zero)
+			return angularVelocity;
+		else
+		{
+			Utils::Vector3 tmp = angularVelocityInserted + (angularVelocity - angularVelocityInserted);
+			return tmp;
+		}
 	}
 
 	Utils::Vector3 RigidBody::getInertia() const
@@ -267,7 +276,10 @@ namespace PhysicEngine
 			}
 
 			// F = 1/2 * area * drag * airD * v^2 
-			inverseVelocity *= ((0.5f * area * drag * myWorld.getAirDensity() * modVelocity) / mass ) * dt;
+			inverseVelocity = inverseVelocity * 0.5f * area * drag * myWorld.getAirDensity() * modVelocity;
+			inverseVelocity /= mass; // Accellerazione
+			inverseVelocity *= dt; // Velocità
+
 			velocity += inverseVelocity;
 
 			transform.setPosition(transform.getPosition() + (velocity * dt));

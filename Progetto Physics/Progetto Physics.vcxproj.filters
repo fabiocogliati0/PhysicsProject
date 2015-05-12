@@ -74,9 +74,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="World.cpp">
       <Filter>Source Files\PhysicEngine</Filter>
     </ClCompile>
@@ -106,6 +103,9 @@
     </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Source Files\PhysicEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
