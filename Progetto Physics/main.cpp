@@ -23,9 +23,9 @@ PhysicEngine::RigidBody rigidBody1, rigidBody2, rigidBody3, rigidBody4, rigidBod
 /*---------------------Grandezze degli oggetti----------------------------------------------------------------------------------------------*/
 
 
-const float SDIM1_X = 1.0f;			// Grandezza parallelepipedo1 X
-const float SDIM1_Y = 1.0f;			// Grandezza parallelepipedo1 Y
-const float SDIM1_Z = 1.0f;			// Grandezza parallelepipedo1 Z
+const float SDIM1_X = 0.6f;			// Grandezza parallelepipedo1 X
+const float SDIM1_Y = 0.6f;			// Grandezza parallelepipedo1 Y
+const float SDIM1_Z = 0.6f;			// Grandezza parallelepipedo1 Z
 const float SDIM2_X = 1.0f;			// Grandezza parallelepipedo2 X
 const float SDIM2_Y = 1.0f;			// Grandezza parallelepipedo2 Y
 const float SDIM2_Z = 1.0f;			// Grandezza parallelepipedo2 Z
@@ -44,7 +44,7 @@ const float DT = 0.005f; // Tempo di integrazione
 double TempoTotale = 0.0;
 
 
-/*---------------------Variabili per il rendering --------------------------------------------------------------------------------------------*/
+/*---------------------Variabili per il rendering -------------------------------------------------------------------------------------------*/
 
 static GLfloat black[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 static GLfloat aLite[] = { 0.2f, 0.2f, 0.2f, 1.0f };
@@ -60,7 +60,7 @@ static GLfloat Rot[16];
 
 
 
-/*---------------------Funzioni -------------------------------------------------------------------------------------------------------------*/
+/*---------------------Funzioni ------------------------------------------------------------------------------------------------------------*/
 
 static void TastoPremuto(unsigned char Tasto)
 {
@@ -341,8 +341,8 @@ int main(int argc, char **argv)
 	//Creo un materiale
 	PhysicEngine::PhysicMaterial material;
 	material.friction	= 0.2;
-	material.elasticity = 600.0f;
-	material.viscosity	= 50.0f;
+	material.elasticity = 250.0f;
+	material.viscosity	= 5.0f;
 
 	//creo un collider per ogni RigidBody che andrò a creare
 	PhysicEngine::PlaneCollider  collider1(0.0f, 1.0f, 0.0f, -PLANEPOS1, PhysicEngine::PlaneCollider::MajorLookDirection);	//y>-5
@@ -363,7 +363,7 @@ int main(int argc, char **argv)
 	PhysicEngine::Transform bodyTransform10;
 	bodyTransform7.setPosition (Utils::Vector3(3.0f, 4.0f, 1.0f));
 	bodyTransform8.setPosition (Utils::Vector3(-1.5f, 1.0f, 1.0f));
-	bodyTransform9.setPosition (Utils::Vector3(3.5f, 2.0f, 1.0f));
+	bodyTransform9.setPosition (Utils::Vector3(3.9f, 2.0f, 1.0f));
 	bodyTransform10.setPosition(Utils::Vector3(0.0f, 3.0f, 1.0f));
 
 	//Creo i corpi rigidi assegnandogli il materiale, il collider, e la transform per i non statici
