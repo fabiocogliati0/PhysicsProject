@@ -72,7 +72,7 @@ namespace PhysicEngine{
 
 		const Utils::Vector3& RigidBody::getVelocity() const;
 
-		const Utils::Vector3& getAngularVelocity() const;
+		const Utils::Vector3 getAngularVelocity() const;
 
 		Utils::Vector3 getInertia() const;
 
