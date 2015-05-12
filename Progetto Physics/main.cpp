@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
@@ -32,7 +33,7 @@ const float RAD1 = 1.0f;			// Raggio sfera1
 const float RAD2 = 1.0f;			// Raggio sfera2
 const float PLANEPOS1 = -5.0f;		// piano 1 y position
 const float PLANEPOS2 = 5.0f;		// Piano 2 y position
-const float PLANEPOS3 = -5.0f;		// piano 3 x position
+const float PLANEPOS3 = - 5.0f;		// piano 3 x position
 const float PLANEPOS4 = 5.0f;		// Piano 4 x position
 const float PLANEPOS5 = 11.0f;		// Piano 5 z position
 const float PLANEPOS6 = -20.0f;		// Piano 6 z position
@@ -88,7 +89,7 @@ static void EseguiCiclicamente()
 {
 	double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
 
-	while (TempoTotale < t)
+	while (TempoTotale < t) 
 	{
 		world.updatePhysic(DT);
 		TempoTotale += DT;
@@ -155,11 +156,11 @@ void DisegnaParall(float X, float Y, float Z, float Lx, float Ly, float Lz, cons
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glTranslatef(X, Y, Z);
-
+	
 	float Rot[16];
-	Rot[0] = R[0];
-	Rot[1] = R[1];
-	Rot[2] = R[2];
+	Rot[0] = R[0]; 
+	Rot[1] = R[1]; 
+	Rot[2] = R[2]; 
 	Rot[3] = 0;
 	Rot[4] = R[3]; Rot[5] = R[4]; Rot[6] = R[5]; Rot[7] = 0;
 	Rot[8] = R[6]; Rot[9] = R[7]; Rot[10] = R[8]; Rot[11] = 0;
@@ -339,9 +340,9 @@ int main(int argc, char **argv)
 
 	//Creo un materiale
 	PhysicEngine::PhysicMaterial material;
-	material.friction = 0.2;
+	material.friction	= 0.2;
 	material.elasticity = 600.0f;
-	material.viscosity = 50.0f;
+	material.viscosity	= 50.0f;
 
 	//creo un collider per ogni RigidBody che andrò a creare
 	PhysicEngine::PlaneCollider  collider1(0.0f, 1.0f, 0.0f, -PLANEPOS1, PhysicEngine::PlaneCollider::MajorLookDirection);	//y>-5
@@ -360,22 +361,22 @@ int main(int argc, char **argv)
 	PhysicEngine::Transform bodyTransform8;
 	PhysicEngine::Transform bodyTransform9;
 	PhysicEngine::Transform bodyTransform10;
-	bodyTransform7.setPosition(Utils::Vector3(3.0f, 4.0f, 1.0f));
-	bodyTransform8.setPosition(Utils::Vector3(-1.5f, 1.0f, 1.0f));
-	bodyTransform9.setPosition(Utils::Vector3(3.5f, 2.0f, 1.0f));
+	bodyTransform7.setPosition (Utils::Vector3(3.0f, 4.0f, 1.0f));
+	bodyTransform8.setPosition (Utils::Vector3(-1.5f, 1.0f, 1.0f));
+	bodyTransform9.setPosition (Utils::Vector3(3.5f, 2.0f, 1.0f));
 	bodyTransform10.setPosition(Utils::Vector3(0.0f, 3.0f, 1.0f));
 
 	//Creo i corpi rigidi assegnandogli il materiale, il collider, e la transform per i non statici
-	rigidBody1 = PhysicEngine::RigidBody(1.0f, material, collider1, PhysicEngine::RigidBody::Static_Body);
-	rigidBody2 = PhysicEngine::RigidBody(1.0f, material, collider2, PhysicEngine::RigidBody::Static_Body);
-	rigidBody3 = PhysicEngine::RigidBody(1.0f, material, collider3, PhysicEngine::RigidBody::Static_Body);
-	rigidBody4 = PhysicEngine::RigidBody(1.0f, material, collider4, PhysicEngine::RigidBody::Static_Body);
-	rigidBody5 = PhysicEngine::RigidBody(1.0f, material, collider5, PhysicEngine::RigidBody::Static_Body);
-	rigidBody6 = PhysicEngine::RigidBody(1.0f, material, collider6, PhysicEngine::RigidBody::Static_Body);
-	rigidBody7 = PhysicEngine::RigidBody(10.0f, material, collider7, bodyTransform7);
-	rigidBody8 = PhysicEngine::RigidBody(1.0f, material, collider8, bodyTransform8);
-	rigidBody9 = PhysicEngine::RigidBody(10.0f, material, collider9, bodyTransform9);
-	rigidBody10 = PhysicEngine::RigidBody(10.0f, material, collider10, bodyTransform10);
+	rigidBody1 = PhysicEngine::RigidBody(1.0f,  material, collider1,  PhysicEngine::RigidBody::Static_Body);
+	rigidBody2 = PhysicEngine::RigidBody(1.0f,  material, collider2,  PhysicEngine::RigidBody::Static_Body);
+	rigidBody3 = PhysicEngine::RigidBody(1.0f,  material, collider3,  PhysicEngine::RigidBody::Static_Body);
+	rigidBody4 = PhysicEngine::RigidBody(1.0f,  material, collider4,  PhysicEngine::RigidBody::Static_Body);
+	rigidBody5 = PhysicEngine::RigidBody(1.0f,  material, collider5,  PhysicEngine::RigidBody::Static_Body);
+	rigidBody6 = PhysicEngine::RigidBody(1.0f,  material, collider6,  PhysicEngine::RigidBody::Static_Body);
+	rigidBody7 = PhysicEngine::RigidBody(10.0f, material, collider7,  bodyTransform7);
+	rigidBody8 = PhysicEngine::RigidBody(1.0f,  material, collider8,  bodyTransform8);
+	rigidBody9 = PhysicEngine::RigidBody(10.0f, material, collider9,  bodyTransform9);
+	rigidBody10 = PhysicEngine::RigidBody(10.0f,material, collider10, bodyTransform10);
 
 	//Aggiungo i corpi rigidi al mondo
 	world.addBody(rigidBody1);
