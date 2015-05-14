@@ -18,7 +18,7 @@ namespace PhysicEngine{
 
 		World(float airDensity, const Utils::Vector3& gravityForce);
 
-		
+
 		void updatePhysic(float dt);
 
 

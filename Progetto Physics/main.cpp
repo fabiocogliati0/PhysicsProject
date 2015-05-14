@@ -161,7 +161,7 @@ void DisegnaParall(float X, float Y, float Z, float Lx, float Ly, float Lz, cons
 	Rot[0] = R[0]; 
 	Rot[1] = R[1]; 
 	Rot[2] = R[2]; 
-	Rot[3] = 0;
+	Rot[3] = 0; 
 	Rot[4] = R[3]; Rot[5] = R[4]; Rot[6] = R[5]; Rot[7] = 0;
 	Rot[8] = R[6]; Rot[9] = R[7]; Rot[10] = R[8]; Rot[11] = 0;
 	Rot[12] = 0; Rot[13] = 0; Rot[14] = 0; Rot[15] = 1;

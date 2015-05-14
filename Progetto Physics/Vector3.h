@@ -27,6 +27,7 @@ namespace Utils{
 		Vector3 operator*(const float &right) const;
 		Vector3 operator*(const Vector3 &right) const;
 		Vector3& operator*=(const float &right);
+		Vector3& operator*=(const Vector3 &right);
 		Vector3 operator/(const float &right) const;
 		Vector3& operator/=(const float &right);
 		bool operator==(const Vector3 &right) const;

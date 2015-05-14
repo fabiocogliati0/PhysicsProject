@@ -88,6 +88,14 @@ namespace Utils
 		return *this;
 	}
 
+	Vector3& Vector3::operator*=(const Vector3 &right)
+	{
+		x = x * right.x;
+		y = y * right.y;
+		z = z * right.z;
+		return *this;
+	}
+
 	Vector3 Vector3::operator/(const float &right) const
 	{
 		Vector3 tmp = *this;

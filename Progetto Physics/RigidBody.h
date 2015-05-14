@@ -11,7 +11,7 @@
 
 namespace PhysicEngine{
 
-	//forward declarations
+	// forward declarations
 	class World;
 	class Collider;
 	struct Collision;
@@ -49,22 +49,15 @@ namespace PhysicEngine{
 						const Utils::Vector3& velocity
 					);
 
-		RigidBody	(	float mass,
-						const PhysicMaterial& material,
-						const Collider& collider,
-						const Transform& transform,
-						const Utils::Vector3& velocity,
-						const Utils::Vector3& angularVelocity
-					);
-
 		
 		RigidBody(const RigidBody& other);
 
-		~RigidBody();
-
 		RigidBody& operator=(const RigidBody& other);
 
+		~RigidBody();
+
 		bool intersect(const RigidBody& other, std::vector<Collision>& o_collisions) const;
+
 
 		const Utils::Vector3& getPosition() const;
 
@@ -84,13 +77,10 @@ namespace PhysicEngine{
 
 		float getFriction() const;
 
-
 		staticBodyType getStaticBodyType() const;
 
 
 		void setVelocity(const Utils::Vector3 &velocityInput);
-
-		void setAngularVelocity(const Utils::Vector3 &angularVelocityInput);
 
 		void addForceDT(const Utils::Vector3& point);
 
@@ -111,9 +101,6 @@ namespace PhysicEngine{
 		staticBodyType staticBody;
 
 		Utils::Vector3 velocity;
-		
-		Utils::Vector3 angularVelocity;
-
 
 		// Temps
 		Utils::Vector3 momentum;				// quantità di moto
@@ -122,7 +109,7 @@ namespace PhysicEngine{
 		Utils::Vector3 resultantMomentum;		// momento risultante
 		Utils::Vector3 gravity;					// Gravità
 		Utils::Vector3 velocityOfGravity;		// velocità di gravità
-		Utils::Vector3 angularVelocityInserted;
+		Utils::Vector3 angularVelocity;			// velocità angolare
 	};
 
 }

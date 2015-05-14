@@ -8,8 +8,10 @@
 
 namespace PhysicEngine{
 
+	// In caso di costruzione senza parametri viene inizializzato con la gravità
+	// di default e in assenza di aria (o di qualsiasi altro gas/fluido).
 	World::World() 
-		: World(1.0f, Utils::Vector3(0.0f, -9.8f, 0.0f))
+		: World(0, Utils::Vector3(0.0f, -9.8f, 0.0f))
 	{
 	}
 
@@ -34,7 +36,7 @@ namespace PhysicEngine{
 					// Seleziono la più grande fra le due
 					float elasticity = bodies[i].getElasticity() >= bodies[j].getElasticity() ?
 											bodies[i].getElasticity() : bodies[j].getElasticity();
-
+					// Seleziono la più grande fra le due
 					float viscosity = bodies[i].getViscosity() >= bodies[j].getViscosity() ? 
 											bodies[i].getViscosity() : bodies[j].getViscosity();
 					
@@ -85,7 +87,10 @@ namespace PhysicEngine{
 		tangentVelocity = impactSpeed - normalVelocity;
 
 		force = (elasticity * collision.deformation) + (viscosity * modNormalVelocity);
+		
+		// Se è < 0 ho deformazione nulla
 		force = force < 0 ? 0 : force;
+		
 		normalForce = collision.normal * force;
 			
 		force *= friction;
@@ -94,12 +99,12 @@ namespace PhysicEngine{
 
 		modTangentVelocity = tangentVelocity.module();
 
-		// Facendo il modulo funziona anche per gravità che non agisce su y
-		if (modTangentVelocity > gravityForce.module() * dt) 
+		// Facendo il modulo della gravità funziona anche per gravità che non agisce su y
+		// Scalo la forza tangente
+		if (modTangentVelocity > gravityForce.module() * dt ) 
 			tangentForce /= modTangentVelocity;
 		else
 			tangentForce /= gravityForce.module() * dt;
-		
 		totalForce = normalForce + tangentForce;
 		
 		Utils::Vector3 localPosition;
@@ -107,6 +112,7 @@ namespace PhysicEngine{
 		localPosition = collision.impactPoint - rigidBodyA.getPosition();
 		rigidBodyA.addForceDT(localPosition, totalForce);
 
+		// Inverto la forza che sarà quella che riceverà l'oggetto B
 		totalForce.invert();
 
 		localPosition = collision.impactPoint - rigidBodyB.getPosition();

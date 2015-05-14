@@ -14,7 +14,7 @@ namespace PhysicEngine
 {
 
 	RigidBody::RigidBody()
-		: RigidBody(1.0f, PhysicMaterial(), BoxCollider(), Transform(), Utils::Vector3::zero, Utils::Vector3::zero)
+		: RigidBody(1.0f, PhysicMaterial(), BoxCollider(), Transform(), Utils::Vector3::zero)
 	{
 	}
 
@@ -23,7 +23,7 @@ namespace PhysicEngine
 		const Collider& collider,
 		staticBodyType isStatic
 		)
-		: RigidBody(mass, material, collider, Transform(), Utils::Vector3::zero, Utils::Vector3::zero)
+		: RigidBody(mass, material, collider, Transform(), Utils::Vector3::zero)
 	{
 		staticBody = isStatic;
 	}
@@ -34,7 +34,7 @@ namespace PhysicEngine
 		const Transform& transform,
 		staticBodyType isStatic
 		)
-		: RigidBody(mass, material, collider, transform, Utils::Vector3::zero, Utils::Vector3::zero)
+		: RigidBody(mass, material, collider, transform, Utils::Vector3::zero)
 	{
 		staticBody = isStatic;
 	}
@@ -44,23 +44,11 @@ namespace PhysicEngine
 		const Collider& collider,
 		const Transform& transform,
 		const Utils::Vector3& velocity
-		)
-		: RigidBody(mass, material, collider, transform, velocity, Utils::Vector3::zero)
-	{	
-	}
-
-	RigidBody::RigidBody(float mass,
-		const PhysicMaterial& material,
-		const Collider& collider,
-		const Transform& transform,
-		const Utils::Vector3& velocity,
-		const Utils::Vector3& angularVelocity
 		) 
 		:	mass(mass), 
 			material(material),
 			transform(transform), 
 			velocity(velocity), 
-			angularVelocity(angularVelocity),
 			staticBody(Non_Static_Body)
 	{
 		// TEMP
@@ -70,7 +58,7 @@ namespace PhysicEngine
 		this->resultantMomentum = Utils::Vector3::zero;
 		this->gravity = Utils::Vector3::zero;
 		this->velocityOfGravity = Utils::Vector3::zero;
-		this->angularVelocityInserted = Utils::Vector3::zero;
+		this->angularVelocity = Utils::Vector3::zero;
 		
 		this->collider = collider.clone();
 	}
@@ -81,24 +69,16 @@ namespace PhysicEngine
 			material(other.material),
 			transform(other.transform),
 			staticBody(other.staticBody),
-			velocity(other.velocity),
-			angularVelocity(other.angularVelocity)
+			velocity(other.velocity)
 	{
 		// TEMP
 		this->momentum = other.momentum;
 		this->angularMomentum = other.angularMomentum;
 		this->gravity = other.gravity;
 		this->velocityOfGravity = other.velocityOfGravity;
-		this->angularVelocityInserted = other.angularVelocityInserted;
 
 		assert(other.collider != nullptr);
 		this->collider = other.collider->clone();
-	}
-
-	RigidBody::~RigidBody()
-	{
-		delete collider;
-		collider = nullptr;
 	}
 
 	RigidBody& RigidBody::operator=(const RigidBody& other)
@@ -110,21 +90,24 @@ namespace PhysicEngine
 			this->transform = other.transform;
 			this->staticBody = other.staticBody;
 			this->velocity = other.velocity;
-			this->angularVelocity = other.angularVelocity;
-			this->angularVelocity = other.angularVelocityInserted;
 
 			// TEMP
 			this->momentum = other.momentum;
 			this->angularMomentum = other.angularMomentum;
 			this->gravity = other.gravity;
 			this->velocityOfGravity = other.velocityOfGravity;
-			this->angularVelocityInserted = other.angularVelocityInserted;
 
 			assert(other.collider != nullptr);
 			this->collider = other.collider->clone();
 		}
 
 		return *this;
+	}
+
+	RigidBody::~RigidBody()
+	{
+		delete collider;
+		collider = nullptr;
 	}
 
 	bool RigidBody::intersect(const RigidBody& other, std::vector<Collision>& o_collisions) const
@@ -150,13 +133,7 @@ namespace PhysicEngine
 
 	const Utils::Vector3 RigidBody::getAngularVelocity() const
 	{
-		if (angularVelocity == Utils::Vector3::zero)
-			return angularVelocity;
-		else
-		{
-			Utils::Vector3 tmp = angularVelocityInserted + (angularVelocity - angularVelocityInserted);
-			return tmp;
-		}
+		return angularVelocity;
 	}
 
 	Utils::Vector3 RigidBody::getInertia() const
@@ -196,11 +173,7 @@ namespace PhysicEngine
 		this->velocity = velocityInput;
 	}
 
-	void RigidBody::setAngularVelocity(const Utils::Vector3 &angularVelocityInput)
-	{
-		this->angularVelocityInserted = angularVelocityInput;
-	}
-
+	// Applico una forza per un DT considerando come punto di applicazione il centro di massa
 	void RigidBody::addForceDT(const Utils::Vector3& force)
 	{
 		if (this->getStaticBodyType() == Non_Static_Body)
@@ -209,15 +182,17 @@ namespace PhysicEngine
 		}
 	}
 
+	// Applico una forza per un DT prendendo in considerazione il braccio della forza
 	void RigidBody::addForceDT(const Utils::Vector3& point, const Utils::Vector3& force)
 	{
+		// Controllo se l'oggetto non è statico, altrimenti non applico nessuna forza
 		if (this->getStaticBodyType()==Non_Static_Body)
 		{
 			// Sommo la forza ricevuta a quella che ho già
 			this->resultantForce += force;
 			if (point != Utils::Vector3::zero)
 			{
-				// *** Calcolo il momento risultante che mi servirà per ruotare l'oggetto
+				// Calcolo il momento risultante che mi servirà per ruotare l'oggetto
 				Utils::Vector3 newResultantMomentum = point.cross(force);
 				resultantMomentum += newResultantMomentum;
 			}
@@ -232,59 +207,25 @@ namespace PhysicEngine
 			Utils::Quaternion totalRotationQuaternion = transform.getRotationQuaternion();
 			Utils::Matrix rotationMatrix = transform.getRotationMatrix();
 
-			// Se la gravità è uguale l'ho già calcolata e mi evito una moltiplicazione
+			// Se la gravità è uguale l'ho già calcolata, quindi non la ricalcolo
 			if (myWorld.getGravityForce() != gravity)
 			{
-				// *** calcolo nuovamente la quantità di moto della gravità
-				// quantitadiMotoGravity = gravity * dt;
+				// calcolo nuovamente la velocità di gravità
 				gravity = myWorld.getGravityForce();
 				velocityOfGravity = gravity * dt;
 			}
 
-			// Moto rettilineo uniforme
+			// Moto translatorio
 			if (resultantForce != Utils::Vector3::zero)
 			{
 				momentum = resultantForce * dt;
 				velocity += momentum / mass;
 			}
 
+			// Aggiungo la componente velocità gravitazionale
 			velocity += velocityOfGravity;
 
-			// Calcolo la forza di attrito dell'aria
-			Utils::Matrix newRotationMatrix = transform.getRotationMatrix();
-			float area = this->getArea();
-			float drag = 0.0f;
-			float modVelocity;
-			Utils::Vector3 inverseVelocity;
-
-			// operazioni comuni
-			inverseVelocity = velocity;
-			inverseVelocity.invert();
-			modVelocity = velocity.module();
-
-			if (collider->getColliderType() == Collider::SphereColliderType)
-				drag = 0.47f;
-			else if (collider->getColliderType() == Collider::BoxColliderType)
-			{
-				Utils::Vector3 down = Utils::Vector3(0, -1, 0);
-				Utils::Vector3 rotate = newRotationMatrix.RotateAbsolute(down);
-				float dot = acos(down.dot(rotate)) * (180.0f / static_cast<float>(M_PI));
-				if (dot > 35 && dot < 55 || dot > 125 && dot < 145)
-					drag = 0.80f;
-				else
-					drag = 1.05f;
-			}
-
-			// F = 1/2 * area * drag * airD * v^2 
-			inverseVelocity = inverseVelocity * 0.5f * area * drag * myWorld.getAirDensity() * modVelocity;
-			inverseVelocity /= mass; // Accellerazione
-			inverseVelocity *= dt; // Velocità
-
-			velocity += inverseVelocity;
-
-			transform.setPosition(transform.getPosition() + (velocity * dt));
-
-			// Moto angolare
+			// Moto rotatorio
 			if (resultantMomentum != Utils::Vector3::zero)
 			{
 				angularMomentum += resultantMomentum * dt;
@@ -299,8 +240,6 @@ namespace PhysicEngine
 			angularVelocity.y /= this->getInertia().y;
 			angularVelocity.z /= this->getInertia().z;
 
-			angularVelocity += angularVelocityInserted;
-
 			if (angularVelocity != Utils::Vector3::zero)
 			{
 				newRotationQuaternion.set(1, angularVelocity.x * dt / 2, angularVelocity.y * dt / 2,
@@ -313,13 +252,41 @@ namespace PhysicEngine
 				totalRotationQuaternion.normalize();
 
 				// La velocità la ritorno in assoluto
-				angularVelocity -= angularVelocityInserted;
 				angularVelocity = rotationMatrix.RotateAbsolute(angularVelocity);
-				angularVelocity += angularVelocityInserted;
 
-				// Setto il nuovo quaternione creando la matrice di rotazione attuale
+				// Setto il nuovo quaternione creando la nuova matrice di rotazione
 				transform.setQuaternionRotation(totalRotationQuaternion);
 			}
+
+
+			// ------ Calcolo la forza di attrito dell'aria
+			Utils::Vector3 inverseVelocity;
+			float drag = 0;
+			float area = this->getArea();
+			float modVelocity;
+
+			// operazioni comuni
+			inverseVelocity = velocity;
+			inverseVelocity.invert();
+			modVelocity = velocity.module();
+
+			if (collider->getColliderType() == Collider::SphereColliderType)
+				drag = 0.47f;
+			else if (collider->getColliderType() == Collider::BoxColliderType)
+				drag = 1.05f;
+
+			// F = 1/2 * area * drag * airD * v^2 
+			inverseVelocity = inverseVelocity * 0.5f * area * drag * myWorld.getAirDensity() * modVelocity;
+			inverseVelocity /= mass; // Accelerazione
+			inverseVelocity *= dt; // Velocità
+
+			velocity += inverseVelocity;
+			// ------ Fine calcolo attrito dell'aria
+
+
+			// Ricalcolo la posizione, addizionando la posizione attuale alla nuova (velocity * dt)
+			transform.setPosition(transform.getPosition() + (velocity * dt));
+
 
 			// Azzeramento forza risultante e momento risultante 
 			resultantForce = resultantMomentum = Utils::Vector3::zero;
