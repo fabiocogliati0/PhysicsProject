@@ -1,3 +1,8 @@
+/*
+* Progetto di Physics Programming
+* Fabio Cogliati, Manuele Nerucci
+*/
+
 #include "Quaternion.h"
 #include "Matrix.h"
 #include "Vector3.h"

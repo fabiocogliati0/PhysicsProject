@@ -1,3 +1,8 @@
+/*
+* Progetto di Physics Programming
+* Fabio Cogliati, Manuele Nerucci
+*/
+
 #include "Transform.h"
 
 namespace PhysicEngine
